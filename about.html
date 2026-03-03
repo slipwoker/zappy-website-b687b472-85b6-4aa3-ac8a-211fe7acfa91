@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>מגננת לחינוך מיוחד עד מדריכת הורים ויוצרת ערכות — חן חכמון זקר - רגעים קטנים גדולים</title>
+    <meta name="description" content="היכרות עם חן חכמון זקר - גננת לחינוך מיוחד, אמא לשלושה ומדריכת הורים. למדו איך המומחיות והחום שלי משתלבים בכל ערכת פעילות שאני יוצרת עבור הילדים שלכם.">
+    <meta name="keywords" content="חן חכמון זקר, גננת חינוך מיוחד, מדריכת הורים מקצועית, הדרכת הורים, יוצרת ערכות חינוכיות">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'b687b472-85b6-4aa3-ac8a-211fe7acfa91',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="מגננת לחינוך מיוחד עד מדריכת הורים ויוצרת ערכות — חן חכמון זקר - רגעים קטנים גדולים">
+  <meta property="og:description" content="היכרות עם חן חכמון זקר - גננת לחינוך מיוחד, אמא לשלושה ומדריכת הורים. למדו איך המומחיות והחום שלי משתלבים בכל ערכת פעילות שאני יוצרת עבור הילדים שלכם.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="מגננת לחינוך מיוחד עד מדריכת הורים ויוצרת ערכות — חן חכמון זקר - רגעים קטנים גדולים">
+  <meta name="twitter:description" content="היכרות עם חן חכמון זקר - גננת לחינוך מיוחד, אמא לשלושה ומדריכת הורים. למדו איך המומחיות והחום שלי משתלבים בכל ערכת פעילות שאני יוצרת עבור הילדים שלכם.">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: #333 !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-dark) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-dark) !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-dark) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      #mic-access-tool-general-button, .mic-access-tool-general-button,
+      #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+      ._access-icon, #mic-access-tool-box, .mic-access-tool-box,
+      #mic-init-access-tool #mic-access-tool-box, div[id*="mic-access-tool-box"], ._access-menu {
+        display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;
+      }
+    </style>
+</head>
+<body>
+
+
+    <div class="mobile-search-panel" id="mobile-search-panel">
+      <div class="search-wrapper">
+        <input type="text" id="mobile-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+        <button class="search-submit" id="mobile-search-submit" title="חיפוש">
+          <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+        </button>
+        <button class="close-search" id="close-mobile-search">
+          <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="search-results" id="mobile-search-results"></div>
+    </div>
+  
+<script>window.ZAPPY_WEBSITE_ID = "b687b472-85b6-4aa3-ac8a-211fe7acfa91";window.ZAPPY_API_BASE = (window.location.pathname.includes('/preview') ? "https://api.zappy5.com" : "https://api.zappy5.com");</script>
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewbox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" style="display:none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+  
+  <button class="phone-header-btn" aria-label="Call">
+    <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+  
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="/" class="logo-link">
+        <img src="/assets/logo.webp" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo">
+      </a>
+    </div>
+    
+    <ul class="nav-menu" id="navMenu">
+
+    <li class="menu-item-has-children zappy-products-dropdown">
+      <a href="/products">
+        מוצרים
+        <svg class="dropdown-arrow" width="12" height="12" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      </a>
+      <ul class="sub-menu" id="zappy-nav-category-links">
+        <li><a href="/products">כל המוצרים</a></li>
+        <!-- Categories will be loaded dynamically -->
+      </ul>
+    </li>
+  <li><a href="/about">אודות</a></li><li><a href="/passover-kits">ערכות פסח</a></li><li><a href="/contact">צור קשר</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><a href="/login" class="login-link nav-login" title="התחברות"><svg class="login-icon" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a><a href="#cart" class="cart-link nav-cart" id="cart-drawer-toggle" title="עגלת קניות"><svg class="cart-icon" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">0</span></a><div class="nav-search-box">
+    <input type="text" class="nav-search-input" id="nav-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+    <button class="nav-search-btn" id="nav-search-btn" title="חיפוש">
+      <svg class="search-icon" width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+    </button>
+    <div class="nav-search-results" id="nav-search-results"></div>
+  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="חיפוש"><svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg></button></div>
+    
+    
+  </div>
+</nav>
+
+    <nav class="zappy-catalog-menu rtl" id="zappy-catalog-menu" dir="rtl">
+      <div class="catalog-menu-container">
+        <a href="/products" class="catalog-menu-item catalog-menu-all">כל המוצרים</a>
+        <div class="catalog-menu-categories" id="zappy-category-links">
+          <!-- Categories will be loaded dynamically -->
+        </div>
+      </div>
+    </nav>
+  
+  
+  <main>
+    <section class="about-intro-section" data-layout-spec="אודות-intro">
+  <div class="about-intro-container">
+    <div class="about-intro-grid">
+      <div class="about-intro-image-column">
+        <div class="about-intro-image-frame">
+          <img data-placeholder="about-intro-portrait" data-context="Warm portrait of a female Israeli kindergarten teacher in her early 30s with gentle smile, sitting in a bright, cozy classroom corner with soft natural light. She's surrounded by colorful educational materials and children's crafts. The setting shows shelves with organized activity kits, pastel-colored storage boxes, and gentle educational posters. Professional yet approachable atmosphere, natural lighting from window, warm pastel color palette (soft pinks, mint greens, cream yellows). The teacher wears casual professional attire. Background slightly blurred to focus on her warm, inviting expression. Photography style: lifestyle editorial, soft focus, warm tones." width="600" height="700" src="/assets/site-about-intro-portrait.webp" alt="חן חכמון זקר - מחנכת גננת חינוך מיוחד ומדריכת הורים">
+        </div>
+      </div>
+      
+      <div class="about-intro-content-column">
+        <h1 class="about-intro-heading">הכירו את המחנכת מאחורי רגעים קטנים גדולים</h1>
+        <p class="about-intro-paragraph">אני חן, גננת חינוך מיוחד, אמא לשלושה ומדריכת הורים. יצרתי את "רגעים קטנים גדולים" מתוך אמונה עמוקה שלמידה מתרחשת בצורה הטובה ביותר דרך משחק מודרך, חמים ומותאם גיל. כל ערכה שאני יוצרת משלבת את הניסיון המקצועי שלי עם ההבנה העמוקה של צרכי ההורים והילדים בבית.</p>
+        
+        <div class="about-intro-cards-wrapper">
+          <div class="about-intro-info-card">
+            <h3 class="about-intro-card-title">מומחיות בחינוך מיוחד</h3>
+            <p class="about-intro-card-text">שנים של ניסיון כגננת חינוך מיוחד לימדו אותי להתאים פעילויות לקצב ולסגנון הלמידה הייחודי של כל ילד. אני מאמינה שכל ילד יכול לפרוח כשהוא מקבל את הכלים המתאימים לו.</p>
+          </div>
+          
+          <div class="about-intro-info-card">
+            <h3 class="about-intro-card-title">פרספקטיבה של הדרכת הורים</h3>
+            <p class="about-intro-card-text">כמדריכת הורים, אני מביאה הבנה מעמיקה של הדינמיקה המשפחתית והצורך ברוטינות פרקטיות בבית. הערכות שלי בנויות להעשיר את הזמן המשפחתי ולחזק את הקשר בין הורים לילדים.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="about-intro-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 80" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,42 Q30,38 60,45 T120,40 Q150,44 180,38 T240,42 Q270,39 300,44 T360,40 Q390,43 420,39 T480,44 Q510,40 540,45 T600,39 Q630,44 660,40 T720,45 Q750,41 780,44 T840,40 Q870,45 900,41 T960,44 Q990,40 1020,45 T1080,41 Q1110,44 1140,40 T1200,45 L1200,80 Z" fill="#FFF9F2"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="about-timeline-section" data-layout-spec="אודות-timeline">
+  <div class="about-timeline-container">
+    <h2 class="about-timeline-title">איך נוצרו הערכות</h2>
+    
+    <div class="about-timeline-wrapper">
+      <div class="about-timeline-backplate"></div>
+      
+      <div class="about-timeline-track">
+        <div class="about-timeline-item" data-step="1">
+          <div class="about-timeline-node"></div>
+          <div class="about-timeline-card">
+            <h3>ניסיון בכיתה</h3>
+            <p>שנים של עבודה כגננת בחינוך מיוחד לימדו אותי איך כל ילד לומד בקצב שונה. יצרתי פעילויות מותאמות אישית שעזרו לכל ילד להצליח בדרכו הייחדית.</p>
+          </div>
+        </div>
+        
+        <div class="about-timeline-item" data-step="2">
+          <div class="about-timeline-node"></div>
+          <div class="about-timeline-card">
+            <h3>הפיכה להורה</h3>
+            <p>כשהפכתי לאמא לשלושה, הבנתי את האתגר האמיתי - איך להעסיק ילדים בגילאים שונים בבית תוך שמירה על שפיות. החיפוש אחר פעילויות משמעותיות ונגישות הפך למשימה יומית.</p>
+          </div>
+        </div>
+        
+        <div class="about-timeline-item" data-step="3">
+          <div class="about-timeline-node"></div>
+          <div class="about-timeline-card">
+            <h3>יצירת פעילויות בבית</h3>
+            <p>התחלתי לפתח פעילויות שמשלבות למידה עם כיף אמיתי. כמדריכת הורים, ראיתי שהורים רבים מחפשים בדיוק את זה - רעיונות מעשיים שעובדים באמת עם ילדים בגילאים שונים.</p>
+          </div>
+        </div>
+        
+        <div class="about-timeline-item" data-step="4">
+          <div class="about-timeline-node"></div>
+          <div class="about-timeline-card">
+            <h3>שיכלול הערכות דרך משפחות אמיתיות</h3>
+            <p>כל ערכה עוברת בדיקה אצל משפחות אמיתיות לפני שהיא מגיעה אליכם. המשוב מהורים וילדים עוזר לי לשפר ולהתאים כל פעילות כך שתהיה פשוטה, מהנה ומשמעותית עבור כולם.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="about-timeline-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 60" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,60 L0,35 Q100,30 200,35 Q300,40 400,35 Q500,30 600,32 Q700,34 800,32 Q900,30 1000,30 Q1100,30 1200,30 L1200,60 Z" fill="#FBF6EF"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="about-credentials-section" data-layout-spec="אודות-credentials">
+  <div class="about-credentials-container">
+    <div class="about-credentials-content">
+      <div class="about-credentials-text-column">
+        <h2>מה הופך את הגישה שלי לייחודית</h2>
+        <p>כל ערכת פעילות נבנית על בסיס מחקרי, עם הבנה עמוקה של התפתחות הילד והצרכים המשתנים של כל גיל. אני מאמינה בגישה רגועה ומעשית שהורים יכולים ליישם בקלות בבית, עם גמישות מלאה להתאמה לילדים שונים ולמצבים משפחתיים מגוונים.</p>
+        
+        <div class="about-credentials-grid">
+          <div class="credential-card">
+            <h3>מטרות למידה ברורות</h3>
+            <p>כל פעילות מגיעה עם הסבר על המיומנויות שהיא מפתחת, כך שתדעי בדיוק מה הילד שלך לומד תוך כדי משחק.</p>
+          </div>
+          
+          <div class="credential-card">
+            <h3>אפשרויות ידידותיות לחושים</h3>
+            <p>כל ערכה כוללת הצעות להתאמה לילדים עם רגישויות חושיות שונות, כך שכל ילד יכול ליהנות בקצב שלו.</p>
+          </div>
+          
+          <div class="credential-card">
+            <h3>הדרכה צעד אחר צעד</h3>
+            <p>הוראות פשוטות ומפורטות עם טיפים מעשיים, כך שגם הורים עסוקים יכולים להוביל פעילות מוצלחת בקלות.</p>
+          </div>
+          
+          <div class="credential-card">
+            <h3>התאמה למספר ילדים</h3>
+            <p>הערכות מותאמות לילד אחד או למספר ילדים, עם רעיונות לשיתוף פעולה ומשחק משותף המעודדים קשרים חברתיים.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="about-credentials-visual-column">
+        <div class="about-credentials-image-wrapper">
+          <img data-placeholder="about-credentials-materials" data-context="Neat still-life arrangement of colorful educational activity kit materials on a light wooden shelf surface - pastel-colored craft supplies, paper shapes, small toys, educational tools, organized in a warm inviting way that reflects kindergarten teacher expertise and parental warmth, soft natural lighting, warm pastel color palette with coral pink and mint green accents" width="600" height="450" src="/assets/site-about-credentials-materials.webp" alt="ערכות פעילות מסודרות בקפידה">
+        </div>
+        
+        <div class="about-credentials-quote-block">
+          <p>אני פוגשת כל משפחה במקום שבו היא נמצאת. לא משנה אם יש לך חמש דקות או שעה, ילד אחד או ארבעה - הערכות שלי נבנות כך שתצליחי ליצור רגעים משמעותיים בדיוק בתנאים שלך.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="about-credentials-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 80" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,40 Q100,35 200,42 T400,38 Q500,42 600,35 T800,40 Q900,38 1000,42 T1200,38 L1200,80 Z" fill="#FBF6EF"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="about-principles-section" data-layout-spec="אודות-principles">
+  <div class="about-principles-container">
+    <h2 class="about-principles-title">העקרונות שמנחים כל ערכה</h2>
+    
+    <div class="about-principles-grid">
+      <!-- Principle Card 1 -->
+      <article class="principle-card">
+        <div class="principle-icon-wrapper">
+          <svg data-element-type="icon" data-icon-type="svg" class="principle-icon" width="64" height="64" viewbox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="28" fill="#CFE3D1" opacity="0.4"></circle>
+            <path d="M32 16C23.163 16 16 23.163 16 32C16 40.837 23.163 48 32 48C40.837 48 48 40.837 48 32C48 23.163 40.837 16 32 16ZM32 44C25.373 44 20 38.627 20 32C20 25.373 25.373 20 32 20C38.627 20 44 25.373 44 32C44 38.627 38.627 44 32 44Z" fill="#7DAA3A"></path>
+            <path d="M28 28H36V36H28V28Z" fill="#7DAA3A" opacity="0.6"></path>
+            <rect x="24" y="24" width="16" height="2" rx="1" fill="#7DAA3A"></rect>
+            <rect x="24" y="38" width="16" height="2" rx="1" fill="#7DAA3A"></rect>
+          </svg>
+        </div>
+        <h3 class="principle-card-title">מבנה חם ותומך</h3>
+        <p class="principle-card-text">כל ערכה בנויה עם מבנה ברור ומסגרת מכילה שנותנת לילדים ביטחון ומרחב להתפתח. הפעילויות מתוכננות בקפידה כך שהילדים יוכלו להצליח ולהרגיש גאים בעצמם, תוך שמירה על אווירה חמה ומזמינה.</p>
+      </article>
+
+      <!-- Principle Card 2 -->
+      <article class="principle-card">
+        <div class="principle-icon-wrapper">
+          <svg data-element-type="icon" data-icon-type="svg" class="principle-icon" width="64" height="64" viewbox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="28" fill="#FFE4A8" opacity="0.4"></circle>
+            <path d="M32 18L36 26L45 27.5L38.5 34L40 43L32 38.5L24 43L25.5 34L19 27.5L28 26L32 18Z" fill="#F2C14E"></path>
+            <circle cx="24" cy="24" r="3" fill="#F2C14E" opacity="0.5"></circle>
+            <circle cx="40" cy="24" r="3" fill="#F2C14E" opacity="0.5"></circle>
+            <circle cx="32" cy="48" r="3" fill="#F2C14E" opacity="0.5"></circle>
+          </svg>
+        </div>
+        <h3 class="principle-card-title">משחק עם מטרה</h3>
+        <p class="principle-card-text">כל פעילות משלבת למידה דרך משחק - זה לא סתם בילוי, אלא הזדמנות לפיתוח מיומנויות חשובות. הילדים נהנים ומתפתחים בו-זמנית, רוכשים כישורי חיים חשובים תוך כדי כיף אמיתי ויצירתיות.</p>
+      </article>
+
+      <!-- Principle Card 3 -->
+      <article class="principle-card">
+        <div class="principle-icon-wrapper">
+          <svg data-element-type="icon" data-icon-type="svg" class="principle-icon" width="64" height="64" viewbox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="28" fill="#F4A7A2" opacity="0.4"></circle>
+            <path d="M20 28C20 24.686 22.686 22 26 22H38C41.314 22 44 24.686 44 28V38C44 41.314 41.314 44 38 44H26C22.686 44 20 41.314 20 38V28Z" fill="#E56B5F" opacity="0.6"></path>
+            <rect x="28" y="18" width="8" height="6" rx="2" fill="#E56B5F"></rect>
+            <circle cx="28" cy="32" r="2" fill="#E56B5F"></circle>
+            <circle cx="36" cy="32" r="2" fill="#E56B5F"></circle>
+            <path d="M28 38H36" stroke="#E56B5F" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <h3 class="principle-card-title">נוח להורים</h3>
+        <p class="principle-card-text">ההכנה פשוטה והקצב מותאם - כי אני מבינה שההורים עסוקים. הערכות מגיעות עם הוראות ברורות, חומרים נגישים וזמני פעילות מתוכננים שמתאימים לשגרת המשפחה ולא דורשים הכנה מורכבת או זמן רב.</p>
+      </article>
+    </div>
+  </div>
+  
+  <!-- Gradient Band at Bottom -->
+  <div class="about-principles-gradient-band" aria-hidden="true"></div>
+</section>
+  </main>
+  
+  <footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-column company-info">
+        <img src="/assets/logo.webp" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo">
+        <p class="footer-tagline">יצירת רגעים משמעותיים בחינוך ובגננות</p>
+      </div>
+      
+      <div class="footer-column quick-links">
+        <h3 class="footer-heading">קישורים מהירים</h3>
+        <ul class="footer-list">
+          <li><a href="/about">אודות</a></li>
+          <li><a href="/passover-kits">ערכות פסח</a></li>
+          <li><a href="/contact">צור קשר</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column contact-info">
+        <h3 class="footer-heading">יצירת קשר</h3>
+        <ul class="footer-list contact-list">
+          <li>
+            <i class="fas fa-envelope"></i>
+            <a href="mailto:[business_email]">[business_email]</a>
+          </li>
+          <li>
+            <i class="fas fa-phone"></i>
+            <a href="tel:[business_phone]">[business_phone]</a>
+          </li>
+          <li><a href="/"><i class="fas fa-map-marker-alt"></i>
+            <span>[business_address]</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column social-media">
+        <h3 class="footer-heading">עקבו אחרינו</h3>
+        <div class="social-links">
+          <a href="[facebook_handle]" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+          <a href="[instagram_handle]" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+          <a href="[whatsapp_handle]" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <div class="copyright">
+          <p>© 2026 חן חכמון זקר - רגעים קטנים גדולים. All rights reserved.</p>
+        </div>
+        <div class="footer-legal">
+          <a href="/privacy">Privacy Policy</a>
+          <span class="separator">|</span>
+          <a href="/terms">Terms &amp; Conditions</a><span class="separator">|</span>
+            <a href="/return-policy" aria-label="מדיניות החזרות">
+              מדיניות החזרות
+            </a>
+          <span class="separator">|</span>
+          <a href="/accessibility">Accessibility</a>
+          <span class="separator">|</span>
+          <a href="https://zappy5.com" target="_blank" class="zappy-attribution">Generated by Zappy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+
+    <script id="zappy-navbar-scroll-effect">
+    (function(){var nb=document.querySelector('nav.navbar,.navbar:not(.zappy-catalog-menu)');var cm=document.querySelector('.zappy-catalog-menu');if(!nb)return;var fb='rgba(47,58,54,0.85)';var th=60;nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';function onS(){var y=window.scrollY||window.pageYOffset;if(y>th){nb.style.background=fb;nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';if(cm){cm.style.background=fb;cm.style.backdropFilter='blur(12px)';cm.style.webkitBackdropFilter='blur(12px)';}}else{nb.style.background='transparent';nb.style.backdropFilter='none';nb.style.webkitBackdropFilter='none';nb.style.boxShadow='none';if(cm){cm.style.background='transparent';cm.style.backdropFilter='none';cm.style.webkitBackdropFilter='none';}}}window.addEventListener('scroll',onS,{passive:true});onS();})();
+    </script>
+</body>
+</html>
