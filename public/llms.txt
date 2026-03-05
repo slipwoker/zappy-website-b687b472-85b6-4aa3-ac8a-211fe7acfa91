@@ -1,79 +1,89 @@
-# Business — Generative Engine Optimization Map
+# חן חכמון זקר - רגעים קטנים גדולים — Generative Engine Optimization Map
+
+> Chen Chakmon Zaker creates activity kits for children, combining her expertise as a special education kindergarten teacher, mother of three, and parenting instructor. The brand 'Small Big Moments' (רגעים קטנים גדולים) focuses on age-appropriate educational activities for children aged 3-10, with customizable kits based on age groups and number of children. The current focus is on Passover holiday activity kits, designed with warm pastel colors and a gentle, inviting aesthetic that reflects both educational expertise and parental warmth.
 
 ---
 
 ## Pages
 
 ### בית
-https://example.com
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app
 ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל.
 
 ### אודות
-https://example.com/about
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/about
 היכרות עם חן חכמון זקר - גננת לחינוך מיוחד, אמא לשלושה ומדריכת הורים. למדו איך המומחיות והחום שלי משתלבים בכל ערכת פעילות שאני יוצרת עבור הילדים שלכם.
 
 ### ערכות פסח
-https://example.com/passover-kits
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/passover-kits
 ערכות פעילות לפסח לילדים בגילאי 3-10 עם פעילויות יצירה, משחקים חינוכיים ותכנים מותאמי גיל. הזמינו ערכה מותאמת אישית למספר הילדים והגילאים במשפחה שלכם.
 
 ### צור קשר
-https://example.com/contact
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/contact
 צרו קשר לייעוץ אישי והתאמת ערכות פעילות לגילאי הילדים שלכם. כגננת לחינוך מיוחד ומדריכת הורים, אשמח לעזור לכם למצוא את הפעילויות המתאימות ביותר.
 
 ### Products
-https://example.com/products
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/products
 המוצרים שלנו - חן חכמון זקר - רגעים קטנים גדולים
 
 ### Cart
-https://example.com/cart
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/cart
 עגלת הקניות שלך
 
 ### Checkout
-https://example.com/checkout
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/checkout
 תשלום
 
 ### Login
-https://example.com/login
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/login
 התחברות לקוחות
 
 ### Account
-https://example.com/account
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/account
 החשבון שלי
 
 ### Order Success
-https://example.com/order-success
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/order-success
 תודה על ההזמנה
 
 ### Product Detail
-https://example.com/product/:slug
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/product/:slug
 פרטי המוצר - חן חכמון זקר - רגעים קטנים גדולים
 
 ### Category
-https://example.com/category/:slug
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/category/:slug
 מוצרים - חן חכמון זקר - רגעים קטנים גדולים
 
 ## Legal & Policy
 
 ### Privacy Policy
-https://example.com/privacy
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/privacy
 Information about how user data is collected, stored, and protected.
 
 ### Terms & Conditions
-https://example.com/terms
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/terms
 Legal terms describing service usage, rights, and policies.
 
 ### Accessibility Statement
-https://example.com/accessibility
+https://chen-chakmon-zakar-regaim-ktan.zappy5.app/accessibility
 Information about WCAG compliance and accessibility features.
 
 ---
 
 # Business Context (for LLM understanding)
 
-## About Business
+## About חן חכמון זקר - רגעים קטנים גדולים
+Chen Chakmon Zaker creates activity kits for children, combining her expertise as a special education kindergarten teacher, mother of three, and parenting instructor. The brand 'Small Big Moments' (רגעים קטנים גדולים) focuses on age-appropriate educational activities for children aged 3-10, with customizable kits based on age groups and number of children. The current focus is on Passover holiday activity kits, designed with warm pastel colors and a gentle, inviting aesthetic that reflects both educational expertise and parental warmth.
+
+## Target Audience
+הורים לילדים בגילאי 3-10
+
+## Industry
+חינוך וגננות
+
 ---
 
 # Additional Resources
 
-- **Sitemap**: https://example.com/sitemap.xml
-- **Robots.txt**: https://example.com/robots.txt
+- **Sitemap**: https://chen-chakmon-zakar-regaim-ktan.zappy5.app/sitemap.xml
+- **Robots.txt**: https://chen-chakmon-zakar-regaim-ktan.zappy5.app/robots.txt
