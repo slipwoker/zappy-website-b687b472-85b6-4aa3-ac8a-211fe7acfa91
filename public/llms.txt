@@ -1,89 +1,79 @@
-# חן חכמון זקר - רגעים קטנים גדולים — Generative Engine Optimization Map
-
-> Chen Chakmon Zaker creates activity kits for children, combining her expertise as a special education kindergarten teacher, mother of three, and parenting instructor. The brand 'Small Big Moments' (רגעים קטנים גדולים) focuses on age-appropriate educational activities for children aged 3-10, with customizable kits based on age groups and number of children. The current focus is on Passover holiday activity kits, designed with warm pastel colors and a gentle, inviting aesthetic that reflects both educational expertise and parental warmth.
+# Business — Generative Engine Optimization Map
 
 ---
 
 ## Pages
 
 ### בית
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app
+https://henhakmonzakar.co.il
 ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל.
 
 ### אודות
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/about
+https://henhakmonzakar.co.il/about
 היכרות עם חן חכמון זקר - גננת לחינוך מיוחד, אמא לשלושה ומדריכת הורים. למדו איך המומחיות והחום שלי משתלבים בכל ערכת פעילות שאני יוצרת עבור הילדים שלכם.
 
 ### ערכות פסח
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/passover-kits
+https://henhakmonzakar.co.il/passover-kits
 ערכות פעילות לפסח לילדים בגילאי 3-10 עם פעילויות יצירה, משחקים חינוכיים ותכנים מותאמי גיל. הזמינו ערכה מותאמת אישית למספר הילדים והגילאים במשפחה שלכם.
 
 ### צור קשר
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/contact
+https://henhakmonzakar.co.il/contact
 צרו קשר לייעוץ אישי והתאמת ערכות פעילות לגילאי הילדים שלכם. כגננת לחינוך מיוחד ומדריכת הורים, אשמח לעזור לכם למצוא את הפעילויות המתאימות ביותר.
 
 ### Products
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/products
+https://henhakmonzakar.co.il/products
 המוצרים שלנו - חן חכמון זקר - רגעים קטנים גדולים
 
 ### Cart
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/cart
+https://henhakmonzakar.co.il/cart
 עגלת הקניות שלך
 
 ### Checkout
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/checkout
+https://henhakmonzakar.co.il/checkout
 תשלום
 
 ### Login
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/login
+https://henhakmonzakar.co.il/login
 התחברות לקוחות
 
 ### Account
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/account
+https://henhakmonzakar.co.il/account
 החשבון שלי
 
 ### Order Success
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/order-success
+https://henhakmonzakar.co.il/order-success
 תודה על ההזמנה
 
 ### Product Detail
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/product/:slug
+https://henhakmonzakar.co.il/product/:slug
 פרטי המוצר - חן חכמון זקר - רגעים קטנים גדולים
 
 ### Category
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/category/:slug
+https://henhakmonzakar.co.il/category/:slug
 מוצרים - חן חכמון זקר - רגעים קטנים גדולים
 
 ## Legal & Policy
 
 ### Privacy Policy
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/privacy
+https://henhakmonzakar.co.il/privacy
 Information about how user data is collected, stored, and protected.
 
 ### Terms & Conditions
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/terms
+https://henhakmonzakar.co.il/terms
 Legal terms describing service usage, rights, and policies.
 
 ### Accessibility Statement
-https://chen-chakmon-zakar-regaim-ktan.zappy5.app/accessibility
+https://henhakmonzakar.co.il/accessibility
 Information about WCAG compliance and accessibility features.
 
 ---
 
 # Business Context (for LLM understanding)
 
-## About חן חכמון זקר - רגעים קטנים גדולים
-Chen Chakmon Zaker creates activity kits for children, combining her expertise as a special education kindergarten teacher, mother of three, and parenting instructor. The brand 'Small Big Moments' (רגעים קטנים גדולים) focuses on age-appropriate educational activities for children aged 3-10, with customizable kits based on age groups and number of children. The current focus is on Passover holiday activity kits, designed with warm pastel colors and a gentle, inviting aesthetic that reflects both educational expertise and parental warmth.
-
-## Target Audience
-הורים לילדים בגילאי 3-10
-
-## Industry
-חינוך וגננות
-
+## About Business
 ---
 
 # Additional Resources
 
-- **Sitemap**: https://chen-chakmon-zakar-regaim-ktan.zappy5.app/sitemap.xml
-- **Robots.txt**: https://chen-chakmon-zakar-regaim-ktan.zappy5.app/robots.txt
+- **Sitemap**: https://henhakmonzakar.co.il/sitemap.xml
+- **Robots.txt**: https://henhakmonzakar.co.il/robots.txt
