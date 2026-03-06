@@ -9505,6 +9505,11 @@ main,
 
 /* ==END ZAPPY V2 E-COMMERCE THEME CSS== */
 
+.index-hero-section .index-hero-section__headline {
+  font-size: 300px;
+  line-height: 1.1;
+}
+
 /* ========== RTL MOBILE NAVBAR FIX (zappy-rtl-mobile-fix) ========== */
 /* High-specificity rules to ensure RTL positioning wins over any [lang="en"] conflicts */
 /* For RTL sites: hamburger on RIGHT, phone on LEFT (mirror of LTR layout) */
