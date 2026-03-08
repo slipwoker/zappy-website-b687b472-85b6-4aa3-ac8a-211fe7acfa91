@@ -242,297 +242,6 @@
     <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
     <!-- Mickidum Accessibility Toolbar -->
     <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
-
-<style data-zappy-section-v2-css="true">
-/* V2 Regenerated Section CSS */
-.index-age-selector-section {
-  position: relative;
-  background-color: #FBF6EF;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23E7D9CC' stroke-width='1'%3E%3Cpath d='M0 32H64' opacity='.35'/%3E%3Cpath d='M32 0V64' opacity='.25'/%3E%3Cpath d='M8 8h48v48H8z' opacity='.18'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 64px 64px;
-  padding: 80px 16px;
-  overflow: visible;
-  color: var(--text-dark);
-}
-
-.index-age-selector-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-}
-
-.index-age-selector-header {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.index-age-selector-header h2 {
-  font-size: 48px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-  color: var(--text-dark);
-  margin-bottom: 24px;
-  position: relative;
-  display: inline-block;
-}
-
-.index-age-selector-header h2::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  right: 50%;
-  transform: translateX(50%);
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-  border-radius: 2px;
-}
-
-.index-age-selector-intro {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.8;
-  color: var(--text-dark);
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.index-age-selector-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
-  margin-bottom: 60px;
-}
-
-.index-age-selector-card {
-  background: #FFFFFF;
-  border-radius: 24px;
-  padding: 40px 32px;
-  box-shadow: 0 16px 34px rgba(58,47,42,0.14);
-  border: 1px solid rgba(231,217,204,0.85);
-  position: relative;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  text-align: center;
-}
-
-.index-age-selector-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 6px;
-  background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.index-age-selector-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 28px 64px rgba(58,47,42,0.18);
-}
-
-.index-age-selector-card:hover::before {
-  transform: scaleX(1);
-}
-
-.index-age-selector-card-young {
-  background: linear-gradient(135deg, rgba(207,227,209,0.15) 0%, rgba(255,255,255,1) 100%);
-}
-
-.index-age-selector-card-older {
-  background: linear-gradient(135deg, rgba(255,228,168,0.15) 0%, rgba(255,255,255,1) 100%);
-}
-
-.index-age-selector-card-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(244,167,162,0.12);
-  border-radius: 50%;
-  color: var(--primary);
-  position: relative;
-}
-
-.index-age-selector-card-icon svg {
-  width: 48px;
-  height: 48px;
-}
-
-.index-age-selector-card-badge {
-  display: inline-block;
-  background: var(--accent);
-  color: var(--text-dark);
-  font-size: 14px;
-  font-weight: 700;
-  padding: 8px 20px;
-  border-radius: 999px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 12px rgba(255,228,168,0.4);
-}
-
-.index-age-selector-card h3 {
-  font-size: 28px;
-  font-weight: 800;
-  line-height: 1.25;
-  color: var(--text-dark);
-  margin-bottom: 24px;
-}
-
-.index-age-selector-card-content {
-  text-align: right;
-}
-
-.index-age-selector-card-content p {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.8;
-  color: var(--text-dark);
-  margin-bottom: 12px;
-}
-
-.index-age-selector-highlight {
-  color: var(--primary);
-  font-weight: 700;
-  font-size: 18px;
-  margin: 16px 0;
-}
-
-.index-age-selector-footer {
-  text-align: center;
-  background: rgba(207,227,209,0.25);
-  border-radius: 20px;
-  padding: 40px 32px;
-  border: 2px dashed var(--border-light);
-}
-
-.index-age-selector-footer p {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.8;
-  color: var(--text-dark);
-  margin-bottom: 24px;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.index-age-selector-cta {
-  display: inline-block;
-  background: var(--primary);
-  color: #FFFFFF;
-  padding: 16px 40px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 16px;
-  text-decoration: none;
-  box-shadow: 0 10px 18px rgba(244,167,162,0.35);
-  transition: all 0.3s ease;
-}
-
-.index-age-selector-cta:hover {
-  background: #E89590;
-  transform: translateY(-2px);
-  box-shadow: 0 14px 24px rgba(244,167,162,0.45);
-}
-
-.index-age-selector-decorative-shapes {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.index-age-selector-shape {
-  position: absolute;
-  color: var(--secondary);
-}
-
-.index-age-selector-shape-1 {
-  width: 300px;
-  height: 300px;
-  top: 10%;
-  right: 5%;
-  opacity: 0.5;
-}
-
-.index-age-selector-shape-2 {
-  width: 250px;
-  height: 250px;
-  bottom: 15%;
-  left: 8%;
-  opacity: 0.4;
-}
-
-.index-age-selector-shape-3 {
-  width: 200px;
-  height: 200px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.3;
-}
-
-@media (max-width: 768px) {
-  .index-age-selector-section {
-    padding: 60px 16px;
-  }
-
-  .index-age-selector-header h2 {
-    font-size: 32px;
-  }
-
-  .index-age-selector-cards {
-    grid-template-columns: 1fr !important;
-    gap: 24px;
-  }
-
-  .index-age-selector-card {
-    padding: 32px 24px;
-  }
-
-  .index-age-selector-card h3 {
-    font-size: 24px;
-  }
-
-  .index-age-selector-card-icon {
-    width: 64px;
-    height: 64px;
-  }
-
-  .index-age-selector-card-icon svg {
-    width: 36px;
-    height: 36px;
-  }
-
-  .index-age-selector-footer {
-    padding: 32px 20px;
-  }
-
-  .index-age-selector-cta {
-    padding: 14px 32px;
-    font-size: 15px;
-  }
-
-  .index-age-selector-shape-1,
-  .index-age-selector-shape-2,
-  .index-age-selector-shape-3 {
-    display: none;
-  }
-}
-</style>
     <link rel="stylesheet" href="/styles.css">
 
     <style id="zappy-dropdown-submenu-styles">
@@ -594,10 +303,10 @@
       <div class="search-wrapper">
         <input type="text" id="mobile-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
         <button class="search-submit" id="mobile-search-submit" title="חיפוש">
-          <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
         </button>
         <button class="close-search" id="close-mobile-search">
-          <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
         </button>
       </div>
       <div class="search-results" id="mobile-search-results"></div>
@@ -606,16 +315,16 @@
 <script>window.ZAPPY_WEBSITE_ID = "b687b472-85b6-4aa3-ac8a-211fe7acfa91";window.ZAPPY_API_BASE = (window.location.pathname.includes('/preview') ? "https://api.zappy5.com" : "https://api.zappy5.com");</script>
   <nav class="navbar" dir="rtl">
   <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
-    <svg class="hamburger-icon" width="24" height="24" viewbox="0 0 24 24" fill="none">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
       <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
     </svg>
-    <svg class="close-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" style="display:none;">
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none;">
       <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
     </svg>
   </button>
   
   <button class="phone-header-btn" aria-label="Call">
-    <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
     </svg>
   </button>
@@ -632,7 +341,7 @@
     <li class="menu-item-has-children zappy-products-dropdown">
       <a href="/products">
         מוצרים
-        <svg class="dropdown-arrow" width="12" height="12" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M6 9l6 6 6-6"></path>
         </svg>
       </a>
@@ -641,13 +350,13 @@
         <!-- Categories will be loaded dynamically -->
       </ul>
     </li>
-  <li><a href="/about">אודות</a></li><li><a href="/passover-kits">ערכות פסח</a></li><li><a href="/contact">צור קשר</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><a href="/login" class="login-link nav-login" title="התחברות"><svg class="login-icon" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a><a href="#cart" class="cart-link nav-cart" id="cart-drawer-toggle" title="עגלת קניות"><svg class="cart-icon" width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">0</span></a><div class="nav-search-box">
+  <li><a href="/about">אודות</a></li><li><a href="/passover-kits">ערכות פסח</a></li><li><a href="/contact">צור קשר</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><a href="/login" class="login-link nav-login" title="התחברות"><svg class="login-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a><a href="#cart" class="cart-link nav-cart" id="cart-drawer-toggle" title="עגלת קניות"><svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">0</span></a><div class="nav-search-box">
     <input type="text" class="nav-search-input" id="nav-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
     <button class="nav-search-btn" id="nav-search-btn" title="חיפוש">
-      <svg class="search-icon" width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
     </button>
     <div class="nav-search-results" id="nav-search-results"></div>
-  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="חיפוש"><svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg></button></div>
+  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="חיפוש"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg></button></div>
     
     
   </div>
@@ -680,7 +389,7 @@
     </div>
   </div><h1 class="index-hero-section__headline" style="text-align: center; font-size: 200px" data-element-id="move-1772990429892-q17tgqwj"><font color="#f5f5dc">רגעים קטנים גדולים</font></h1>
   <div class="index-hero-section__divider-wrapper">
-    <svg aria-hidden="true" viewbox="0 0 1200 100" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg aria-hidden="true" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="index-hero-wave-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:#FFF9F2;stop-opacity:1"></stop>
@@ -688,76 +397,24 @@
           <stop offset="100%" style="stop-color:#FFF9F2;stop-opacity:1"></stop>
         </linearGradient>
       </defs>
-      <path d="M0,100 L0,45 Q60,38 120,45 T240,42 Q300,48 360,40 T480,45 Q540,38 600,46 T720,40 Q780,47 840,42 T960,45 Q1020,39 1080,46 T1200,42 L1200,100 Z" fill="#FBF6EF"></path>
+      <path d="M0,100 L0,45 Q60,38 120,45 T240,42 Q300,48 360,40 T480,45 Q540,38 600,46 T720,40 Q780,47 840,42 T960,45 Q1020,39 1080,46 T1200,42 L1200,100 Z" fill="var(--bg-light)"></path>
     </svg>
   </div>
 </section>
 
-    <section class="index-age-selector-section" data-layout-spec="בית-age-selector" data-zappy-section="true">
-  <div class="index-age-selector-container">
-    <div class="index-age-selector-header">
-      <h2>ערכות פסח</h2>
-      <p class="index-age-selector-intro">בערכה תמצאו משחקים, יצירות, משימות חשיבה, פעילויות חוויתיות ומשחקים המזמנים זמן איכות משפחתי. כל הפעילויות בערכה זו מותאמים לחג הפסח בכל ערכה חומרים ופעילויות ל-2 ילדים! כמובן הערכה ניתנת להתאמה אישית- לגילאי הילדים ולכמות הילדים. לא בטוחים איזו ערכה מתאימה? אשמח לעזור לכם למצוא את ההתאמה המושלמת</p>
-    </div>
+    <section class="featured-products-section" id="featured-products" data-zappy-dynamic="true">
+      <div class="container">
+        <h2 class="section-title"><span>
 
-    <div class="index-age-selector-cards">
-      <div class="index-age-selector-card index-age-selector-card-young">
-        <div class="index-age-selector-card-icon">
-          <svg data-element-type="icon" data-icon-type="svg" viewbox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="20" r="12" stroke="currentColor" stroke-width="3" fill="none"></circle>
-            <path d="M16 52c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"></path>
-            <circle cx="24" cy="18" r="2" fill="currentColor"></circle>
-            <circle cx="40" cy="18" r="2" fill="currentColor"></circle>
-            <path d="M26 24c0 3.314 2.686 6 6 6s6-2.686 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"></path>
-          </svg>
+אני חן, גננת חינוך מיוחד, אמא לשלושה ומדריכת הורים.&nbsp;<br></span><span>יצרתי את "רגעים קטנים גדולים" מתוך אמונה </span>שלמידה <span>מתרחשת בצורה הטובה ביותר</span>&nbsp;דרך משחק<span>.&nbsp;<br></span><span>בכל ערכה שאני יוצרת אני משלבת את הניסיון המקצועי שלי בחינוך המיוחד<br></span><span>יחד עם ההבנה [החשובה!] של צרכי ההורים והילדים בבית.&nbsp;</span><br><span>&nbsp;אם אתם מחפשים פעילות לפסח שהיא מעבר להעביר את הזמן-<br></span><span>כזו שמפתחת חשיבה, למידה, סקרנות, מחזקת את הקשר בין אחים ויוצרת שיח רגשי אמיתי -<br></span><span>אתם במקום הנכון !</span></h2>
+        <div class="product-grid featured-grid" id="zappy-featured-products">
+          <div class="loading-products">טוען מוצרים...</div>
         </div>
-        <div class="index-age-selector-card-badge">ילדי גן</div>
-        <h3>גילאי 3-6</h3>
-        <div class="index-age-selector-card-content">
-          <p>מה יש בערכה?שטיח ענק לצביעהיצירה לפסחמשחק חשבוניחוברת עבודה מותאמת גילמשחק זיכרון לפסחרביעיות פסח משחק מסלול</p>
-          <p class="index-age-selector-highlight">[מהמם!]</p>
-          <p>משפחתיהכנת מר דשא</p>
+        <div class="view-all-products">
+          <a href="/products" class="btn btn-primary">צפה בכל המוצרים →</a>
         </div>
       </div>
-
-      <div class="index-age-selector-card index-age-selector-card-older">
-        <div class="index-age-selector-card-icon">
-          <svg data-element-type="icon" data-icon-type="svg" viewbox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="18" r="10" stroke="currentColor" stroke-width="3" fill="none"></circle>
-            <path d="M18 54c0-7.732 6.268-14 14-14s14 6.268 14 14" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"></path>
-            <rect x="20" y="46" width="24" height="3" rx="1.5" fill="currentColor"></rect>
-            <circle cx="26" cy="16" r="1.5" fill="currentColor"></circle>
-            <circle cx="38" cy="16" r="1.5" fill="currentColor"></circle>
-            <path d="M28 22c0 2.209 1.791 4 4 4s4-1.791 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"></path>
-          </svg>
-        </div>
-        <div class="index-age-selector-card-badge">ילדי בית ספר</div>
-        <h3>גילאי 7-10</h3>
-        <div class="index-age-selector-card-content">
-          <p>מה יש בערכה?שטיח ענק לצביעהמשחק סתריםחוברת עבודה מותאמת גילמשחק זיכרון לפסחרביעיות פסח משחק מסלול [מהמם!] משפחתיהכנת מר דשא</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="index-age-selector-footer">
-      <p>כל ערכה ניתנת להתאמה אישית למספר הילדים ולא בטוחים איזו ערכה מתאימה? נשמח לעזור לכם למצוא את ההתאמה המושלמת</p>
-      <a href="#kits" class="index-age-selector-cta">לכל הערכות שלנו</a>
-    </div>
-
-    <div class="index-age-selector-decorative-shapes">
-      <svg data-no-icon-edit="true" aria-hidden="true" class="index-age-selector-shape index-age-selector-shape-1" viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <path d="M45,-65C58,-55,68,-42,72,-27C76,-12,74,5,68,20C62,35,52,48,39,56C26,64,10,67,-6,75C-22,83,-44,96,-58,91C-72,86,-78,63,-79,42C-80,21,-76,2,-70,-15C-64,-32,-56,-47,-44,-58C-32,-69,-16,-76,1,-78C18,-80,32,-75,45,-65Z" fill="currentColor" opacity="0.08"></path>
-      </svg>
-      <svg data-no-icon-edit="true" aria-hidden="true" class="index-age-selector-shape index-age-selector-shape-2" viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <path d="M39,-54C50,-44,58,-32,62,-18C66,-4,66,12,60,26C54,40,42,52,28,59C14,66,-2,68,-18,65C-34,62,-50,54,-60,41C-70,28,-74,10,-72,-8C-70,-26,-62,-44,-50,-54C-38,-64,-22,-66,-6,-58C10,-50,28,-64,39,-54Z" fill="currentColor" opacity="0.06"></path>
-      </svg>
-      <svg data-no-icon-edit="true" aria-hidden="true" class="index-age-selector-shape index-age-selector-shape-3" viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" stroke-width="2" opacity="0.1"></circle>
-        <circle cx="100" cy="100" r="40" fill="none" stroke="currentColor" stroke-width="2" opacity="0.08"></circle>
-      </svg>
-    </div>
-  </div>
-</section>
+    </section>
   
 
     <section class="featured-categories-section" id="featured-categories" data-zappy-dynamic="true">
@@ -789,7 +446,7 @@
 משפחתי<br>הכנת מר דשא</p>
         <div class="index-age-selector-skills" id="zappy-drop-onio6mmaq">
           <div class="index-age-selector-skill-icon" id="zappy-drop-eoxtbc7gj">
-            <svg data-element-type="icon" data-icon-type="svg" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-n0wdlgyef">
+            <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-n0wdlgyef">
               <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
               <circle cx="7" cy="6" r="1.5" fill="currentColor"></circle>
               <circle cx="7" cy="12" r="1.5" fill="currentColor"></circle>
@@ -797,13 +454,13 @@
             </svg>
           </div>
           <div class="index-age-selector-skill-icon" id="zappy-drop-8mu6xug5s">
-            <svg data-element-type="icon" data-icon-type="svg" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-4ppjk928r">
+            <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-4ppjk928r">
               <text x="12" y="16" text-anchor="middle" font-size="14" font-weight="bold" fill="currentColor">א</text>
               <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2" fill="none"></rect>
             </svg>
           </div>
           <div class="index-age-selector-skill-icon" id="zappy-drop-pfnmmkm11">
-            <svg data-element-type="icon" data-icon-type="svg" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-qbivpteip">
+            <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-qbivpteip">
               <circle cx="12" cy="8" r="3" fill="currentColor" opacity="0.2"></circle>
               <path d="M6 21v-2a6 6 0 0 1 12 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
             </svg>
@@ -817,20 +474,20 @@
         <p class="" id="zappy-drop-a4nk9yfte" style="">מה יש בערכה?<br>שטיח ענק לצביעה<br>משחק סתרים<br>חוברת עבודה מותאמת גיל<br>משחק זיכרון לפסח<br>רביעיות פסח <br>משחק מסלול [מהמם!] משפחתי<br>הכנת מר דשא&nbsp;&nbsp;</p>
         <div class="index-age-selector-skills" id="zappy-drop-f9gxpiais">
           <div class="index-age-selector-skill-icon" id="zappy-drop-6in8zj8so">
-            <svg data-element-type="icon" data-icon-type="svg" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-pqfq6mymc">
+            <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-pqfq6mymc">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" fill="currentColor" opacity="0.2"></path>
               <path d="M8 7h8M8 11h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
             </svg>
           </div>
           <div class="index-age-selector-skill-icon" id="zappy-drop-f3om3nu53">
-            <svg data-element-type="icon" data-icon-type="svg" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-vcxqyy3g2">
+            <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-vcxqyy3g2">
               <circle cx="12" cy="12" r="9" fill="currentColor" opacity="0.2"></circle>
               <text x="12" y="16" text-anchor="middle" font-size="12" font-weight="bold" fill="currentColor">1+2</text>
             </svg>
           </div>
           <div class="index-age-selector-skill-icon" id="zappy-drop-erg98x23r">
-            <svg data-element-type="icon" data-icon-type="svg" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-3lvohjbc9">
+            <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="" id="zappy-drop-3lvohjbc9">
               <path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor" opacity="0.2"></path>
               <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
@@ -845,7 +502,7 @@
   </div>
 
   <div class="index-age-selector-divider-wrapper">
-    <svg aria-hidden="true" viewbox="0 0 1200 60" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="scallop-fade" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stop-opacity="0.15"></stop>
@@ -867,7 +524,7 @@
       <div class="index-benefits-cards">
         <div class="index-benefits-card">
           <div class="index-benefits-card-icon">
-            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewbox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S6 21.523 6 16 10.477 6 16 6z" fill="currentColor"></path>
               <path d="M16 10a1 1 0 0 1 1 1v4h4a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1z" fill="currentColor"></path>
             </svg>
@@ -878,7 +535,7 @@
 
         <div class="index-benefits-card">
           <div class="index-benefits-card-icon">
-            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewbox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16 4l-3 3h-5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-5l-3-3zm0 2.828L17.172 8H24v15H8V8h6.828L16 6.828z" fill="currentColor"></path>
               <circle cx="16" cy="16" r="4" fill="currentColor"></circle>
             </svg>
@@ -889,7 +546,7 @@
 
         <div class="index-benefits-card">
           <div class="index-benefits-card-icon">
-            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewbox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M8 6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H8zm0 2h16v16H8V8z" fill="currentColor"></path>
               <path d="M12 12h8v2h-8v-2zm0 4h8v2h-8v-2zm0 4h5v2h-5v-2z" fill="currentColor"></path>
             </svg>
@@ -900,7 +557,7 @@
 
         <div class="index-benefits-card">
           <div class="index-benefits-card-icon">
-            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewbox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S6 21.523 6 16 10.477 6 16 6z" fill="currentColor"></path>
               <path d="M14.5 10l-1.5 1.5L16.293 15H10v2h6.293L13 20.293 14.5 22l6-6-6-6z" fill="currentColor"></path>
             </svg>
@@ -922,7 +579,7 @@
   </div>
 
   <div class="index-benefits-divider-wrapper">
-    <svg aria-hidden="true" viewbox="0 0 1200 100" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg aria-hidden="true" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="benefits-divider-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:#FBF6EF;stop-opacity:1"></stop>
@@ -992,7 +649,7 @@
   </div>
 
   <div class="showcase-divider-wrapper">
-    <svg aria-hidden="true" viewbox="0 0 1200 100" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg aria-hidden="true" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="sunbeam-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:#FBF6EF;stop-"></stop>
