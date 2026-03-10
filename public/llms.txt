@@ -52,6 +52,9 @@ https://henhakmonzakar.co.il/product/:slug
 https://henhakmonzakar.co.il/category/:slug
 מוצרים - חן חכמון זקר - רגעים קטנים גדולים
 
+### Page
+https://henhakmonzakar.co.il/educational-tips
+
 ## Legal & Policy
 
 ### Privacy Policy
