@@ -9520,6 +9520,377 @@ main,
   text-align: center;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   V2 REGENERATED SECTION CSS (צור קשר-contact)
+   Added: 2026-03-10T21:01:23.747Z
+   ═══════════════════════════════════════════════════════════ */
+.contact-contact-section {
+  position: relative;
+  background: linear-gradient(180deg, #FBF6EF 0%, #F3EADF 100%);
+  color: var(--text-dark);
+  padding: 120px 16px 80px;
+  overflow: visible;
+  direction: rtl;
+}
+
+.contact-contact-section .contact-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.contact-contact-section .contact-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.contact-contact-section .contact-info-side {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.contact-contact-section .contact-heading-block {
+  text-align: right;
+}
+
+.contact-contact-section .contact-icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  border-radius: 16px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+  box-shadow: 0 10px 24px rgba(244,167,162,0.35);
+}
+
+.contact-contact-section h2 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--text-dark);
+  margin: 0 0 16px 0;
+}
+
+.contact-contact-section .contact-subtitle {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.contact-contact-section .contact-details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-contact-section .contact-detail-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: start;
+  gap: 16px;
+  border: 1px solid rgba(231,217,204,0.85);
+  box-shadow: 0 8px 16px rgba(58,47,42,0.08);
+  transition: all 0.3s ease;
+}
+
+.contact-contact-section .contact-detail-card:hover {
+  box-shadow: 0 16px 34px rgba(58,47,42,0.14);
+  transform: translateY(-2px);
+}
+
+.contact-contact-section .detail-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #FFF9F2 0%, #FFE4A8 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+.contact-contact-section .detail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
+.contact-contact-section .detail-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: block;
+}
+
+.contact-contact-section .detail-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-decoration: none;
+  display: block;
+  transition: color 0.3s ease;
+}
+
+.contact-contact-section .detail-value:hover {
+  color: var(--primary);
+}
+
+.contact-contact-section .map-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  margin-top: 4px;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.contact-contact-section .map-link:hover {
+  color: var(--accent);
+}
+
+.contact-contact-section .social-links-wrapper {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(231,217,204,0.85);
+  box-shadow: 0 8px 16px rgba(58,47,42,0.08);
+}
+
+.contact-contact-section .social-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 16px;
+  text-align: right;
+}
+
+.contact-contact-section .social-icons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.contact-contact-section .social-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  font-size: 18px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(244,167,162,0.25);
+}
+
+.contact-contact-section .social-icon:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(244,167,162,0.4);
+}
+
+.contact-contact-section .contact-form-side {
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 22px 54px rgba(58,47,42,0.18);
+  border: 1px solid rgba(231,217,204,0.85);
+}
+
+.contact-contact-section .contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contact-contact-section .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.contact-contact-section .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-contact-section .form-group label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-align: right;
+}
+
+.contact-contact-section .form-group input,
+.contact-contact-section .form-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid rgba(231,217,204,0.85);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
+  background: #FBF6EF;
+  transition: all 0.3s ease;
+  font-family: Assistant, Heebo, system-ui, -apple-system, sans-serif;
+  text-align: right;
+}
+
+.contact-contact-section .form-group input:focus,
+.contact-contact-section .form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(244,167,162,0.15);
+}
+
+.contact-contact-section .form-group input::placeholder,
+.contact-contact-section .form-group textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.contact-contact-section .form-group textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.contact-contact-section .btn-submit {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: var(--text-light);
+  padding: 16px 32px;
+  border-radius: 999px;
+  border: 0;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 24px rgba(244,167,162,0.35);
+  align-self: flex-start;
+  font-family: Assistant, Heebo, system-ui, -apple-system, sans-serif;
+}
+
+.contact-contact-section .btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(244,167,162,0.45);
+}
+
+.contact-contact-section .contact-decorative-circles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.contact-contact-section .circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.08;
+}
+
+.contact-contact-section .circle-1 {
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  top: -80px;
+  right: -100px;
+}
+
+.contact-contact-section .circle-2 {
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  bottom: -60px;
+  left: 10%;
+}
+
+.contact-contact-section .circle-3 {
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+  top: 50%;
+  left: -40px;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
+  .contact-contact-section {
+    padding: 100px 16px 60px;
+  }
+
+  .contact-contact-section .contact-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .contact-contact-section .contact-info-side {
+    gap: 32px;
+  }
+
+  .contact-contact-section h2 {
+    font-size: 28px;
+  }
+
+  .contact-contact-section .contact-form-side {
+    padding: 28px 20px;
+  }
+
+  .contact-contact-section .form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .contact-contact-section .btn-submit {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .contact-contact-section .social-icons {
+    justify-content: center;
+  }
+
+  .contact-contact-section .circle-1 {
+    width: 200px;
+    height: 200px;
+    top: -40px;
+    right: -60px;
+  }
+
+  .contact-contact-section .circle-2 {
+    width: 160px;
+    height: 160px;
+  }
+
+  .contact-contact-section .circle-3 {
+    width: 120px;
+    height: 120px;
+  }
+}
+
 /* ========== RTL MOBILE NAVBAR FIX (zappy-rtl-mobile-fix) ========== */
 /* High-specificity rules to ensure RTL positioning wins over any [lang="en"] conflicts */
 /* For RTL sites: hamburger on RIGHT, phone on LEFT (mirror of LTR layout) */
