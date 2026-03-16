@@ -9901,6 +9901,14 @@ main,
   width: 100%;
 }
 
+.index-hero-section h1[data-element-id="move-1772990429892-q17tgqwj"] {
+  position: absolute;
+  bottom: 22%;
+  left: 0;
+  right: 0;
+  top: auto;
+}
+
 /* ========== RTL MOBILE NAVBAR FIX (zappy-rtl-mobile-fix) ========== */
 /* High-specificity rules to ensure RTL positioning wins over any [lang="en"] conflicts */
 /* For RTL sites: hamburger on RIGHT, phone on LEFT (mirror of LTR layout) */
