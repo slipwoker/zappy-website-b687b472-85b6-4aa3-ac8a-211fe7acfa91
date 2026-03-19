@@ -9956,6 +9956,15 @@ main,
 
 /* ==END ZAPPY V2 E-COMMERCE THEME CSS== */
 
+.index-why-parents-section .index-why-parents-section__image-decoration,
+.index-why-parents-section .image-decoration,
+.index-why-parents-section .decorative-square,
+.index-why-parents-section [class*="square"],
+.index-why-parents-section [class*="accent"],
+.index-why-parents-section [class*="decoration"] {
+  display: none;
+}
+
 /* ========== RTL MOBILE NAVBAR FIX (zappy-rtl-mobile-fix) ========== */
 /* High-specificity rules to ensure RTL positioning wins over any [lang="en"] conflicts */
 /* For RTL sites: hamburger on RIGHT, phone on LEFT (mirror of LTR layout) */
