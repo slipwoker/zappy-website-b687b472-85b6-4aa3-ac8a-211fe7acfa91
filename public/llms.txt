@@ -55,8 +55,8 @@ https://henhakmonzakar.co.il/category/:slug
 ### Page
 https://henhakmonzakar.co.il/educational-tips
 
-### Page
-https://henhakmonzakar.co.il/copy
+### פעילויות לילדים
+https://henhakmonzakar.co.il/childrens-activities
 
 ## Legal & Policy
 
