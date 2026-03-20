@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index, follow">
-    <title>החשבון שלי</title>
-    <meta name="description" content="החשבון שלי">
+    <title>Generated Website</title>
+    <meta name="description" content="">
     <meta name="keywords" content="">
     
     <!-- Favicons -->
@@ -219,13 +219,13 @@
 </script>
 <!-- End Zappy Analytics -->
     <meta property="og:title" content="הפכו רגעים יומיומיים לחוויות חינוכיות מיוחדות — חן חכמון זקר - רגעים קטנים גדולים" />
-  
+  <meta property="og:description" content="ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="he_IL" />
   
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="הפכו רגעים יומיומיים לחוויות חינוכיות מיוחדות — חן חכמון זקר - רגעים קטנים גדולים" />
-  
+  <meta name="twitter:description" content="ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל." />
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -242,8 +242,6 @@
     <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
     <!-- Mickidum Accessibility Toolbar -->
     <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="/styles.css">
 
     <style id="zappy-dropdown-submenu-styles">
@@ -300,15 +298,7 @@
 </head>
 <body>
 
-  <script>
-    window.ZAPPY_WEBSITE_ID = "b687b472-85b6-4aa3-ac8a-211fe7acfa91";
-    // Preview pages are served by the Zappy server itself (localhost in dev), so use that base.
-    // Deployed sites are static and must call the public Zappy API (never localhost).
-    window.ZAPPY_API_BASE = (window.location.pathname.includes('/preview'))
-      ? "https://api.zappy5.com"
-      : "https://api.zappy5.com";
-  </script>
-  
+
     <div class="mobile-search-panel" id="mobile-search-panel">
       <div class="search-wrapper">
         <input type="text" id="mobile-search-input" placeholder="חיפוש מוצרים..." autocomplete="off" />
@@ -321,6 +311,8 @@
       </div>
       <div class="search-results" id="mobile-search-results"></div>
     </div>
+  
+<script>window.ZAPPY_WEBSITE_ID = "b687b472-85b6-4aa3-ac8a-211fe7acfa91";window.ZAPPY_API_BASE = (window.location.pathname.includes('/preview') ? "https://api.zappy5.com" : "https://api.zappy5.com");</script>
   <nav class="navbar" dir="rtl">
   <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
     <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -369,7 +361,8 @@
     
   </div>
 </nav>
-<nav class="zappy-catalog-menu rtl" id="zappy-catalog-menu" dir="rtl">
+
+    <nav class="zappy-catalog-menu rtl" id="zappy-catalog-menu" dir="rtl">
       <div class="catalog-menu-container">
         <a href="/products" class="catalog-menu-item catalog-menu-all">כל המוצרים</a>
         <div class="catalog-menu-categories" id="zappy-category-links">
@@ -377,167 +370,36 @@
         </div>
       </div>
     </nav>
-  <main class="page-container ecommerce-page">
-    
-        <section class="account-section">
-          <div class="account-container">
-            <!-- Not logged in state -->
-            <div class="account-not-logged-in" id="account-not-logged-in">
-              <div class="account-icon">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
-              </div>
-              <h1>לא מחובר</h1>
-              <p>יש להתחבר כדי לצפות בחשבון</p>
-              <a href="/login" class="btn btn-primary">התחברות</a>
-            </div>
-            
-            <!-- Logged in state -->
-            <div class="account-logged-in" id="account-logged-in" style="display: none;">
-              <div class="account-header">
-                <h1>החשבון שלי</h1>
-                <div class="account-info">
-                  <p class="account-welcome">ברוך הבא, <span id="account-email"></span></p>
-                  <button class="btn btn-secondary btn-sm" id="logout-btn">התנתק</button>
-                </div>
-              </div>
-              
-              <!-- Personal Details Section -->
-              <div class="profile-section">
-                <div class="section-header">
-                  <h2>פרטים אישיים</h2>
-                  <button class="btn btn-text btn-sm" id="edit-profile-btn">עריכת פרופיל</button>
-                </div>
-                
-                <!-- Profile Display -->
-                <div class="profile-display" id="profile-display">
-                  <div class="profile-field">
-                    <span class="profile-label">שם:</span>
-                    <span class="profile-value" id="profile-name">-</span>
-                  </div>
-                  <div class="profile-field">
-                    <span class="profile-label">טלפון:</span>
-                    <span class="profile-value" id="profile-phone">-</span>
-                  </div>
-                </div>
-                
-                <!-- Profile Edit Form (hidden by default) -->
-                <div class="profile-form" id="profile-form" style="display: none;">
-                  <div class="form-group">
-                    <label for="edit-name">שם</label>
-                    <input type="text" id="edit-name" placeholder="שם" />
-                  </div>
-                  <div class="form-group">
-                    <label for="edit-phone">טלפון</label>
-                    <input type="tel" id="edit-phone" placeholder="טלפון" />
-                  </div>
-                  <div class="form-actions">
-                    <button class="btn btn-primary btn-sm" id="save-profile-btn">שמור שינויים</button>
-                    <button class="btn btn-secondary btn-sm" id="cancel-profile-btn">ביטול</button>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Addresses Section -->
-              <div class="addresses-section">
-                <div class="section-header">
-                  <h2>כתובות</h2>
-                  <button class="btn btn-primary btn-sm" id="add-address-btn">הוסף כתובת</button>
-                </div>
-                
-                <div class="addresses-list" id="addresses-list">
-                  <div class="addresses-empty" id="addresses-empty">
-                    <p>אין כתובות שמורות</p>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Favorites Section -->
-              <div class="favorites-section">
-                <h2>המועדפים שלי</h2>
-                <div class="favorites-loading" id="favorites-loading">
-                  <div class="loading-spinner"></div>
-                </div>
-                <div class="favorites-empty" id="favorites-empty" style="display: none;">
-                  <p>אין עדיין מוצרים מועדפים</p>
-                  <a href="/products" class="btn btn-primary btn-sm">גלו את כל המוצרים שלנו</a>
-                </div>
-                <div class="favorites-grid" id="favorites-grid" style="display: none;"></div>
-              </div>
-              
-              <!-- Orders Section -->
-              <div class="orders-section">
-                <h2>ההזמנות שלך</h2>
-                <div class="orders-loading" id="orders-loading">
-                  <div class="loading-spinner"></div>
-                  <p>טוען פרטי הזמנה...</p>
-                </div>
-                <div class="orders-empty" id="orders-empty" style="display: none;">
-                  <p>אין עדיין הזמנות</p>
-                  <a href="/products" class="btn btn-primary">להמשך קניות</a>
-                </div>
-                <div class="orders-list" id="orders-list" style="display: none;"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        <!-- Address Modal -->
-        <div class="address-modal-overlay" id="address-modal-overlay" style="display: none;">
-          <div class="address-modal">
-            <div class="address-modal-header">
-              <h3 id="address-modal-title">הוסף כתובת</h3>
-              <button class="address-modal-close" id="address-modal-close">&amp;amp;times;</button>
-            </div>
-            <div class="address-modal-body">
-              <input type="hidden" id="address-edit-id" />
-              <div class="form-group">
-                <label for="address-label">שם הכתובת</label>
-                <select id="address-label">
-                  <option value="home">בית</option>
-                  <option value="work">עבודה</option>
-                  <option value="other">אחר</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="address-street">רחוב ומספר</label>
-                <input type="text" id="address-street" placeholder="רחוב ומספר" required />
-              </div>
-              <div class="form-group">
-                <label for="address-apartment">דירה, קומה, כניסה</label>
-                <input type="text" id="address-apartment" placeholder="דירה, קומה, כניסה" />
-              </div>
-              <div class="form-group">
-                <label for="address-city">עיר</label>
-                <input type="text" id="address-city" placeholder="עיר" required />
-              </div>
-              <div class="form-group">
-                <label for="address-zip">מיקוד</label>
-                <input type="text" id="address-zip" placeholder="מיקוד" />
-              </div>
-              <div class="form-group form-checkbox">
-                <label>
-                  <input type="checkbox" id="address-default" />
-                  <span>הגדר כברירת מחדל</span>
-                </label>
-              </div>
-            </div>
-            <div class="address-modal-footer">
-              <button class="btn btn-primary" id="save-address-btn">שמור שינויים</button>
-              <button class="btn btn-secondary" id="cancel-address-btn">ביטול</button>
-            </div>
-          </div>
+  
+  
+  <main>
+      <section id="layout-1773178562260" class="py-16 md:py-24 bg-white layout-section zappy-removable" data-zappy-component="true" style="width: 100%; padding: 60px 0;">
+        <div class="container mx-auto px-4 md:px-8 text-center">
+          <h1 class="text-3xl md:text-4xl font-bold mb-4">טיפים בחינוך</h1>
+          <p class="text-gray-600 text-lg">This page is ready for your content.</p>
         </div>
+      </section>
+
+<section id="layout-1773178634031" class="layout-section" data-zappy-component="true" style="width: 100%; padding: 60px 0; direction: rtl;" data-component-id="basic-text-bullets">
+  <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <h2 style="font-size: 32px; font-weight: 700; color: #1F2937; margin-bottom: 20px; font-family: Heebo, Assistant, system-ui, -apple-system, Segoe UI, sans-serif;">קבלו באהבה ממני המון מידע וכלים בחינוך ילדים</h2>
       
-  </main>
+      <ul style="list-style: none; padding: 0; margin: 0;" class="zappy-vertical-grid"><li style="padding: 12px 30px 12px 0px; position: relative; font-size: 16px; color: rgb(31, 41, 55); font-family: Heebo, Assistant, system-ui, -apple-system, &amp;amp;quot;Segoe UI&amp;amp;quot;, sans-serif;" class="zappy-editable"><span style="position: absolute; right: 0; color: #F4A7A2;">•</span> חזרה למסגרת אחרי חופש גדול- איך נכין את הילדים?</li><li style="padding: 12px 30px 12px 0px; position: relative; font-size: 16px; color: rgb(31, 41, 55); font-family: Heebo, Assistant, system-ui, -apple-system, &amp;amp;quot;Segoe UI&amp;amp;quot;, sans-serif; cursor: text;" class="zappy-editable"><span style="position: absolute; right: 0px; color: rgb(244, 167, 162); cursor: text;" class>•</span>מזל טוב! אח חדש הצטרף למשפחה - איך נתווך ונכין לקראת השינוי</li><li style="padding: 12px 30px 12px 0px; position: relative; font-size: 16px; color: rgb(31, 41, 55); font-family: Heebo, Assistant, system-ui, -apple-system, &amp;amp;quot;Segoe UI&amp;amp;quot;, sans-serif;" class="zappy-editable"><span style="position: absolute; right: 0; color: #F4A7A2;">•</span> מצב מלחמה- איך נסביר ונתווך לילדים את המצב&amp;amp;nbsp; ודרכים להרגעות</li><li style="padding: 12px 30px 12px 0px; position: relative; font-size: 16px; color: rgb(31, 41, 55); font-family: Heebo, Assistant, system-ui, -apple-system, &amp;amp;quot;Segoe UI&amp;amp;quot;, sans-serif; cursor: text;" class="zappy-editable"><span style="position: absolute; right: 0px; color: rgb(244, 167, 162); cursor: text;" class>•</span>במקום מה לא- מה כן ?</li><li style="padding: 12px 30px 12px 0px; position: relative; font-size: 16px; color: rgb(31, 41, 55); font-family: Heebo, Assistant, system-ui, -apple-system, &amp;amp;quot;Segoe UI&amp;amp;quot;, sans-serif;" class="zappy-editable"><span style="position: absolute; right: 0; color: #F4A7A2;">•</span><a href="/assets/_________________-1773782579359-z6ir2m.pdf" target="_blank" rel="noopener noreferrer" style="color: rgb(244, 167, 162); text-decoration: underline; cursor: pointer;"> הילד משקר? דרכים להבין ולהתמודד&amp;amp;nbsp;</a></li><li style="padding: 12px 30px 12px 0px; position: relative; font-size: 16px; color: rgb(31, 41, 55); font-family: Heebo, Assistant, system-ui, -apple-system, &amp;amp;quot;Segoe UI&amp;amp;quot;, sans-serif; cursor: text;" class="zappy-editable"><span style="position: absolute; right: 0px; color: rgb(244, 167, 162); cursor: text;" class>•</span><a href="/assets/_______________________________________-1773784431415-q6x1md.pdf" target="_blank" rel="noopener noreferrer" style="color: rgb(244, 167, 162); text-decoration: underline; cursor: pointer;"> השוטר הטוב והשוטר הרע</a></li><li style="padding: 12px 30px 12px 0px; position: relative; font-size: 16px; color: rgb(31, 41, 55); font-family: Heebo, Assistant, system-ui, -apple-system, &amp;amp;quot;Segoe UI&amp;amp;quot;, sans-serif; cursor: text;" class="zappy-editable"><span style="position: absolute; right: 0px; color: rgb(244, 167, 162); cursor: text;" class>•</span> יעיחעיעיעיעח</li><li style="padding: 12px 30px 12px 0px; position: relative; font-size: 16px; color: rgb(31, 41, 55); font-family: Heebo, Assistant, system-ui, -apple-system, &amp;amp;quot;Segoe UI&amp;amp;quot;, sans-serif; cursor: text;" class="zappy-editable"><span style="position: absolute; right: 0px; color: rgb(244, 167, 162); cursor: text;" class>•</span> עיחעחיעחי</li><li style="padding: 12px 30px 12px 0px; position: relative; font-size: 16px; color: rgb(31, 41, 55); font-family: Heebo, Assistant, system-ui, -apple-system, &amp;amp;quot;Segoe UI&amp;amp;quot;, sans-serif; cursor: text;" class="zappy-editable"><span style="position: absolute; right: 0px; color: rgb(244, 167, 162); cursor: text;" class>•</span> עיעיח</li></ul>
+    </div>
+  </div>
+  
+</section>
+
+
+    </main>
+  
   <footer class="site-footer">
   <div class="footer-container">
     <div class="footer-top">
       <div class="footer-column company-info">
         <img src="/assets/logo-1773748743616-dwcn4r.webp?v=1773748744009-9k2lo8" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo" />
-        
+        <p class="footer-tagline">יצירת רגעים משמעותיים בחינוך ובגננות</p>
       </div>
       
       <div class="footer-column quick-links">
@@ -597,104 +459,11 @@
   </div>
 </footer>
   
-<div class="cart-drawer-overlay" id="cart-drawer-overlay"></div>
-<aside class="cart-drawer rtl" id="cart-drawer" dir="rtl">
-  <div class="cart-drawer-header">
-    <h2>עגלת הקניות שלך</h2>
-    <button type="button" class="cart-drawer-close" id="cart-drawer-close" aria-label="סגור">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-  <div class="cart-drawer-body" id="cart-drawer-items">
-    <div class="empty-cart">העגלה ריקה</div>
-  </div>
-  <div class="cart-drawer-footer">
-    <div class="cart-drawer-total">
-      <span>סה"כ:</span>
-      <span id="cart-drawer-total">₪0</span>
-    </div>
-    <a href="/checkout" class="cart-drawer-checkout">המשך לתשלום</a>
-  </div>
-</aside>
-  <script>
-  &lt;!-- Search handling for e-commerce pages --&gt;
-  (function() {
-    // Unified search function that works in both preview and deployed modes
-    function performSearch(query) {
-      if (query.length &lt; 2) return;
-      
-      // Check if we're in preview mode (URL contains preview-fullscreen)
-      var isPreview = window.location.pathname.includes('preview-fullscreen');
-      
-      if (isPreview) {
-        // In preview mode, update the page parameter and add search
-        var url = new URL(window.location.href);
-        url.searchParams.set('page', '/products');
-        url.searchParams.set('search', query);
-        window.location.href = url.toString();
-      } else {
-        // In deployed mode, navigate to products with search
-        window.location.href = '/products?search=' + encodeURIComponent(query);
-      }
-    }
-    
-    // Handle navbar search input
-    var navSearchInput = document.querySelector('.nav-search-input');
-    if (navSearchInput) {
-      navSearchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          performSearch(this.value.trim());
-        }
-      });
-    }
-    
-    // Handle mobile search panel
-    var mobileSearchInput = document.getElementById('mobile-search-input');
-    var mobileSearchPanel = document.getElementById('mobile-search-panel');
-    var closeMobileSearch = document.getElementById('close-mobile-search');
-    var searchToggle = document.querySelector('.nav-search-toggle');
-    
-    // Open mobile search panel
-    if (searchToggle &amp;&amp; mobileSearchPanel) {
-      searchToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        mobileSearchPanel.classList.add('active');
-        if (mobileSearchInput) {
-          setTimeout(function() { mobileSearchInput.focus(); }, 100);
-        }
-      });
-    }
-    
-    // Close mobile search panel
-    if (closeMobileSearch &amp;&amp; mobileSearchPanel) {
-      closeMobileSearch.addEventListener('click', function() {
-        mobileSearchPanel.classList.remove('active');
-        if (mobileSearchInput) mobileSearchInput.value = '';
-      });
-    }
-    
-    // Handle Enter key on mobile search
-    if (mobileSearchInput) {
-      mobileSearchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          performSearch(this.value.trim());
-        }
-      });
-    }
-    
-    // Handle search query from URL on load
-    var urlParams = new URLSearchParams(window.location.search);
-    var searchQuery = urlParams.get('search');
-    if (searchQuery) {
-      if (navSearchInput) navSearchInput.value = searchQuery;
-      if (mobileSearchInput) mobileSearchInput.value = searchQuery;
-      console.log('[E-COMMERCE] Search query from URL:', searchQuery);
-    }
-  })();
-  </script>
+  <a href="https://wa.me/972523524200" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
 
     <script src="/script.js"></script>
 
