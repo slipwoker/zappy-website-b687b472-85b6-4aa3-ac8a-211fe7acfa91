@@ -6183,6 +6183,21 @@ body.accessibility-widget-visible ._access-menu {
 
 
 
+
+
+.index-why-parents-section .index-why-parents-section__image-decoration,
+.index-why-parents-section .image-decoration,
+.index-why-parents-section .decorative-square,
+.index-why-parents-section [class*="square"],
+.index-why-parents-section [class*="accent"],
+.index-why-parents-section [class*="decoration"] {
+  display: none;
+}
+
+
+
+
+
 /* ==ZAPPY V2 E-COMMERCE THEME CSS== */
 /* ═══════════════════════════════════════════════════════════════════════════ */
 /* V2 E-COMMERCE CSS - Clean V2 Variables Only                                  */
@@ -7612,6 +7627,9 @@ main.page-container.ecommerce-page,
 }
 .product-gallery-thumb:hover,
 .product-gallery-thumb.active { border-color: var(--accent); }
+.product-video-thumb { width: 166px; height: 166px; border-radius: 4px; border: 2px solid transparent; overflow: hidden; flex-shrink: 0; background: #1a1a2e; }
+@media (max-width: 768px) { .product-video-thumb { width: 80px; height: 80px; } }
+.product-video-thumb:hover { border-color: var(--accent); }
 .product-info { display: flex; flex-direction: column; gap: 16px; }
 .product-info .product-variants { margin-top: 0; }
 .product-info .product-add-row { margin-top: 20px; }
@@ -9955,15 +9973,6 @@ main,
 }
 
 /* ==END ZAPPY V2 E-COMMERCE THEME CSS== */
-
-.index-why-parents-section .index-why-parents-section__image-decoration,
-.index-why-parents-section .image-decoration,
-.index-why-parents-section .decorative-square,
-.index-why-parents-section [class*="square"],
-.index-why-parents-section [class*="accent"],
-.index-why-parents-section [class*="decoration"] {
-  display: none;
-}
 
 /* ========== RTL MOBILE NAVBAR FIX (zappy-rtl-mobile-fix) ========== */
 /* High-specificity rules to ensure RTL positioning wins over any [lang="en"] conflicts */

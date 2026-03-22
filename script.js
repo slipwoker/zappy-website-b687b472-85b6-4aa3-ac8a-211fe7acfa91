@@ -545,6 +545,8 @@ window.onload = function() {
 ;
 
 ;
+
+;
 /* ==ZAPPY E-COMMERCE JS START== */
 // E-commerce functionality
 (function() {
@@ -752,13 +754,15 @@ function stripHtmlToText(html) {
         if (data.data.country) {
           storeCountry = data.data.country;
         }
-        if (data.data.catalogMenuEnabled === false) {
-          var catalogMenu = document.getElementById('zappy-catalog-menu');
-          if (catalogMenu) {
+        var catalogMenu = document.getElementById('zappy-catalog-menu');
+        if (catalogMenu) {
+          if (data.data.catalogMenuEnabled === true) {
+            catalogMenu.style.removeProperty('display');
+          } else {
             catalogMenu.style.setProperty('display', 'none', 'important');
-            if (typeof setupFixedHeaders === 'function') {
-              setTimeout(setupFixedHeaders, 50);
-            }
+          }
+          if (typeof setupFixedHeaders === 'function') {
+            setTimeout(setupFixedHeaders, 50);
           }
         }
         storeSettingsFetched = true;
@@ -1934,6 +1938,17 @@ function stripHtmlToText(html) {
       }
     });
     
+    // Check first-order discount when email is entered
+    var emailFieldForFirstOrder = document.getElementById('customer-email');
+    if (emailFieldForFirstOrder) {
+      emailFieldForFirstOrder.addEventListener('blur', function() {
+        var em = emailFieldForFirstOrder.value.trim();
+        if (em && isValidEmail(em)) {
+          checkFirstOrderDiscount(em);
+        }
+      });
+    }
+
     // shipping-state is a <select>, so use 'change' instead of 'input'
     var stateSelect = document.getElementById('shipping-state');
     if (stateSelect) {
@@ -2184,7 +2199,7 @@ function stripHtmlToText(html) {
             shippingMethodName: selectedShipping.name || 'משלוח',
             cart: cart,
             couponCode: appliedCoupon ? appliedCoupon.code : null,
-            couponDiscount: couponDiscount,
+            couponDiscount: couponDiscount + seasonalDiscount + firstOrderDiscount,
             paymentMethodId: selectedPaymentMethod ? selectedPaymentMethod.id : null
           })
         });
@@ -2201,7 +2216,7 @@ function stripHtmlToText(html) {
           // Ensure numeric values are properly parsed (shipping.price may be string from DB)
           const subtotalNum = getCartSubtotal();
           const shippingCostNum = parseFloat(selectedShipping.price) || 0;
-          const discountNum = parseFloat(couponDiscount) || 0;
+          const discountNum = parseFloat(couponDiscount + seasonalDiscount + firstOrderDiscount) || 0;
           const pendingOrderData = {
             cartItems: cart,
             subtotal: subtotalNum,
@@ -2582,7 +2597,95 @@ function stripHtmlToText(html) {
   // Coupon state
   let appliedCoupon = null;
   let couponDiscount = 0;
-  
+
+  // Seasonal discount state
+  let seasonalDiscounts = [];
+  let seasonalDiscount = 0;
+  let seasonalFreeShipping = false;
+
+  // First-order discount state
+  let firstOrderDiscount = 0;
+  let firstOrderFreeShipping = false;
+  let firstOrderApplied = null;
+  let firstOrderCheckedEmail = '';
+
+  async function checkFirstOrderDiscount(email) {
+    if (!email || email === firstOrderCheckedEmail) return;
+    firstOrderCheckedEmail = email;
+    firstOrderDiscount = 0;
+    firstOrderFreeShipping = false;
+    firstOrderApplied = null;
+    try {
+      var subtotal = getCartSubtotal();
+      var res = await fetch(buildApiUrl('/api/ecommerce/storefront/first-order-discount'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ websiteId: websiteId, customerEmail: email, orderSubtotal: subtotal })
+      });
+      var data = await res.json();
+      if (data.success && data.data) {
+        firstOrderDiscount = data.data.totalDiscount || 0;
+        firstOrderFreeShipping = data.data.freeShipping || false;
+        firstOrderApplied = data.data.appliedDiscount || null;
+      }
+    } catch (e) {
+      console.warn('[E-COMMERCE] Failed to check first-order discount', e);
+    }
+    updateOrderTotals();
+  }
+
+  async function fetchSeasonalDiscounts() {
+    try {
+      const res = await fetch(buildApiUrl('/api/ecommerce/storefront/seasonal-discounts?websiteId=' + websiteId));
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data)) {
+        seasonalDiscounts = data.data;
+      }
+    } catch (e) {
+      console.warn('[E-COMMERCE] Failed to load seasonal discounts', e);
+    }
+  }
+
+  function getSeasonalDiscountForProduct(productId) {
+    for (var i = 0; i < seasonalDiscounts.length; i++) {
+      var d = seasonalDiscounts[i];
+      var ids = Array.isArray(d.product_ids) ? d.product_ids : [];
+      if (d.applies_to === 'all' || ids.length === 0 || ids.indexOf(productId) !== -1) {
+        return d;
+      }
+    }
+    return null;
+  }
+
+  function calcSeasonalCartDiscount() {
+    seasonalDiscount = 0;
+    seasonalFreeShipping = false;
+    if (!seasonalDiscounts.length || !cart || !cart.length) return;
+
+    for (var i = 0; i < seasonalDiscounts.length; i++) {
+      var d = seasonalDiscounts[i];
+      var ids = Array.isArray(d.product_ids) ? d.product_ids : [];
+      var appliesToAll = d.applies_to === 'all' || ids.length === 0;
+
+      var eligibleSubtotal = 0;
+      for (var j = 0; j < cart.length; j++) {
+        var item = cart[j];
+        if (appliesToAll || ids.indexOf(item.id) !== -1) {
+          var price = parseFloat(item.sale_price && parseFloat(item.sale_price) < parseFloat(item.price) ? item.sale_price : item.price) || 0;
+          eligibleSubtotal += price * (parseInt(item.quantity) || 1);
+        }
+      }
+
+      if (d.type === 'percentage' && eligibleSubtotal > 0) {
+        seasonalDiscount += (eligibleSubtotal * parseFloat(d.value)) / 100;
+      } else if (d.type === 'fixed' && eligibleSubtotal > 0) {
+        seasonalDiscount += Math.min(parseFloat(d.value), eligibleSubtotal);
+      } else if (d.type === 'free_shipping') {
+        seasonalFreeShipping = true;
+      }
+    }
+  }
+
   // Initialize coupon functionality
   function initCoupon() {
     const toggleBtn = document.getElementById('coupon-toggle-btn');
@@ -2627,13 +2730,16 @@ function stripHtmlToText(html) {
       
       try {
         const subtotal = getCartSubtotal();
+        const emailInput = document.getElementById('customer-email');
+        const customerEmail = emailInput ? emailInput.value.trim() : '';
         const res = await fetch(buildApiUrl('/api/ecommerce/storefront/validate-coupon'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             websiteId: websiteId,
             code: code,
-            subtotal: subtotal
+            subtotal: subtotal,
+            customerEmail: customerEmail || null
           })
         });
         
@@ -2648,6 +2754,10 @@ function stripHtmlToText(html) {
             errorMsg = t.couponExpired || 'Coupon has expired';
           } else if (data.data?.error === 'min_order') {
             errorMsg = (t.couponMinOrder || 'Minimum order amount') + ': ' + t.currency + data.data.minOrderAmount;
+          } else if (data.data?.error === 'not_first_order') {
+            errorMsg = t.couponFirstOrderOnly || (isRTL ? 'קופון זה מיועד להזמנה ראשונה בלבד' : 'This coupon is for first-time customers only');
+          } else if (data.data?.error === 'email_required') {
+            errorMsg = t.couponEmailRequired || (isRTL ? 'נא להזין אימייל כדי להשתמש בקופון זה' : 'Please enter your email to use this coupon');
           }
           
           if (errorEl) {
@@ -2752,8 +2862,16 @@ function stripHtmlToText(html) {
         couponDiscount = subtotal;
       }
     }
+
+    // Calculate seasonal discounts
+    calcSeasonalCartDiscount();
+    if (seasonalFreeShipping || firstOrderFreeShipping) {
+      shippingCost = 0;
+    }
+    var totalDiscount = couponDiscount + seasonalDiscount + firstOrderDiscount;
+    if (totalDiscount > subtotal) totalDiscount = subtotal;
     
-    const total = subtotal + shippingCost - couponDiscount;
+    const total = subtotal + shippingCost - totalDiscount;
     
     // Calculate VAT - prices include VAT
     // VAT rate is fetched from store settings (defaults to 18% for Israel)
@@ -2764,11 +2882,11 @@ function stripHtmlToText(html) {
     if (vatAmountEl) vatAmountEl.textContent = t.currency + vatAmount.toFixed(2);
     if (shippingCostEl) shippingCostEl.textContent = shippingCost === 0 ? (t.free || 'FREE') : t.currency + shippingCost.toFixed(2);
     
-    // Show/hide discount row
+    // Show/hide discount row (coupon + seasonal combined)
     if (discountRow && discountEl) {
-      if (couponDiscount > 0) {
+      if (totalDiscount > 0) {
         discountRow.style.display = 'flex';
-        discountEl.textContent = '-' + t.currency + couponDiscount.toFixed(2);
+        discountEl.textContent = '-' + t.currency + totalDiscount.toFixed(2);
       } else {
         discountRow.style.display = 'none';
       }
@@ -4553,6 +4671,7 @@ function stripHtmlToText(html) {
     initCartDrawer();
     initCheckout();
     initCoupon();
+    fetchSeasonalDiscounts();
     initOrderSuccess();
     initLogin();
     initAccount();
@@ -4774,14 +4893,16 @@ async function fetchAdditionalJsSettings(force) {
       if (data.data.viewToggleEnabled != null) {
         additionalJsViewToggleEnabled = data.data.viewToggleEnabled;
       }
-      // Hide catalog menu if disabled in store settings
-      if (data.data.catalogMenuEnabled === false) {
-        var catalogMenu = document.getElementById('zappy-catalog-menu');
-        if (catalogMenu) {
+      // Show/hide catalog menu based on store settings
+      var catalogMenu = document.getElementById('zappy-catalog-menu');
+      if (catalogMenu) {
+        if (data.data.catalogMenuEnabled === true) {
+          catalogMenu.style.removeProperty('display');
+        } else {
           catalogMenu.style.setProperty('display', 'none', 'important');
-          if (typeof setupFixedHeaders === 'function') {
-            setTimeout(setupFixedHeaders, 50);
-          }
+        }
+        if (typeof setupFixedHeaders === 'function') {
+          setTimeout(setupFixedHeaders, 50);
         }
       }
       // Handle dynamic announcement bar
@@ -5042,13 +5163,39 @@ function renderProductGrid(grid, products, t, isFeaturedSection, viewMode) {
     const variantMaxPrice = parseFloat(p.variant_max_price);
     const hasVariantPriceRange = variantCount > 1 && variantPriceCount > 1 && Number.isFinite(variantMinPrice) && Number.isFinite(variantMaxPrice) && variantMinPrice !== variantMaxPrice;
     const startingAtLabel = getEcomText('startingAt', t.startingAt || 'Starting at');
-    const displayPrice = showPrice 
-      ? (hasVariantPriceRange
-        ? startingAtLabel + ' ' + t.currency + variantMinPrice.toFixed(2)
-        : (hasSalePrice 
-          ? t.currency + parseFloat(p.sale_price).toFixed(2) + ' <span class="original-price">' + t.currency + parseFloat(p.price).toFixed(2) + '</span>'
-          : t.currency + parseFloat(p.price).toFixed(2)))
-      : '';
+
+    // Check for seasonal discount on this product
+    var seasonalD = typeof getSeasonalDiscountForProduct === 'function' ? getSeasonalDiscountForProduct(p.id) : null;
+    var effectivePrice = parseFloat(p.price);
+    var effectiveSalePrice = hasSalePrice ? parseFloat(p.sale_price) : null;
+    var seasonalApplied = false;
+
+    if (seasonalD && !hasVariantPriceRange) {
+      var basePrice = effectiveSalePrice !== null ? effectiveSalePrice : effectivePrice;
+      var discountedPrice = basePrice;
+      if (seasonalD.type === 'percentage') {
+        discountedPrice = basePrice - (basePrice * parseFloat(seasonalD.value) / 100);
+      } else if (seasonalD.type === 'fixed') {
+        discountedPrice = Math.max(0, basePrice - parseFloat(seasonalD.value));
+      }
+      if (discountedPrice < basePrice) {
+        seasonalApplied = true;
+        effectiveSalePrice = discountedPrice;
+      }
+    }
+
+    var displayPrice;
+    if (!showPrice) {
+      displayPrice = '';
+    } else if (hasVariantPriceRange) {
+      displayPrice = startingAtLabel + ' ' + t.currency + variantMinPrice.toFixed(2);
+    } else if (seasonalApplied && effectiveSalePrice !== null) {
+      displayPrice = t.currency + effectiveSalePrice.toFixed(2) + ' <span class="original-price">' + t.currency + effectivePrice.toFixed(2) + '</span>';
+    } else if (hasSalePrice) {
+      displayPrice = t.currency + parseFloat(p.sale_price).toFixed(2) + ' <span class="original-price">' + t.currency + parseFloat(p.price).toFixed(2) + '</span>';
+    } else {
+      displayPrice = t.currency + parseFloat(p.price).toFixed(2);
+    }
     
     // Get first image with correct URL in preview/live
     var imageUrl = p.images && p.images[0]
@@ -5260,7 +5407,7 @@ function initTransparentNavbarScrollEffect() {
 
   var cm = document.querySelector('.zappy-catalog-menu');
   // Determine frosted glass color from the page background
-  var bodyBg = getComputedStyle(document.body).backgroundColor || 'rgb(0,0,0)';
+  var bodyBg = getComputedStyle(document.body).backgroundColor || 'rgb(255,255,255)';
   var m = bodyBg.match(/\d+/g);
   var r = m ? parseInt(m[0]) : 0, g = m ? parseInt(m[1]) : 0, b = m ? parseInt(m[2]) : 0;
   var frostedBg = 'rgba(' + r + ',' + g + ',' + b + ',0.85)';
@@ -6018,7 +6165,19 @@ function renderProductDetail(container, product, t) {
     return img;
   }).filter(Boolean);
   const mainImage = images[0] || '';
-  const hasMultipleImages = images.length > 1;
+
+  // Resolve product videos
+  const videos = (product.videos || []).map(function(v) {
+    var resolved = Object.assign({}, v);
+    if (v.type === 'upload' && v.url && window.resolveProductImageUrl) {
+      resolved.url = window.resolveProductImageUrl(v.url);
+    }
+    if (v.type === 'upload' && v.thumbnail && window.resolveProductImageUrl) {
+      resolved.thumbnail = window.resolveProductImageUrl(v.thumbnail);
+    }
+    return resolved;
+  });
+  const hasMedia = images.length > 1 || videos.length > 0;
   const baseInStock = product.stock_status !== 'out_of_stock';
   const hasSalePrice = product.sale_price && parseFloat(product.sale_price) < parseFloat(product.price);
   const basePrice = hasSalePrice ? parseFloat(product.sale_price) : parseFloat(product.price);
@@ -6135,6 +6294,33 @@ function renderProductDetail(container, product, t) {
   breadcrumbHtml += '<span class="breadcrumb-current">' + product.name + '</span>';
   breadcrumbHtml += '</nav>';
   
+  // Build video thumbnails HTML
+  var videoThumbsHtml = videos.map(function(v, i) {
+    var thumb = '';
+    if (v.type === 'youtube') {
+      var ytId = v.videoId || '';
+      if (!ytId && v.url) {
+        var _yp = v.url.split('v='); if (_yp[1]) ytId = _yp[1].split('&')[0].substring(0,11);
+        if (!ytId) { _yp = v.url.split('youtu.be/'); if (_yp[1]) ytId = _yp[1].split('?')[0].substring(0,11); }
+      }
+      thumb = 'https://img.youtube.com/vi/' + ytId + '/mqdefault.jpg';
+    } else if (v.type === 'vimeo') {
+      thumb = v.thumbnail || '';
+    } else if (v.type === 'upload') {
+      thumb = v.thumbnail || '';
+    }
+    var dataAttr = 'data-video-index="' + i + '"';
+    var thumbContent = thumb
+      ? '<img src="' + thumb + '" alt="Video" style="width:100%;height:100%;object-fit:cover;" />'
+      : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1a1a2e;color:#fff;font-size:20px;">▶</div>';
+    return '<div class="product-gallery-thumb product-video-thumb" ' + dataAttr + ' onclick="openVideoModal(' + i + ')" style="position:relative;cursor:pointer;">'
+      + thumbContent
+      + '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">'
+      + '<div style="width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;">'
+      + '<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>'
+      + '</div></div></div>';
+  }).join('');
+
   container.innerHTML = `
     ${breadcrumbHtml}
     <div class="product-detail-container">
@@ -6143,14 +6329,22 @@ function renderProductDetail(container, product, t) {
           ? '<img src="' + mainImage + '" alt="' + product.name + '" class="product-gallery-main" id="product-main-image">'
           : '<div class="product-gallery-main" style="display:flex;align-items:center;justify-content:center;color:#999;font-size:64px;">📦</div>'
         }
-        ${hasMultipleImages ? `
+        ${hasMedia ? `
           <div class="product-gallery-thumbs">
             ${images.map((img, i) => `
               <img src="${img}" alt="${product.name}" class="product-gallery-thumb ${i === 0 ? 'active' : ''}" onclick="changeMainImage(this, '${img}')" />
             `).join('')}
+            ${videoThumbsHtml}
           </div>
         ` : ''}
       </div>
+    <!-- Video Modal -->
+    <div id="product-video-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;" onclick="closeVideoModal()">
+      <div style="position:relative;width:90%;max-width:800px;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;" onclick="event.stopPropagation();">
+        <div id="product-video-modal-content" style="width:100%;height:100%;"></div>
+        <button onclick="closeVideoModal()" style="position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);z-index:1;">✕</button>
+      </div>
+    </div>
       <div class="product-info">
         <div class="product-title-row">
           <h1>${product.name}</h1>
@@ -6318,10 +6512,55 @@ function renderProductDetail(container, product, t) {
 function changeMainImage(thumb, src) {
   const mainImg = document.getElementById('product-main-image');
   if (mainImg) mainImg.src = src;
-  
-  // Update active thumb
+
   document.querySelectorAll('.product-gallery-thumb').forEach(t => t.classList.remove('active'));
   thumb.classList.add('active');
+}
+
+function openVideoModal(videoIndex) {
+  var videos = (window.currentProduct && window.currentProduct.videos) || [];
+  var v = videos[videoIndex];
+  if (!v) return;
+  var modal = document.getElementById('product-video-modal');
+  var content = document.getElementById('product-video-modal-content');
+  if (!modal || !content) return;
+
+  var html = '';
+  if (v.type === 'youtube') {
+    var ytId = v.videoId || '';
+    if (!ytId && v.url) {
+      var ytParts = v.url.split('v='); if (ytParts[1]) ytId = ytParts[1].split('&')[0].substring(0,11);
+      if (!ytId) { ytParts = v.url.split('youtu.be/'); if (ytParts[1]) ytId = ytParts[1].split('?')[0].substring(0,11); }
+    }
+    html = '<iframe src="https://www.youtube.com/embed/' + ytId + '?autoplay=1&rel=0" style="width:100%;height:100%;border:none;" allow="autoplay;fullscreen;encrypted-media" allowfullscreen></iframe>';
+  } else if (v.type === 'vimeo') {
+    var vimeoId = v.videoId || '';
+    if (!vimeoId && v.url) {
+      var vmParts = v.url.split('vimeo.com/'); if (vmParts[1]) vimeoId = vmParts[1].split('?')[0].split('/')[0];
+    }
+    html = '<iframe src="https://player.vimeo.com/video/' + vimeoId + '?autoplay=1" style="width:100%;height:100%;border:none;" allow="autoplay;fullscreen" allowfullscreen></iframe>';
+  } else if (v.type === 'upload') {
+    var src = v.url;
+    if (window.resolveProductImageUrl) src = window.resolveProductImageUrl(v.url);
+    html = '<video src="' + src + '" style="width:100%;height:100%;object-fit:contain;" controls autoplay></video>';
+  }
+  content.innerHTML = html;
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.addEventListener('keydown', _videoModalEscHandler);
+}
+
+function _videoModalEscHandler(e) {
+  if (e.key === 'Escape') closeVideoModal();
+}
+
+function closeVideoModal() {
+  var modal = document.getElementById('product-video-modal');
+  var content = document.getElementById('product-video-modal-content');
+  if (modal) modal.style.display = 'none';
+  if (content) content.innerHTML = '';
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', _videoModalEscHandler);
 }
 
 function _zappyProductToast(message) {
