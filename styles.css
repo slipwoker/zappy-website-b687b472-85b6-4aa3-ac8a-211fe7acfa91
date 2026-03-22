@@ -9974,6 +9974,10 @@ main,
 
 /* ==END ZAPPY V2 E-COMMERCE THEME CSS== */
 
+.index-hero-section h1[data-element-id="move-1774190242945-0u09slil"] {
+  display: none;
+}
+
 /* ========== RTL MOBILE NAVBAR FIX (zappy-rtl-mobile-fix) ========== */
 /* High-specificity rules to ensure RTL positioning wins over any [lang="en"] conflicts */
 /* For RTL sites: hamburger on RIGHT, phone on LEFT (mirror of LTR layout) */
