@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>דף חיוב מאובטח</title>
+    <meta name="description" content="חן חכמון זקר - רגעים קטנים גדולים - דף חיוב מאובטח">
+    <meta name="keywords" content="">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: 'b687b472-85b6-4aa3-ac8a-211fe7acfa91',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:url" content="https://henhakmonzakar.co.il/secure-payment">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="דף חיוב מאובטח">
+    <meta property="og:description" content="חן חכמון זקר - רגעים קטנים גדולים - דף חיוב מאובטח">
+    <meta property="og:image" content="https://henhakmonzakar.co.il/assets/section-hero-secure-payment-hero-image-1-og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:alt" content="דף חיוב מאובטח">
+    <meta property="og:locale" content="he_IL">
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="דף חיוב מאובטח">
+    <meta name="twitter:description" content="חן חכמון זקר - רגעים קטנים גדולים - דף חיוב מאובטח">
+    <meta name="twitter:image" content="https://henhakmonzakar.co.il/assets/section-hero-secure-payment-hero-image-1-og.jpg">
+    <meta name="twitter:image:alt" content="דף חיוב מאובטח"><style id="zappy-ai-page-styles">.secure-payment-hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #FBF6EF 0%, #F3EADF 100%);
+  color: var(--text-dark);
+  overflow: visible;
+  direction: rtl;
+  padding: 0;
+}
+
+/* ── Background image & scrim ── */
+.secure-payment-hero-section .sph-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.secure-payment-hero-section .sph-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.secure-payment-hero-section .sph-scrim {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(180deg,
+      rgba(251,246,239,0.55) 0%,
+      rgba(251,246,239,0.82) 40%,
+      rgba(251,246,239,0.92) 100%
+    );
+  pointer-events: none;
+}
+
+/* ── Center wrapper ── */
+.secure-payment-hero-section .sph-center-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 140px 24px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Card ── */
+.secure-payment-hero-section .sph-card {
+  background: rgba(255, 249, 242, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 28px;
+  border: 1px solid rgba(233, 222, 211, 0.85);
+  box-shadow: 0 28px 64px rgba(58, 47, 42, 0.13), inset 0 1px 0 rgba(255,255,255,0.8);
+  padding: 52px 48px 44px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Eyebrow ── */
+.secure-payment-hero-section .sph-eyebrow {
+  display: inline-block;
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: rgba(244, 167, 162, 0.12);
+  border: 1px solid rgba(244, 167, 162, 0.35);
+  border-radius: 999px;
+  padding: 6px 18px;
+  margin-bottom: 22px;
+}
+
+/* ── Heading ── */
+.secure-payment-hero-section .sph-heading {
+  font-family: Heebo, Assistant, system-ui, sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: var(--text-dark);
+  margin: 0 0 18px;
+  text-align: center;
+}
+
+/* ── Subtitle ── */
+.secure-payment-hero-section .sph-subtitle {
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin: 0 0 34px;
+  text-align: center;
+}
+
+.secure-payment-hero-section .sph-br-desktop {
+  display: none;
+}
+
+/* ── CTA Row ── */
+.secure-payment-hero-section .sph-cta-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.secure-payment-hero-section .sph-btn-main {
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  background: var(--primary);
+  color: #ffffff;
+  padding: 14px 36px;
+  border-radius: 999px;
+  border: 0;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  box-shadow: 0 10px 24px rgba(244, 167, 162, 0.38);
+  transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  width: 100%;
+  max-width: 280px;
+}
+
+.secure-payment-hero-section .sph-btn-main:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(244, 167, 162, 0.46);
+  background: #f09490;
+}
+
+.secure-payment-hero-section .sph-btn-secondary {
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  background: #F7F0E7;
+  color: var(--text-dark);
+  padding: 13px 36px;
+  border-radius: 999px;
+  border: 2px solid rgba(189, 170, 154, 0.75);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  box-shadow: 0 8px 16px rgba(58, 47, 42, 0.10);
+  transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  width: 100%;
+  max-width: 280px;
+}
+
+.secure-payment-hero-section .sph-btn-secondary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(58, 47, 42, 0.14);
+  background: #ede5d8;
+}
+
+/* ── Trust row ── */
+.secure-payment-hero-section .sph-trust-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 6px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 22px;
+  width: 100%;
+}
+
+.secure-payment-hero-section .sph-trust-item {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.secure-payment-hero-section .sph-trust-item .fa-solid {
+  font-size: 13px;
+  color: var(--secondary);
+  flex-shrink: 0;
+}
+
+.secure-payment-hero-section .sph-trust-divider {
+  display: inline-block;
+  width: 1px;
+  height: 16px;
+  background: var(--border-light);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* ── Responsive: tablet & desktop ── */
+@media (min-width: 600px) {
+  .secure-payment-hero-section .sph-cta-row {
+    flex-direction: row;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .secure-payment-hero-section .sph-btn-main,
+  .secure-payment-hero-section .sph-btn-secondary {
+    width: auto;
+  }
+
+  .secure-payment-hero-section .sph-br-desktop {
+    display: inline;
+  }
+}
+
+@media (min-width: 768px) {
+  .secure-payment-hero-section .sph-center-wrapper {
+    padding: 160px 40px 100px;
+  }
+
+  .secure-payment-hero-section .sph-card {
+    padding: 60px 56px 52px;
+    max-width: 640px;
+  }
+
+  .secure-payment-hero-section .sph-heading {
+    font-size: 3rem;
+  }
+
+  .secure-payment-hero-section .sph-subtitle {
+    font-size: 18px;
+  }
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .secure-payment-hero-section .sph-center-wrapper {
+    padding: 110px 16px 60px;
+  }
+
+  .secure-payment-hero-section .sph-card {
+    padding: 36px 24px 32px;
+    border-radius: 20px;
+  }
+
+  .secure-payment-hero-section .sph-heading {
+    font-size: 2rem;
+  }
+
+  .secure-payment-hero-section .sph-subtitle {
+    font-size: 16px;
+  }
+
+  .secure-payment-hero-section .sph-trust-row {
+    gap: 8px 4px;
+  }
+
+  .secure-payment-hero-section .sph-trust-divider {
+    display: none;
+  }
+}
+
+.secure-payment-services-section {
+  background: linear-gradient(180deg, #FBF6EF 0%, #F3EADF 100%);
+  color: var(--text-dark);
+  padding: 80px 20px 100px;
+  position: relative;
+  overflow: visible;
+  direction: rtl;
+  font-family: 'Assistant', 'Heebo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.secure-payment-services-section .sps-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Header */
+.secure-payment-services-section .sps-header {
+  text-align: center;
+  margin-bottom: 56px;
+  max-width: 640px;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+}
+
+.secure-payment-services-section .sps-title {
+  font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-dark);
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+  text-align: center;
+  max-width: none !important;
+}
+
+.secure-payment-services-section .sps-intro {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: none !important;
+}
+
+/* Grid */
+.secure-payment-services-section .sps-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  direction: rtl;
+}
+
+/* Card */
+.secure-payment-services-section .sps-card {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid rgba(231,217,204,0.85);
+  box-shadow: 0 16px 34px rgba(58,47,42,0.10);
+  padding: 36px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.secure-payment-services-section .sps-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(58,47,42,0.16);
+}
+
+/* Corner Tag */
+.secure-payment-services-section .sps-corner-tag {
+  position: absolute;
+  top: 16px;
+  inset-inline-start: 16px;
+  background: rgba(244,167,162,0.18);
+  color: #C4706A;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(244,167,162,0.4);
+  line-height: 1.4;
+}
+
+.secure-payment-services-section .sps-tag-green {
+  background: rgba(207,227,209,0.3);
+  color: #4A7A52;
+  border-color: rgba(207,227,209,0.7);
+}
+
+.secure-payment-services-section .sps-tag-yellow {
+  background: rgba(255,228,168,0.35);
+  color: #9A7A1A;
+  border-color: rgba(255,228,168,0.7);
+}
+
+/* Icon */
+.secure-payment-services-section .sps-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  flex-shrink: 0;
+}
+
+.secure-payment-services-section .sps-icon-pink {
+  background: rgba(244,167,162,0.18);
+  color: #C4706A;
+}
+
+.secure-payment-services-section .sps-icon-green {
+  background: rgba(207,227,209,0.35);
+  color: #3E7A48;
+}
+
+.secure-payment-services-section .sps-icon-yellow {
+  background: rgba(255,228,168,0.4);
+  color: #9A7A1A;
+}
+
+/* Card Body */
+.secure-payment-services-section .sps-card-body {
+  flex: 1;
+}
+
+.secure-payment-services-section .sps-card-title {
+  font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+  text-align: start;
+}
+
+.secure-payment-services-section .sps-card-desc {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-muted);
+  text-align: start;
+  margin-bottom: 0;
+}
+
+/* Card Footer */
+.secure-payment-services-section .sps-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-direction: row;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: start;
+}
+
+.secure-payment-services-section .sps-card-footer .fa-circle-check {
+  color: var(--secondary);
+  font-size: 16px;
+  flex-shrink: 0;
+  filter: brightness(0.75);
+}
+
+/* Decorative subtle dot pattern overlay */
+.secure-payment-services-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='1.2' fill='%23E7D9CC' opacity='0.45'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.secure-payment-services-section .sps-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Desktop Grid */
+@media (min-width: 768px) {
+  .secure-payment-services-section {
+    padding: 100px 40px 120px;
+  }
+
+  .secure-payment-services-section .sps-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .secure-payment-services-section .sps-card {
+    padding: 40px 32px 30px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .secure-payment-services-section {
+    padding: 60px 16px 80px;
+  }
+
+  .secure-payment-services-section .sps-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+  }
+
+  .secure-payment-services-section .sps-title {
+    font-size: 26px;
+  }
+
+  .secure-payment-services-section .sps-header {
+    margin-bottom: 36px;
+  }
+
+  .secure-payment-services-section .sps-card {
+    padding: 32px 20px 22px;
+  }
+
+  .secure-payment-services-section .sps-icon-wrap {
+    width: 48px;
+    height: 48px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+.secure-payment-about-section {
+  background: linear-gradient(180deg, #FBF6EF 0%, #F3EADF 100%);
+  color: var(--text-dark);
+  padding: 80px 16px 80px;
+  direction: rtl;
+  position: relative;
+  overflow: visible;
+}
+
+.secure-payment-about-section .spa-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Grid Layout */
+.secure-payment-about-section .spa-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  direction: rtl;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .secure-payment-about-section {
+    padding: 100px 40px 100px;
+  }
+  .secure-payment-about-section .spa-grid {
+    grid-template-columns: 60fr 40fr;
+    gap: 56px;
+    align-items: start;
+  }
+}
+
+/* ── RIGHT COLUMN: Text ── */
+.secure-payment-about-section .spa-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.secure-payment-about-section .spa-eyebrow {
+  display: inline-block;
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--primary);
+  background: rgba(244,167,162,0.13);
+  border: 1px solid rgba(244,167,162,0.35);
+  border-radius: 20px;
+  padding: 4px 14px;
+  margin-bottom: 16px;
+  text-align: right;
+}
+
+.secure-payment-about-section .spa-heading {
+  font-family: Heebo, Assistant, system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--text-dark);
+  margin: 0 0 20px 0;
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  .secure-payment-about-section .spa-heading {
+    font-size: 2.25rem;
+  }
+}
+
+.secure-payment-about-section .spa-intro {
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+  margin: 0 0 36px 0;
+  text-align: right;
+}
+
+/* Row Items */
+.secure-payment-about-section .spa-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.secure-payment-about-section .spa-row-item {
+  padding: 24px 0;
+}
+
+.secure-payment-about-section .spa-row-divider {
+  height: 1px;
+  background: var(--border-light);
+  border: none;
+  margin: 0;
+}
+
+.secure-payment-about-section .spa-row-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.secure-payment-about-section .spa-row-title {
+  font-family: Heebo, Assistant, system-ui, sans-serif;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-dark);
+  margin: 0;
+  text-align: right;
+}
+
+.secure-payment-about-section .spa-row-content p {
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0;
+  text-align: right;
+}
+
+/* ── LEFT COLUMN: Principles Card ── */
+.secure-payment-about-section .spa-card-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.secure-payment-about-section .spa-principles-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid rgba(231,217,204,0.85);
+  box-shadow: 0 16px 34px rgba(58,47,42,0.10);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.secure-payment-about-section .spa-principles-card::before {
+  content: '';
+  position: absolute;
+  inset-inline-end: -20px;
+  top: -20px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255,228,168,0.45) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Seal */
+.secure-payment-about-section .spa-card-seal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.secure-payment-about-section .spa-seal-text {
+  font-family: Heebo, Assistant, system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.secure-payment-about-section .spa-card-title {
+  font-family: Heebo, Assistant, system-ui, sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  text-align: right;
+  position: relative;
+  z-index: 1;
+}
+
+.secure-payment-about-section .spa-card-subtitle {
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: -10px 0 0 0;
+  text-align: right;
+  position: relative;
+  z-index: 1;
+}
+
+/* Principles List */
+.secure-payment-about-section .spa-principles-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.secure-payment-about-section .spa-principle-item {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  align-items: flex-start;
+  direction: rtl;
+}
+
+.secure-payment-about-section .spa-principle-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(207,227,209,0.40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--bg-dark);
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+.secure-payment-about-section .spa-principle-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: right;
+}
+
+.secure-payment-about-section .spa-principle-text strong {
+  font-family: Heebo, Assistant, system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.4;
+}
+
+.secure-payment-about-section .spa-principle-text span {
+  font-family: Assistant, Heebo, system-ui, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* Hover on card */
+.secure-payment-about-section .spa-principles-card {
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+.secure-payment-about-section .spa-principles-card:hover {
+  box-shadow: 0 22px 48px rgba(58,47,42,0.16);
+  transform: translateY(-4px);
+}
+
+/* Mobile overrides */
+@media (max-width: 767px) {
+  .secure-payment-about-section {
+    padding: 60px 16px 60px;
+  }
+  .secure-payment-about-section .spa-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px;
+  }
+  .secure-payment-about-section .spa-heading {
+    font-size: 1.6rem;
+  }
+  .secure-payment-about-section .spa-principles-card {
+    padding: 24px 20px;
+  }
+  .secure-payment-about-section .spa-principles-card::before {
+    display: none;
+  }
+}
+
+.secure-payment-faq-section {
+  background: linear-gradient(180deg, #FBF6EF 0%, #F3EADF 100%);
+  color: var(--text-dark);
+  padding: 80px 24px 72px;
+  direction: rtl;
+  font-family: Assistant, Heebo, system-ui, -apple-system, Segoe UI, sans-serif;
+}
+
+.secure-payment-faq-section .faq-container {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.secure-payment-faq-section .faq-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.secure-payment-faq-section .faq-title {
+  font-family: Heebo, Assistant, system-ui, -apple-system, Segoe UI, sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-dark);
+  margin: 0 0 16px;
+}
+
+.secure-payment-faq-section .faq-intro {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.75;
+  color: var(--text-muted);
+  margin: 0 auto;
+  max-width: 560px;
+  text-align: center;
+}
+
+.secure-payment-faq-section .faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.secure-payment-faq-section .faq-item {
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border-light);
+  text-align: right;
+}
+
+.secure-payment-faq-section .faq-item:first-child {
+  border-top: 1px solid var(--border-light);
+}
+
+.secure-payment-faq-section .faq-question {
+  font-family: Heebo, Assistant, system-ui, -apple-system, Segoe UI, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: var(--text-dark);
+  margin: 0 0 14px;
+  text-align: right;
+}
+
+.secure-payment-faq-section .faq-answer {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.75;
+  color: var(--text-dark);
+  margin: 0 0 10px;
+  text-align: right;
+}
+
+.secure-payment-faq-section .faq-answer:last-child {
+  margin-bottom: 0;
+}
+
+.secure-payment-faq-section .faq-answer strong {
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.secure-payment-faq-section .faq-footer-note {
+  margin-top: 48px;
+  text-align: center;
+  padding: 24px 28px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 18px;
+  border: 1px solid rgba(231, 217, 204, 0.80);
+  box-shadow: 0 22px 54px rgba(58, 47, 42, 0.08);
+}
+
+.secure-payment-faq-section .faq-footer-note p {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--text-dark);
+  margin: 0;
+  text-align: center;
+}
+
+.secure-payment-faq-section .faq-contact-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 800;
+  border-bottom: 2px solid var(--primary);
+  transition: opacity 0.2s ease;
+}
+
+.secure-payment-faq-section .faq-contact-link:hover {
+  opacity: 0.75;
+}
+
+@media (max-width: 768px) {
+  .secure-payment-faq-section {
+    padding: 60px 16px 56px;
+  }
+
+  .secure-payment-faq-section .faq-header {
+    margin-bottom: 36px;
+  }
+
+  .secure-payment-faq-section .faq-title {
+    font-size: 28px;
+  }
+
+  .secure-payment-faq-section .faq-intro {
+    font-size: 16px;
+  }
+
+  .secure-payment-faq-section .faq-item {
+    padding: 24px 0;
+  }
+
+  .secure-payment-faq-section .faq-question {
+    font-size: 19px;
+  }
+
+  .secure-payment-faq-section .faq-footer-note {
+    margin-top: 36px;
+    padding: 20px 18px;
+  }
+}
+
+.secure-payment-contact-section {
+  direction: rtl;
+  background-color: #EDE5DA;
+  background-image: linear-gradient(180deg, #EDE5DA 0%, #E3D8CC 100%);
+  color: var(--text-dark);
+  padding: 80px 20px 80px;
+  position: relative;
+}
+
+.secure-payment-contact-section .spc-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.secure-payment-contact-section .spc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* ── Cards ── */
+.secure-payment-contact-section .spc-form-card,
+.secure-payment-contact-section .spc-info-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 16px 34px rgba(58,47,42,0.13);
+  border: 1px solid rgba(231,217,204,0.85);
+  padding: 36px 32px;
+}
+
+/* ── Form Column ── */
+.secure-payment-contact-section .spc-form-title {
+  font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-dark);
+  margin: 0 0 12px;
+  text-align: right;
+}
+
+.secure-payment-contact-section .spc-form-desc {
+  font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0 0 28px;
+  text-align: right;
+}
+
+.secure-payment-contact-section .spc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.secure-payment-contact-section .spc-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.secure-payment-contact-section .spc-label {
+  font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-align: right;
+}
+
+.secure-payment-contact-section .spc-input {
+  font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-dark);
+  background: var(--bg-light);
+  border: 1.5px solid var(--border-light);
+  border-radius: 12px;
+  padding: 14px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: right;
+  direction: rtl;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+  resize: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.secure-payment-contact-section .spc-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.secure-payment-contact-section .spc-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(244,167,162,0.22);
+  background: #FFFFFF;
+}
+
+.secure-payment-contact-section .spc-textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.secure-payment-contact-section .spc-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  background: var(--primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  padding: 15px 32px;
+  width: 100%;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(244,167,162,0.38);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  margin-top: 4px;
+}
+
+.secure-payment-contact-section .spc-submit-btn:hover {
+  background: #f08e88;
+  box-shadow: 0 14px 30px rgba(244,167,162,0.48);
+  transform: translateY(-2px);
+}
+
+.secure-payment-contact-section .spc-submit-btn i {
+  font-size: 15px;
+}
+
+/* ── Info Column ── */
+.secure-payment-contact-section .spc-info-title {
+  font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+  font-size: 1.375rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--text-dark);
+  margin: 0 0 10px;
+  text-align: right;
+}
+
+.secure-payment-contact-section .spc-info-intro {
+  font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0 0 28px;
+  text-align: right;
+}
+
+.secure-payment-contact-section .spc-info-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-bottom: 32px;
+}
+
+.secure-payment-contact-section .spc-info-block {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  align-items: flex-start;
+  direction: rtl;
+}
+
+.secure-payment-contact-section .spc-block-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-dark);
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(255,228,168,0.5);
+}
+
+.secure-payment-contact-section .spc-block-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
+.secure-payment-contact-section .spc-block-title {
+  font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-dark);
+  display: block;
+}
+
+.secure-payment-contact-section .spc-block-text {
+  font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Direct Contact ── */
+.secure-payment-contact-section .spc-contact-direct {
+  border-top: 1.5px solid var(--border-light);
+  padding-top: 24px;
+}
+
+.secure-payment-contact-section .spc-direct-label {
+  font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin: 0 0 14px;
+  text-align: right;
+}
+
+.secure-payment-contact-section .spc-direct-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.secure-payment-contact-section .spc-direct-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-dark);
+  font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-light);
+  background: var(--bg-light);
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  text-align: right;
+}
+
+.secure-payment-contact-section .spc-direct-link i {
+  font-size: 16px;
+  color: var(--primary);
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+.secure-payment-contact-section .spc-direct-link:hover {
+  border-color: var(--primary);
+  background: #fff6f5;
+  box-shadow: 0 4px 14px rgba(244,167,162,0.2);
+}
+
+.secure-payment-contact-section .spc-whatsapp i {
+  color: #25D366;
+}
+
+.secure-payment-contact-section .spc-whatsapp:hover {
+  border-color: #25D366;
+  background: #f0fff5;
+  box-shadow: 0 4px 14px rgba(37,211,102,0.18);
+}
+
+/* ── Desktop Layout ── */
+@media (min-width: 768px) {
+  .secure-payment-contact-section {
+    padding: 100px 40px 100px;
+  }
+
+  .secure-payment-contact-section .spc-grid {
+    grid-template-columns: 55fr 45fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .secure-payment-contact-section .spc-form-card,
+  .secure-payment-contact-section .spc-info-card {
+    padding: 44px 40px;
+  }
+
+  .secure-payment-contact-section .spc-submit-btn {
+    width: auto;
+    align-self: flex-start;
+    padding: 15px 44px;
+  }
+
+  .secure-payment-contact-section .spc-direct-links {
+    gap: 10px;
+  }
+}
+
+/* ── Mobile ── */
+@media (max-width: 767px) {
+  .secure-payment-contact-section {
+    padding: 60px 16px 60px;
+  }
+
+  .secure-payment-contact-section .spc-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .secure-payment-contact-section .spc-form-card,
+  .secure-payment-contact-section .spc-info-card {
+    padding: 26px 20px;
+  }
+
+  .secure-payment-contact-section .spc-form-title {
+    font-size: 1.6rem;
+  }
+
+  .secure-payment-contact-section .spc-info-block {
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+  }
+
+  .secure-payment-contact-section .spc-block-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+}</style>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-dark) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-dark) !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-dark) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      #mic-access-tool-general-button, .mic-access-tool-general-button,
+      #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+      ._access-icon, #mic-access-tool-box, .mic-access-tool-box,
+      #mic-init-access-tool #mic-access-tool-box, div[id*="mic-access-tool-box"], ._access-menu {
+        display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;
+      }
+    </style>
+</head>
+<body>
+
+
+    <div class="mobile-search-panel" id="mobile-search-panel">
+      <div class="search-wrapper">
+        <input type="text" id="mobile-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+        <button class="search-submit" id="mobile-search-submit" title="חיפוש">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+        </button>
+        <button class="close-search" id="close-mobile-search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="search-results" id="mobile-search-results"></div>
+    </div>
+  
+<script>window.ZAPPY_WEBSITE_ID = "b687b472-85b6-4aa3-ac8a-211fe7acfa91";window.ZAPPY_API_BASE = (window.location.pathname.includes('/preview') ? "https://api.zappy5.com" : "https://api.zappy5.com");</script>
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+  
+  <button class="phone-header-btn" aria-label="Call" data-phone="0523524200">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+  
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="/" class="logo-link">
+        <img src="/assets/logo-1773748743616-dwcn4r.webp?v=1773748744009-9k2lo8" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo">
+      </a>
+    </div>
+    
+    <ul class="nav-menu" id="navMenu"><li><a href="/" data-i18n="nav-home">בית</a></li>
+
+    <li class="menu-item-has-children zappy-products-dropdown">
+      <a href="/products">
+        מוצרים
+        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      </a>
+      <ul class="sub-menu" id="zappy-nav-category-links">
+        <li><a href="/products">כל המוצרים</a></li>
+        <!-- Categories will be loaded dynamically -->
+      </ul>
+    </li>
+  <li><a href="/about">אודות</a></li><li><a href="/passover-kits">ערכות פסח</a></li><li><a href="/contact">צור קשר</a></li><li><a href="/educational-tips" class="">טיפים בחינוך</a></li><li><a href="/childrens-activities">פעילויות לילדים</a></li><li><a href="/secure-payment" class="nav-link">חיוב</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><a href="/login" class="login-link nav-login" title="התחברות"><svg class="login-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a><a href="#cart" class="cart-link nav-cart" id="cart-drawer-toggle" title="עגלת קניות"><svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">0</span></a><div class="nav-search-box">
+    <input type="text" class="nav-search-input" id="nav-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+    <button class="nav-search-btn" id="nav-search-btn" title="חיפוש">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+    </button>
+    <div class="nav-search-results" id="nav-search-results"></div>
+  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="חיפוש"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg></button></div>
+    
+    
+  </div>
+</nav>
+
+    <nav class="zappy-catalog-menu rtl" id="zappy-catalog-menu" dir="rtl">
+      <div class="catalog-menu-container">
+        <a href="/products" class="catalog-menu-item catalog-menu-all">כל המוצרים</a>
+        <div class="catalog-menu-categories" id="zappy-category-links">
+          <!-- Categories will be loaded dynamically -->
+        </div>
+      </div>
+    </nav>
+  
+  
+  <main class="blog-page ai-generated-page"><section class="secure-payment-hero-section" data-layout-spec="דף חיוב מאובטח-hero" dir="rtl" data-hero-type="fullscreen-scrim">
+  <div class="sph-bg-wrapper">
+    <img data-hero-bg="true" data-context="A calm, sunlit, beautifully organized workspace or desk scene for a children educational activity kit business. Soft natural light, warm pastel tones (peach, sage green, cream), a tidy wooden desk with colorful craft supplies, activity cards, small scissors, and gentle art materials neatly arranged. Warm and inviting atmosphere, clean and airy, suitable for a parent-friendly educational brand called Small Big Moments." width="1440" height="720" src="/assets/section-hero-secure-payment-hero-image-1.webp" alt="שולחן עבודה מסודר עם ערכות פעילות לילדים בצבעים פסטליים חמים" class="sph-bg-img" data-zappy-editable-image="true">
+    <div class="sph-scrim" aria-hidden="true"></div>
+  </div>
+
+  <div class="sph-center-wrapper">
+    <div class="sph-card">
+      <span class="sph-eyebrow">ערכות פעילות חינוכיות לילדים</span>
+      <h1 class="sph-heading">רגעים קטנים<br>שנשארים לתמיד</h1>
+      <h3 class="sph-subtitle">ערכות פעילות מותאמות גיל לילדים בגילאי 3–10,<br class="sph-br-desktop"> מתוכננות עם אהבה על ידי גננת חינוך מיוחד ואמא לשלושה</h3>
+      <div class="sph-cta-row">
+        <a href="#contact" class="btn-primary sph-btn-main">צרי קשר לפרטים</a>
+        <a href="#kits" class="btn-secondary sph-btn-secondary">לערכות הפסח</a>
+      </div>
+      <div class="sph-trust-row" aria-label="מידע אמינות">
+        <span class="sph-trust-item">
+          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+          תשלום מאובטח
+        </span>
+        <span class="sph-trust-divider" aria-hidden="true"></span>
+        <span class="sph-trust-item">
+          <i class="fa-solid fa-lock" aria-hidden="true"></i>
+          פרטיות מלאה
+        </span>
+        <span class="sph-trust-divider" aria-hidden="true"></span>
+        <span class="sph-trust-item">
+          <i class="fa-solid fa-heart" aria-hidden="true"></i>
+          ליווי אישי
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="secure-payment-services-section" data-layout-spec="דף חיוב מאובטח-services" dir="rtl">
+  <div class="sps-container">
+    <div class="sps-header">
+      <h2 class="sps-title">מה כלול בערכות שלנו?</h2>
+      <p class="sps-intro">כל ערכה מתוכננת בקפידה על ידי גננת חינוך מיוחד ומדריכת הורים — כדי שכל רגע קטן יהפוך לחוויה גדולה ומשמעותית עבור ילדכם.</p>
+    </div>
+    <div class="sps-grid">
+
+      <!-- Card 1 -->
+      <article class="sps-card">
+        <span class="sps-corner-tag">גילאי 3–5</span>
+        <div class="sps-icon-wrap sps-icon-pink">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+          </svg>
+        </div>
+        <div class="sps-card-body">
+          <h3 class="sps-card-title">פעילויות מותאמות גיל</h3>
+          <p class="sps-card-desc">כל פעילות בערכה נבנתה בהתאם לשלב ההתפתחותי של הילד — מגרייה קוגניטיבית, מיומנויות מוטוריות ועד עידוד יצירתיות.</p>
+        </div>
+        <p class="sps-card-footer"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> מותאם לגיל הרך</p>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="sps-card">
+        <span class="sps-corner-tag sps-tag-green">גילאי 6–10</span>
+        <div class="sps-icon-wrap sps-icon-green">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </div>
+        <div class="sps-card-body">
+          <h3 class="sps-card-title">חומרים מוכנים לשימוש</h3>
+          <p class="sps-card-desc">הכל כלול בערכה — הדפסות, הוראות ברורות ורעיונות להרחבה. אין צורך בהכנה מוקדמת, רק להנות ביחד עם הילדים.</p>
+        </div>
+        <p class="sps-card-footer"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> מוכן להדפסה מיידית</p>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="sps-card">
+        <span class="sps-corner-tag sps-tag-yellow">ערכות חג</span>
+        <div class="sps-icon-wrap sps-icon-yellow">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"></path>
+          </svg>
+        </div>
+        <div class="sps-card-body">
+          <h3 class="sps-card-title">ערכות חג הפסח</h3>
+          <p class="sps-card-desc">ערכות ייחודיות לחג הפסח עם פעילויות שמחברות את הילדים לסיפור ההגדה בצורה חווייתית, יצירתית ומותאמת אישית.</p>
+        </div>
+        <p class="sps-card-footer"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> מותאם לחג ולמשפחה</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="secure-payment-about-section" data-layout-spec="דף חיוב מאובטח-about" dir="rtl">
+  <div class="spa-container">
+    <div class="spa-grid">
+
+      <!-- Right Column: Main Text Block -->
+      <div class="spa-text-col">
+        <span class="spa-eyebrow">קצת עליי</span>
+        <h2 class="spa-heading">חן חכמון זקר –<br>לב של גננת, עיניים של אמא</h2>
+        <p class="spa-intro">אני חן, גננת חינוך מיוחד עם שנים של ניסיון בעבודה עם ילדים בגילאי 3–10, אמא לשלושה, ומנחת הורים. מתוך הכרה עמוקה בכוחם של רגעים קטנים ומשמעותיים, יצרתי ערכות פעילות שמחברות בין ידע פדגוגי אמיתי לבין חום ביתי אמיתי.</p>
+
+        <div class="spa-rows">
+          <div class="spa-row-item">
+            <div class="spa-row-content">
+              <h3 class="spa-row-title">מומחיות בחינוך מיוחד</h3>
+              <p>הכשרתי כגננת חינוך מיוחד נותנת לי כלים ייחודיים להתאמת פעילויות לכל ילד – בהתאם לגיל, לשלב ההתפתחותי ולצרכיו האישיים. כל ערכה מתוכננת עם מחשבה פדגוגית ולא רק כיף חולף.</p>
+            </div>
+          </div>
+          <div class="spa-row-divider"></div>
+
+          <div class="spa-row-item">
+            <div class="spa-row-content">
+              <h3 class="spa-row-title">ניסיון כאמא לשלושה</h3>
+              <p>אני לא רק מלמדת – אני חיה את זה. כאמא לשלושה ילדים אני יודעת בדיוק מה עובד בשטח, מה מחזיק ילדים מעורבים ומה גורם לרגע להפוך לזיכרון. הערכות שלי נבחנו בבית שלי לפני שהגיעו אליכם.</p>
+            </div>
+          </div>
+          <div class="spa-row-divider"></div>
+
+          <div class="spa-row-item">
+            <div class="spa-row-content">
+              <h3 class="spa-row-title">הנחיית הורים</h3>
+              <p>כמנחת הורים אני מאמינה שהרגעים הקטנים הם שיוצרים את הקשר הגדול. הערכות שלי מעוצבות כך שגם ההורים יוכלו להיות חלק מהפעילות – בלי לחץ, בלי הכנות מורכבות, רק שמחה ונוכחות.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Left Column: Principles Card -->
+      <div class="spa-card-col">
+        <div class="spa-principles-card">
+          <div class="spa-card-seal">
+            <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="56" height="56" fill="none" aria-hidden="true">
+              <circle cx="28" cy="28" r="26" stroke="var(--primary)" stroke-width="2" fill="var(--accent)" fill-opacity="0.35"></circle>
+              <path d="M28 16 L30.5 23.5 H38.5 L32 28.5 L34.5 36 L28 31 L21.5 36 L24 28.5 L17.5 23.5 H25.5 Z" fill="var(--primary)" opacity="0.85"></path>
+            </svg>
+            <span class="spa-seal-text">רגעים קטנים גדולים</span>
+          </div>
+
+          <h3 class="spa-card-title">מה מנחה אותי</h3>
+          <p class="spa-card-subtitle">ארבעה עקרונות שעומדים בבסיס כל ערכה שאני יוצרת:</p>
+
+          <ul class="spa-principles-list">
+            <li class="spa-principle-item">
+              <span class="spa-principle-icon"><i class="fa-solid fa-shield-heart"></i></span>
+              <div class="spa-principle-text">
+                <strong>בטיחות ואמינות</strong>
+                <span>חומרים בטוחים לגיל, הוראות ברורות, ואיכות שאפשר לסמוך עליה.</span>
+              </div>
+            </li>
+            <li class="spa-principle-item">
+              <span class="spa-principle-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <div class="spa-principle-text">
+                <strong>שקיפות מלאה</strong>
+                <span>כל ערכה מגיעה עם הסבר על מטרת הפעילות ומה הילד לומד ממנה.</span>
+              </div>
+            </li>
+            <li class="spa-principle-item">
+              <span class="spa-principle-icon"><i class="fa-solid fa-sliders"></i></span>
+              <div class="spa-principle-text">
+                <strong>התאמה אישית</strong>
+                <span>כל ערכה מותאמת לגיל הילד ולמספר המשתתפים – ללא פשרות.</span>
+              </div>
+            </li>
+            <li class="spa-principle-item">
+              <span class="spa-principle-icon"><i class="fa-solid fa-comments"></i></span>
+              <div class="spa-principle-text">
+                <strong>זמינות ותמיכה</strong>
+                <span>אני כאן לכל שאלה לפני ואחרי – כי הקשר עם ההורים חשוב לי.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="secure-payment-faq-section" data-layout-spec="דף חיוב מאובטח-faq" dir="rtl">
+  <div class="faq-container">
+    <div class="faq-header">
+      <h2 class="faq-title">שאלות נפוצות</h2>
+      <p class="faq-intro">כאן תמצאו תשובות לשאלות הנפוצות ביותר שעולות לפני הזמנת ערכת פעילות. לא מצאתם מה שחיפשתם? אנחנו כאן בשמחה.</p>
+    </div>
+
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <h3 class="faq-question">לאיזה גיל מתאימות הערכות?</h3>
+        <p class="faq-answer">הערכות מותאמות לילדים בגילאי <strong>3 עד 10</strong>. בעת ההזמנה ניתן לציין את גיל הילד (או הילדים), ואנחנו נדאג לשלוח ערכה שמתאימה בדיוק לשלב ההתפתחותי שלהם — מבחינת רמת הקושי, הכלים והתוכן.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3 class="faq-question">האם ניתן להזמין ערכה ליותר מילד אחד?</h3>
+        <p class="faq-answer">בהחלט! הערכות ניתנות להתאמה לפי <strong>מספר הילדים</strong> ולפי טווחי גיל שונים בתוך אותה משפחה. פשוט ציינו בעת ההזמנה כמה ילדים ומה הגילאים — ונתאים את הכמויות והרמות בהתאם.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3 class="faq-question">מה כוללת ערכת הפסח?</h3>
+        <p class="faq-answer">ערכת הפסח כוללת פעילויות יצירה, משחקים ותרגילים חינוכיים בנושא חג הפסח — כולם מותאמי גיל ומוכנים לשימוש מיידי. הערכה מגיעה עם <strong>הוראות ברורות</strong> להורים, כך שאפשר להתחיל מיד בלי הכנה מיוחדת.</p>
+        <p class="faq-answer">כל הפעילויות תוכננו על ידי חן, גננת חינוך מיוחד ומדריכת הורים, ומשלבות למידה עם הנאה.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3 class="faq-question">איך מתבצעת ההזמנה?</h3>
+        <p class="faq-answer">ההזמנה מתבצעת <strong>ישירות דרך יצירת קשר</strong> — ניתן לשלוח הודעה בוואטסאפ או בטופס הצור קשר. לאחר שנבין את הצרכים שלכם (גיל, כמות ילדים, חג רלוונטי), נשלח לכם את הערכה המתאימה ביותר.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3 class="faq-question">האם הערכות מגיעות פיזית או דיגיטלית?</h3>
+        <p class="faq-answer">הערכות זמינות <strong>בפורמט דיגיטלי</strong> להורדה מיידית, כך שתוכלו להדפיס בבית ולהתחיל מיד. הפורמט הדיגיטלי גם מאפשר להדפיס כמה עותקים שצריך — מושלם לכמה ילדים או לאירועים משפחתיים.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3 class="faq-question">האם הפעילויות מתאימות גם לילדים עם צרכים מיוחדים?</h3>
+        <p class="faq-answer">חן היא גננת חינוך מיוחד מנוסה, ולכן הפעילויות תוכננו עם <strong>רגישות גבוהה לצרכים שונים</strong>. אם לילד שלכם יש צרכים ספציפיים, מוזמנים לפנות ישירות — נשמח להתאים את הערכה אישית ככל האפשר.</p>
+      </div>
+
+    </div>
+
+    <div class="faq-footer-note">
+      <p>יש לכם שאלה שלא מצאתם כאן? <a href="#contact" class="faq-contact-link">צרו איתנו קשר</a> ונחזור אליכם בהקדם 💛</p>
+    </div>
+  </div>
+</section>
+
+<section class="secure-payment-contact-section" data-layout-spec="דף חיוב מאובטח-contact" dir="rtl">
+  <div class="spc-container">
+    <div class="spc-grid">
+
+      <!-- Right Column: Contact Form -->
+      <div class="spc-form-card card-default">
+        <h2 class="spc-form-title">צרי קשר ונתחיל</h2>
+        <p class="spc-form-desc">יש לכם שאלות על הערכות? רוצים לדעת איזו ערכה מתאימה לגיל הילד שלכם? השאירו פרטים ואחזור אליכם בהקדם עם כל המידע שתצטרכו.</p>
+        <form class="contact-form spc-form" novalidate="">
+          <div class="spc-field-group">
+            <label class="spc-label" for="spc-name">שם מלא</label>
+            <input class="spc-input" type="text" id="spc-name" name="name" placeholder="למשל: מיכל לוי" autocomplete="name">
+          </div>
+          <div class="spc-field-group">
+            <label class="spc-label" for="spc-email">כתובת אימייל</label>
+            <input class="spc-input" type="email" id="spc-email" name="email" placeholder="your@email.com" autocomplete="email">
+          </div>
+          <div class="spc-field-group">
+            <label class="spc-label" for="spc-phone">טלפון</label>
+            <input class="spc-input" type="tel" id="spc-phone" name="phone" placeholder="05X-XXXXXXX" autocomplete="tel">
+          </div>
+          <div class="spc-field-group">
+            <label class="spc-label" for="spc-message">הודעה</label>
+            <textarea class="spc-input spc-textarea" id="spc-message" name="message" placeholder="ספרו לי על הילדים שלכם – גיל, כמה ילדים, ולאיזה אירוע הערכה מיועדת..." rows="4"></textarea>
+          </div>
+          <button type="submit" class="spc-submit-btn btn-primary">שלחי הודעה <i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
+        </form>
+      </div>
+
+      <!-- Left Column: Info Card -->
+      <div class="spc-info-card card-default">
+        <h3 class="spc-info-title">איך זה עובד?</h3>
+        <p class="spc-info-intro">אין רכישה אוטומטית באתר — כל הזמנה מתבצעת בשיחה אישית כדי שהערכה תתאים בדיוק לילד שלכם.</p>
+
+        <div class="spc-info-blocks">
+
+          <div class="spc-info-block">
+            <div class="spc-block-icon">
+              <i class="fa-regular fa-clock" aria-hidden="true"></i>
+            </div>
+            <div class="spc-block-content">
+              <strong class="spc-block-title">זמינות למענה</strong>
+              <p class="spc-block-text">אני עונה בדרך כלל תוך יום עסקים אחד. בתקופות עמוסות (כמו ערב חג) אשתדל לחזור אליכם תוך 48 שעות.</p>
+            </div>
+          </div>
+
+          <div class="spc-info-block">
+            <div class="spc-block-icon">
+              <i class="fa-regular fa-credit-card" aria-hidden="true"></i>
+            </div>
+            <div class="spc-block-content">
+              <strong class="spc-block-title">קבלת פרטי תשלום</strong>
+              <p class="spc-block-text">לאחר שנסכים על הערכה המתאימה, אשלח לכם קישור לתשלום מאובטח ישירות למייל או לוואטסאפ.</p>
+            </div>
+          </div>
+
+          <div class="spc-info-block">
+            <div class="spc-block-icon">
+              <i class="fa-regular fa-hand-pointer" aria-hidden="true"></i>
+            </div>
+            <div class="spc-block-content">
+              <strong class="spc-block-title">אין רכישה אוטומטית</strong>
+              <p class="spc-block-text">האתר לא מבצע חיובים. כל הזמנה מאושרת ידנית על ידי — כך אני מבטיחה שכל ערכה מותאמת אישית.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="spc-contact-direct">
+          <p class="spc-direct-label">מעדיפות ליצור קשר ישיר?</p>
+          <div class="spc-direct-links">
+            <a href="mailto:[business_email]" class="spc-direct-link">
+              <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+              <span>[business_email]</span>
+            </a>
+            <a href="tel:[business_phone]" class="spc-direct-link">
+              <i class="fa-solid fa-phone" aria-hidden="true"></i>
+              <span>[business_phone]</span>
+            </a>
+            <a href="https://wa.me/[whatsapp_handle]" target="_blank" rel="noopener" class="spc-direct-link spc-whatsapp">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+              <span>וואטסאפ</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section></main>
+  
+  <footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-column company-info">
+        <img src="/assets/logo-1773748743616-dwcn4r.webp?v=1773748744009-9k2lo8" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo">
+        
+      </div>
+      
+      <div class="footer-column quick-links">
+        <h3 class="footer-heading">קישורים מהירים</h3>
+        <ul class="footer-list">
+          <li><a href="/about">אודות</a></li>
+          <li><a href="/passover-kits" class="" data-original-href="/passover-kits">ערכות פסח</a></li>
+          <li><a href="/contact">צור קשר</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column contact-info">
+        <h3 class="footer-heading">יצירת קשר</h3>
+        <ul class="footer-list contact-list">
+          <li>
+            <i class="fas fa-envelope"></i>
+            <a href="mailto:henhakmon@gmail.com">henhakmon@gmail.com]</a>
+          </li>
+          <li>
+            <i class="fas fa-phone"></i>
+            <a href="tel:0523524200">0523524200</a>
+          </li>
+          <li><a href="/"><i class="fas fa-map-marker-alt"></i>
+            <span>צור משה</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column social-media">
+        <h3 class="footer-heading">עקבו ברשתות</h3>
+        <div class="social-links">
+          <a href="https://www.facebook.com/share/v/1HWsBTTaku/" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/henhakmon1?igsh=NDMyaDR4eDlkejZk" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/972523524200" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <div class="copyright">
+          <p>© 2026 חן חכמון זקר - רגעים קטנים גדולים. כל הזכויות שמורות.</p>
+        </div>
+        <div class="footer-legal">
+          <a href="/privacy">מדיניות פרטיות</a>
+          <span class="separator">|</span>
+          <a href="/terms">תנאי שימוש</a><span class="separator">|</span>
+            <a href="/return-policy" aria-label="מדיניות החזרות">
+              מדיניות החזרות
+            </a>
+          <span class="separator">|</span>
+          <a href="/accessibility">נגישות</a>
+          <span class="separator">|</span>
+          <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  <a href="https://wa.me/972523524200" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+
+    <script id="zappy-navbar-scroll-effect">
+    (function(){
+      var nb=document.querySelector('nav.navbar,.navbar:not(.zappy-catalog-menu)');
+      var cm=document.querySelector('.zappy-catalog-menu,#zappy-catalog-menu');
+      if(!nb)return;
+      var fb='rgba(255,249,242,0.85)';
+      var th=60;
+      var rs=getComputedStyle(document.documentElement);
+      var td=rs.getPropertyValue('--text-dark').trim()||'#1a1a1a';
+      var tl=rs.getPropertyValue('--text-light').trim()||'#ffffff';
+      var st=true?td:tl;
+      nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';
+      if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';
+      var neSel='a,.navbar-brand,.navbar-brand a,.dropdown-toggle,.mobile-toggle,.phone-header-btn,.mobile-hamburger-btn,.mobile-close-btn,.mobile-submenu-toggle,.nav-link';
+      var skipCls=['cart-link','login-link','nav-search-toggle','search-toggle'];
+      function sTC(c,clr){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){var sk=false;if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu')){sk=true;}for(var j=0;j<skipCls.length;j++){if(els[i].classList.contains(skipCls[j])){sk=true;break;}}if(!sk)els[i].style.setProperty('color',clr,'important');}}
+      function cTC(c){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu'))continue;els[i].style.removeProperty('color');}}
+      function applyScrolled(){
+        nb.classList.add('scrolled');
+        if(window.innerWidth>768){
+          nb.style.setProperty('--frosted-text',st);
+          nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('background-color',fb,'important');
+          nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+        }
+        if(cm){cm.classList.add('scrolled');if(window.innerWidth>768){cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}}
+      }
+      function onS(){
+        if(window._zappyNavNoDarkHero) return;
+        if(window.innerWidth<=768){nb.classList.remove('scrolled');cTC(nb);if(cm){cm.classList.remove('scrolled');cTC(cm);}return;}
+        var y=window.scrollY||window.pageYOffset;
+        if(y>th){
+          nb.classList.add('scrolled');nb.style.setProperty('background-color',fb,'important');nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('--frosted-text',st);nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+          if(cm){cm.classList.add('scrolled');cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}
+        }else{
+          nb.classList.remove('scrolled');nb.style.setProperty('background-color','transparent','important');nb.style.removeProperty('background-image');
+          nb.style.removeProperty('--frosted-text');nb.style.backdropFilter='none';nb.style.webkitBackdropFilter='none';nb.style.boxShadow='none';
+          cTC(nb);
+          if(cm){cm.classList.remove('scrolled');cm.style.setProperty('background','transparent','important');cm.style.setProperty('backdrop-filter','none','important');cm.style.setProperty('-webkit-backdrop-filter','none','important');cTC(cm);}
+        }
+      }
+      function sLum(rv,gv,bv){rv/=255;gv/=255;bv/=255;rv=rv<=0.03928?rv/12.92:Math.pow((rv+0.055)/1.055,2.4);gv=gv<=0.03928?gv/12.92:Math.pow((gv+0.055)/1.055,2.4);bv=bv<=0.03928?bv/12.92:Math.pow((bv+0.055)/1.055,2.4);return 0.2126*rv+0.7152*gv+0.0722*bv;}
+      window.addEventListener('scroll',onS,{passive:true});
+      window.addEventListener('resize',onS,{passive:true});
+      onS();
+      var heroEl=document.querySelector('section[class*="hero"],[data-hero-type],main>section:first-child');
+      var hasDH=false;
+      if(heroEl){var hCs=getComputedStyle(heroEl);var hBI=hCs.backgroundImage;if(hBI&&hBI!=='none'){if(hBI.indexOf('url(')!==-1){var hM2=hCs.backgroundColor.match(/\d+/g);if(hM2&&hM2.length>=3){hasDH=sLum(parseInt(hM2[0]),parseInt(hM2[1]),parseInt(hM2[2]))<0.4;}else{hasDH=true;}}else if(hBI.indexOf('gradient')!==-1){var cM=hBI.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g);if(cM&&cM.length>0){var tLm=0;for(var ci=0;ci<cM.length;ci++){var pts=cM[ci].match(/\d+/g);tLm+=sLum(parseInt(pts[0]),parseInt(pts[1]),parseInt(pts[2]));}hasDH=(tLm/cM.length)<0.4;}else{hasDH=true;}}else{hasDH=true;}}else{var hM=hCs.backgroundColor.match(/\d+/g);if(hM&&hM.length>=3){hasDH=sLum(parseInt(hM[0]),parseInt(hM[1]),parseInt(hM[2]))<0.4;}}}
+      if(!hasDH){window.removeEventListener('scroll',onS);window.removeEventListener('resize',onS);applyScrolled();window._zappyNavNoDarkHero=true;}
+    })();
+    </script>
+</body>
+</html>
