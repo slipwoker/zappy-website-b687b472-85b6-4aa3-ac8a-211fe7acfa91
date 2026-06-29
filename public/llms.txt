@@ -1,4 +1,6 @@
-# Business — Generative Engine Optimization Map
+# חן חכמון זקר - רגעים קטנים גדולים — Generative Engine Optimization Map
+
+> Chen Chakmon Zaker creates activity kits for children, combining her expertise as a special education kindergarten teacher, mother of three, and parenting instructor. The brand 'Small Big Moments' (רגעים קטנים גדולים) focuses on age-appropriate educational activities for children aged 3-10, with customizable kits based on age groups and number of children. The current focus is on Passover holiday activity kits, designed with warm pastel colors and a gentle, inviting aesthetic that reflects both educational expertise and parental warmth.
 
 ---
 
@@ -74,12 +76,36 @@ Information about WCAG compliance and accessibility features.
 
 ---
 
-# Business Context (for LLM understanding)
+## Products
 
-## About Business
+**Total active products: 1**
+
+### ערכת קיץ
+https://henhakmonzakar.co.il/product/arkt-kyts-kseyws
+- Price: 180.00 ILS
+- Availability: In stock
+- Description: שטיח ענק לצביעה יצירה משחק חשבוני חוברת עבודה מותאמת גיל משחק זיכרון רביעיות משחק מסלול [מהמם!] משפחתי הכנת מר דשא
+- Image: https://henhakmonzakar.co.il/assets/product-1774193708361-c0e5hq.webp
+
 ---
 
-# Additional Resources
+# Business Context (for LLM understanding)
 
-- **Sitemap**: https://henhakmonzakar.co.il/sitemap.xml
-- **Robots.txt**: https://henhakmonzakar.co.il/robots.txt
+## About חן חכמון זקר - רגעים קטנים גדולים
+Chen Chakmon Zaker creates activity kits for children, combining her expertise as a special education kindergarten teacher, mother of three, and parenting instructor. The brand 'Small Big Moments' (רגעים קטנים גדולים) focuses on age-appropriate educational activities for children aged 3-10, with customizable kits based on age groups and number of children. The current focus is on Passover holiday activity kits, designed with warm pastel colors and a gentle, inviting aesthetic that reflects both educational expertise and parental warmth.
+
+## Target Audience
+הורים לילדים בגילאי 3-10
+
+## Industry
+חינוך וגננות
+
+---
+
+# Machine-readable feeds
+
+- Sitemap (XML): https://henhakmonzakar.co.il/sitemap.xml
+- Robots: https://henhakmonzakar.co.il/robots.txt
+- Flattened page text (for LLMs): https://henhakmonzakar.co.il/llms-full.txt
+- Products (JSON): https://henhakmonzakar.co.il/products.json
+- Products (Google Merchant RSS): https://henhakmonzakar.co.il/product-feed.xml

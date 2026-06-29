@@ -1,0 +1,31 @@
+{
+  "@context": "https://schema.org",
+  "generated_at": "2026-06-29T20:24:49.473Z",
+  "base_url": "https://henhakmonzakar.co.il",
+  "currency": "ILS",
+  "count": 1,
+  "products": [
+    {
+      "id": "fc25557d-c0d0-4842-8dc6-12bbd2528a3b",
+      "slug": "arkt-kyts-kseyws",
+      "name": "ערכת קיץ",
+      "name_translations": {},
+      "description": "<ul><li><strong>שטיח ענק לצביעה</strong></li><li><strong>יצירה </strong></li><li><strong>משחק חשבוני</strong></li><li><strong>חוברת עבודה מותאמת גיל</strong></li><li><strong>משחק זיכרון </strong></li><li><strong>רביעיות </strong></li><li><strong>משחק מסלול [מהמם!] משפחתי</strong></li><li><strong>הכנת מר דשא</strong></li></ul>",
+      "short_description": null,
+      "sku": null,
+      "brand": null,
+      "price": 180,
+      "base_price": 180,
+      "sale_price": null,
+      "currency": "ILS",
+      "images": [
+        "https://henhakmonzakar.co.il/assets/product-1774193708361-c0e5hq.webp"
+      ],
+      "in_stock": true,
+      "stock_status": "in_stock",
+      "url": "https://henhakmonzakar.co.il/product/arkt-kyts-kseyws",
+      "categories": [],
+      "updated_at": "2026-04-20T20:45:13.502Z"
+    }
+  ]
+}
