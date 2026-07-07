@@ -1,21 +1,21 @@
 {
   "@context": "https://schema.org",
-  "generated_at": "2026-07-07T06:00:07.843Z",
+  "generated_at": "2026-07-07T06:01:51.769Z",
   "base_url": "https://henhakmonzakar.co.il",
   "currency": "ILS",
   "count": 1,
   "products": [
     {
       "id": "fc25557d-c0d0-4842-8dc6-12bbd2528a3b",
-      "slug": "arkt-kyts-kseyws",
+      "slug": "arkt-kyts-ufo9al",
       "name": "ערכת קיץ",
       "name_translations": {},
-      "description": "<ul><li><strong>שטיח ענק לצביעה</strong></li><li><strong>יצירה </strong></li><li><strong>משחק חשבוני</strong></li><li><strong>חוברת עבודה מותאמת גיל</strong></li><li><strong>משחק זיכרון </strong></li><li><strong>רביעיות </strong></li><li><strong>משחק מסלול [מהמם!] משפחתי</strong></li><li><strong>הכנת מר דשא</strong></li></ul>",
+      "description": "<ul><li><strong>חול קינטי</strong></li><li><strong>חוברת עבודה מותאמת גיל [3-6 ,7-10]</strong></li><li><strong>חוכרת צביעה אישית</strong></li><li><strong>משחק- לשבור את הקרח</strong></li><li><strong>משחק דליים&nbsp;</strong></li><li><strong>שטיח ענק לצביעה</strong></li><li><strong>3 עבודות יצירה</strong></li><li><strong>קוביית פעילויות</strong></li><li><strong>משחק משפחתי- גלה מי אני!</strong></li><li><strong>הפתעה ממני- לו\"ז יולי אוגוסט שעיצבתי במיוחד בשבילכם!</strong></li><li><strong>רעיונות למשחקים- מחומר שיש בבית</strong></li></ul><p><br></p>",
       "short_description": null,
       "sku": null,
       "brand": null,
-      "price": 180,
-      "base_price": 180,
+      "price": 200,
+      "base_price": 200,
       "sale_price": null,
       "currency": "ILS",
       "images": [
@@ -23,9 +23,9 @@
       ],
       "in_stock": true,
       "stock_status": "in_stock",
-      "url": "https://henhakmonzakar.co.il/product/arkt-kyts-kseyws",
+      "url": "https://henhakmonzakar.co.il/product/arkt-kyts-ufo9al",
       "categories": [],
-      "updated_at": "2026-04-20T20:45:13.502Z"
+      "updated_at": "2026-07-07T06:00:54.460Z"
     }
   ]
 }
