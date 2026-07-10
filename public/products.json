@@ -1,16 +1,16 @@
 {
   "@context": "https://schema.org",
-  "generated_at": "2026-07-10T21:07:20.121Z",
+  "generated_at": "2026-07-10T21:10:02.045Z",
   "base_url": "https://henhakmonzakar.co.il",
   "currency": "ILS",
   "count": 1,
   "products": [
     {
       "id": "fc25557d-c0d0-4842-8dc6-12bbd2528a3b",
-      "slug": "arkt-kyts-ufo9al",
+      "slug": "arkt-kyts-m6cv5f",
       "name": "ערכת קיץ",
       "name_translations": {},
-      "description": "<ul><li><strong>חול קינטי</strong></li><li><strong>חוברת עבודה מותאמת גיל [3-6 ,7-10]</strong></li><li><strong>חוכרת צביעה אישית</strong></li><li><strong>משחק- לשבור את הקרח</strong></li><li><strong>משחק דליים&nbsp;</strong></li><li><strong>שטיח ענק לצביעה</strong></li><li><strong>3 עבודות יצירה</strong></li><li><strong>קוביית פעילויות</strong></li><li><strong>משחק משפחתי- גלה מי אני!</strong></li><li><strong>הפתעה ממני- לו\"ז יולי אוגוסט שעיצבתי במיוחד בשבילכם!</strong></li><li><strong>רעיונות למשחקים- מחומר שיש בבית</strong></li></ul><p><br></p>",
+      "description": "<ul><li><strong>חול קינטי</strong></li><li><strong>חוברת עבודה מותאמת גיל [3-6 ,7-10]</strong></li><li><strong>חוכרת צביעה אישית</strong></li><li><strong>משחק- לשבור את הקרח</strong></li><li><strong>משחק דליים&nbsp;</strong></li><li><strong>שטיח ענק לצביעה</strong></li><li><strong>3 עבודות יצירה</strong></li><li><strong>קוביית פעילויות</strong></li><li><strong>משחק משפחתי- גלה מי אני!</strong></li><li><strong>הפתעה ממני- לו\"ז יולי אוגוסט שעיצבתי במיוחד בשבילכם!</strong></li><li><strong>רעיונות למשחקים- מחומר שיש בבית</strong></li></ul>",
       "short_description": null,
       "sku": null,
       "brand": null,
@@ -19,13 +19,13 @@
       "sale_price": null,
       "currency": "ILS",
       "images": [
-        "https://henhakmonzakar.co.il/assets/product-1774193708361-c0e5hq.webp"
+        "https://henhakmonzakar.co.il/assets/product-1783717759153-57534g.webp"
       ],
       "in_stock": true,
       "stock_status": "in_stock",
-      "url": "https://henhakmonzakar.co.il/product/arkt-kyts-ufo9al",
+      "url": "https://henhakmonzakar.co.il/product/arkt-kyts-m6cv5f",
       "categories": [],
-      "updated_at": "2026-07-07T06:00:54.460Z"
+      "updated_at": "2026-07-10T21:09:57.205Z"
     }
   ]
 }
