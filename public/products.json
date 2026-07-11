@@ -1,21 +1,21 @@
 {
   "@context": "https://schema.org",
-  "generated_at": "2026-07-11T11:48:47.233Z",
+  "generated_at": "2026-07-11T11:49:30.279Z",
   "base_url": "https://henhakmonzakar.co.il",
   "currency": "ILS",
   "count": 1,
   "products": [
     {
       "id": "fc25557d-c0d0-4842-8dc6-12bbd2528a3b",
-      "slug": "arkt-kyts-m6cv5f",
+      "slug": "arkt-kyts-46dvlq",
       "name": "ערכת קיץ",
       "name_translations": {},
       "description": "<ul><li><strong>חול קינטי</strong></li><li><strong>חוברת עבודה מותאמת גיל [3-6 ,7-10]</strong></li><li><strong>חוכרת צביעה אישית</strong></li><li><strong>משחק- לשבור את הקרח</strong></li><li><strong>משחק דליים&nbsp;</strong></li><li><strong>שטיח ענק לצביעה</strong></li><li><strong>3 עבודות יצירה</strong></li><li><strong>קוביית פעילויות</strong></li><li><strong>משחק משפחתי- גלה מי אני!</strong></li><li><strong>הפתעה ממני- לו\"ז יולי אוגוסט שעיצבתי במיוחד בשבילכם!</strong></li><li><strong>רעיונות למשחקים- מחומר שיש בבית</strong></li></ul>",
       "short_description": null,
       "sku": null,
       "brand": null,
-      "price": 200,
-      "base_price": 200,
+      "price": 249,
+      "base_price": 249,
       "sale_price": null,
       "currency": "ILS",
       "images": [
@@ -23,9 +23,9 @@
       ],
       "in_stock": true,
       "stock_status": "in_stock",
-      "url": "https://henhakmonzakar.co.il/product/arkt-kyts-m6cv5f",
+      "url": "https://henhakmonzakar.co.il/product/arkt-kyts-46dvlq",
       "categories": [],
-      "updated_at": "2026-07-10T21:09:57.205Z"
+      "updated_at": "2026-07-11T11:48:59.061Z"
     }
   ]
 }
