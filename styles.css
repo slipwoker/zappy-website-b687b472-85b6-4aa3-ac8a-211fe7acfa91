@@ -1,4 +1,38 @@
+/* Zappy custom media fonts:start */
+@font-face {
+  font-family: 'Rubik';
+  src: url('assets/fonts/Rubik-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
+@font-face {
+  font-family: 'Rubik';
+  src: url('assets/fonts/Rubik-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('assets/fonts/Rubik-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('assets/fonts/Rubik-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+/* Zappy custom media fonts:end */
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
 
 /* Self-hosted fonts (Inter + Rubik for multi-language support) */
 
@@ -160,9 +194,10 @@
   --gradient-lightSection: linear-gradient(180deg, #FBF6EF 0%, #F3EADF 100%);
   --gradient-overlayLight: linear-gradient(180deg, rgba(251,246,239,0.85) 0%, rgba(251,246,239,0.65) 55%, rgba(251,246,239,0.00) 100%);
   
-  --font-heading: Heebo, Assistant, system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-heading: 'Rubik', sans-serif;
   --font-body: Assistant, Heebo, system-ui, -apple-system, Segoe UI, sans-serif;
-}
+
+  --heading-font: 'Rubik', sans-serif;}
 
 * {
   margin: 0;
@@ -5279,7 +5314,8 @@ main { margin-top: 0 !important; padding-top: 0 !important; }
   /* Body text scaling - exclude spans to avoid breaking icons */
   p, li {
     font-size: clamp(14px, 4vw, 18px) !important;
-  }
+  
+  font-weight: 600;}
 
   /* 5. IMAGE RESPONSIVENESS */
   img {
