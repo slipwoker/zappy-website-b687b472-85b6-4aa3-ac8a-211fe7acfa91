@@ -248,7 +248,7 @@
     <!-- Mickidum Accessibility Toolbar -->
     
     <style id="zappy-critical-above-fold-css">
-html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{box-sizing:inherit}body{margin:0;min-width:320px;overflow-x:clip}img,svg,video{max-width:100%;height:auto}main{display:block}.container{width:min(100% - 32px,1200px);margin-inline:auto}.navbar,nav.navbar,header .navbar,header[role="banner"]{position:relative;z-index:1000;width:100%}.nav-container,.navbar .container{display:flex;align-items:center;justify-content:space-between;min-height:64px}.logo,.logo-link img{display:block;width:35px;height:35px;object-fit:contain}.nav-menu,#navMenu{list-style:none}.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-block;min-width:1em;text-align:center}html:not(#zappy-noop)[data-zappy-site-type="ecommerce"] .phone-header-btn,html:not(#zappy-noop) .navbar:has(.nav-ecommerce-icons)>.phone-header-btn{display:none!important;visibility:hidden!important;width:0!important;height:0!important;pointer-events:none!important}.hero-section,.index-hero-section,section[class*="hero"]{position:relative;overflow:hidden;min-height:560px}.hero-bg-wrapper,.hero-bg-image,section[class*="hero"] [class*="hero-bg"]{position:absolute;inset:0;width:100%;height:100%}.hero-bg-wrapper img,.hero-bg-image img,section[class*="hero"] [data-hero-bg],section[class*="hero"] img[data-hero-background="true"]{width:100%!important;height:100%!important;object-fit:cover!important;display:block}.hero-content,section[class*="hero"] .container{position:relative;z-index:2}@media(max-width:768px){:root{--header-height:72px;--total-header-height:72px;--zappy-mobile-menu-top:72px}html[data-zappy-site-type="ecommerce"] body{padding-top:var(--total-header-height,72px)}html[data-zappy-site-type="ecommerce"] body>nav.navbar,html[data-zappy-site-type="ecommerce"] body>.navbar:not(.zappy-catalog-menu){position:fixed!important;top:0;left:0;right:0;z-index:100000;width:100%;margin-bottom:0}.zappy-catalog-menu{position:fixed;top:var(--header-height,72px);left:0;right:0;z-index:99999}.nav-container,.navbar .container{min-height:60px}.nav-menu,#navMenu{max-width:100vw;overflow-x:hidden}.hero-section,.index-hero-section,section[class*="hero"]{min-height:100svh}.hero-bg-wrapper,.hero-bg-image,.hero-scrim{min-height:100svh}}
+html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{box-sizing:inherit}body{margin:0;min-width:320px;overflow-x:clip}img,svg,video{max-width:100%;height:auto}main{display:block}.container{width:min(100% - 32px,1200px);margin-inline:auto}.navbar,nav.navbar,header .navbar,header[role="banner"]{position:relative;z-index:1000;width:100%}.nav-container,.navbar .container{display:flex;align-items:center;justify-content:space-between;min-height:64px}.logo,.logo-link img{display:block;width:35px;height:35px;object-fit:contain}.nav-menu,#navMenu{list-style:none}.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-block;min-width:1em;text-align:center}html:not(#zappy-noop)[data-zappy-site-type="ecommerce"] .phone-header-btn,html:not(#zappy-noop) .navbar:has(.nav-ecommerce-icons)>.phone-header-btn{display:none!important;visibility:hidden!important;width:0!important;height:0!important;pointer-events:none!important}.zappy-preview-empty-store-cta{display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}.hero-section,.index-hero-section,section[class*="hero"]{position:relative;overflow:hidden;min-height:560px}.hero-bg-wrapper,.hero-bg-image,section[class*="hero"] [class*="hero-bg"]{position:absolute;inset:0;width:100%;height:100%}.hero-bg-wrapper img,.hero-bg-image img,section[class*="hero"] [data-hero-bg],section[class*="hero"] img[data-hero-background="true"]{width:100%!important;height:100%!important;object-fit:cover!important;display:block}.hero-content,section[class*="hero"] .container{position:relative;z-index:2}@media(max-width:768px){:root{--header-height:72px;--total-header-height:72px;--zappy-mobile-menu-top:72px}html[data-zappy-site-type="ecommerce"] body{padding-top:var(--total-header-height,72px)}html[data-zappy-site-type="ecommerce"] body>nav.navbar,html[data-zappy-site-type="ecommerce"] body>.navbar:not(.zappy-catalog-menu){position:fixed!important;top:0;left:0;right:0;z-index:100000;width:100%;margin-bottom:0}.zappy-catalog-menu{position:fixed;top:var(--header-height,72px);left:0;right:0;z-index:99999}.nav-container,.navbar .container{min-height:60px}.nav-menu,#navMenu{max-width:100vw;overflow-x:hidden}.hero-section,.index-hero-section,section[class*="hero"]{min-height:100svh}.hero-bg-wrapper,.hero-bg-image,.hero-scrim{min-height:100svh}}
 </style>
     <link rel="preload" href="/styles.css" as="style">
     <link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'">
@@ -260,7 +260,7 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
       /* Base styles for dropdown submenus - parent must be positioned */
       .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
       /* Submenu base - hidden by default */
-      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
       /* CRITICAL: Desktop hover styles to show dropdown */
       .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
       /* Submenu item styling */
@@ -356,7 +356,7 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
       <div class="search-results" id="mobile-search-results"></div>
     </div>
   
-<script>window.ZAPPY_WEBSITE_ID = "b687b472-85b6-4aa3-ac8a-211fe7acfa91";window.ZAPPY_API_BASE = "https://api.zappy5.com";</script>
+<script>window.ZAPPY_WEBSITE_ID = "b687b472-85b6-4aa3-ac8a-211fe7acfa91";window.ZAPPY_API_BASE = (window.location.pathname.includes('/preview') ? "https://api.zappy5.com" : "https://api.zappy5.com");</script>
   <nav class="navbar" dir="rtl">
   <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
     <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -432,8 +432,8 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
   <!-- Content Overlay Card -->
   <div class="passover-kits-hero-section__container">
     <div class="passover-kits-hero-section__card">
-      <h1 class="passover-kits-hero-section__title" style="color: rgb(34, 48, 43) !important;">ערכת פעילות לקיץ<br>&nbsp;לגילאי&nbsp; 10–3</h1>
-      <h3 class="passover-kits-hero-section__subtitle">כל ערכה כוללת פעילויות משחק, חשיבה ויצירה. פעילויות המשלבות מטרות למידה שונות&nbsp;<br>ומזמנות רגעי משפחה קטנים. גדולים.&nbsp;&nbsp;<br><br>לכם נשאר להתאים את הערכה בשבילכם:&nbsp;<br>לגיל הילד ולמספר הילדים בבית.&nbsp;<br></h3><h2>זו יכולה להיות גם מתנה מושלמת לתת לחברים-&nbsp;</h2><div class="zappy-inserted-element" id="zappy-element-1774193263868-iihzdmcjs" data-element-id="zappy-element-1774193263868-iihzdmcjs" data-element-type="button" style="margin: 20px auto; text-align: center !important; display: flex !important; justify-content: center !important; align-items: flex-start !important; max-width: 560px !important; width: 100% !important; align-self: start !important; height: auto !important;"><a href="/products" class="btn btn-primary" style="text-decoration: none; padding: 12px 24px; border-radius: 6px; display: inline-block; border-style: solid; border-width: 2px; border-image: initial; outline: none; border-color: var(--primary-color, var(--primary, #8B0000)) !important; color: rgb(255, 255, 255) !important; flex: 0 0 auto !important; background-color: var(--primary-color, var(--primary, #8B0000)) !important; background-image: none !important;" data-element-type="button" data-text-color="auto" data-element-id="btn-1774193274983-j1fvaejqr" id="btn-1774193274983-j1fvaejqr">להזמנה</a></div>
+      <h1 class="passover-kits-hero-section__title" style="color: rgb(34, 48, 43) !important;"></h1><h2>ערכת פעילות לקיץ</h2><h2>&nbsp;לגילאי&nbsp; 10–3</h2>
+      <h3 class="passover-kits-hero-section__subtitle" style="">כל ערכה כוללת פעילויות משחק, חשיבה ויצירה. פעילויות המשלבות מטרות למידה שונות&nbsp;<br>ומזמנות רגעי משפחה קטנים. גדולים.&nbsp;&nbsp;<br><br>לכם נשאר להתאים את הערכה בשבילכם:&nbsp;<br>לגיל הילד ולמספר הילדים בבית.&nbsp;<br></h3><h2 style="">זו יכולה להיות גם מתנה מושלמת לתת לחברים&nbsp;</h2><div class="zappy-inserted-element" id="zappy-element-1774193263868-iihzdmcjs" data-element-id="zappy-element-1774193263868-iihzdmcjs" data-element-type="button" style="margin: 20px auto; text-align: center !important; display: flex !important; justify-content: center !important; align-items: flex-start !important; max-width: 560px !important; width: 100% !important; align-self: start !important; height: auto !important;"><a href="/products" class="btn btn-primary" style="text-decoration: none; padding: 12px 24px; border-radius: 6px; display: inline-block; border-style: solid; border-width: 2px; border-image: initial; outline: none; border-color: var(--primary-color, var(--primary, #8B0000)) !important; color: rgb(255, 255, 255) !important; flex: 0 0 auto !important; background-color: var(--primary-color, var(--primary, #8B0000)) !important; background-image: none !important;" data-element-type="button" data-text-color="auto" data-element-id="btn-1774193274983-j1fvaejqr" id="btn-1774193274983-j1fvaejqr">להזמנה</a></div>
       
     </div>
   </div>
@@ -453,31 +453,31 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
         
         
         <div class="passover-kits-product-overview-info-grid"><div class="passover-kits-product-overview-info-row" data-grid-item-index="0">
-            <h3>חומרים ואביזרים</h3>
-            <p>
+            <h3 style="">חומרים ואביזרים</h3>
+            <p style="">
 
 כל פעילות בערכה מגיעה עם כל מה שצריך!&nbsp;<br><span style="background-color: initial;">רק להוציא ולהתחיל ליצור ולשחק.</span></p>
           </div><div class="passover-kits-product-overview-info-row" data-grid-item-index="1">
             <h3>הדרכה צעד אחר צעד</h3>
-            <p>מדריך מפורט עם שלבים פשוטים וברורים.&nbsp;<br>גם אם זו הפעם הראשונה שלכם – תסמכו עליי שאתם תצליחו להבין בקלות ותיהנו מהערכה.</p>
+            <p style="">מדריך מפורט עם שלבים פשוטים וברורים.&nbsp;<br>גם אם זו הפעם הראשונה שלכם – תסמכו עליי שאתם תצליחו להבין בקלות ותיהנו מהערכה.</p>
           </div><div class="passover-kits-product-overview-info-row" data-grid-item-index="2">
             <h3>מטרות למידה</h3>
-            <p>כל פעילותעובדת ומחזקת מיומנויות חשובות שונות:&nbsp;<br>פיתוח מוטוריקה עדינה, קואורדינציה עין-יד, יצירתיות ודמיון, זיכרון, פתרון בעיות,&nbsp;
+            <p style="">כל פעילותעובדת ומחזקת מיומנויות חשובות שונות:&nbsp;<br>פיתוח מוטוריקה עדינה, קואורדינציה עין-יד, יצירתיות ודמיון, זיכרון, פתרון בעיות,&nbsp;
 
 חיבור לתכני הקיץ ועוד..</p>
           </div><div class="passover-kits-product-overview-info-row" data-grid-item-index="3">
             <h3>זמן הכנה</h3>
-            <p>אין! -&nbsp; פותחים את הערכה, מוציאים. מסדרים ומתחילים לשחק.</p>
+            <p style="">אין! -&nbsp; פותחים את הערכה, מוציאים. מסדרים ומתחילים לשחק.</p>
           </div><div class="passover-kits-product-overview-info-row" data-grid-item-index="4">
             <h3>גילאים מומלצים</h3>
-            <p>לגילאי 3-10, ערכה המכילה חומרים ופעילויות לשני ילדים. בחוברת עבודה 
+            <p style="">לגילאי 3-10, ערכה המכילה חומרים ופעילויות לשני ילדים. בחוברת עבודה 
 
 יש התאמה אישית
 
 לפי גיל [3-6 , 7-10] .&nbsp;</p>
           </div><div class="passover-kits-product-overview-info-row" data-grid-item-index="5">
-            <h3>מושלם לאחים ולמשפחות&nbsp;</h3>
-            <p>הערכה מעודדת שיתוף פעולה ויצירה ביחד.&nbsp;<br>יש משחקים משפחתיים שאפשר לשחק עם המשפחה, חברים, שכנים, עם מי שרוצים!<br>ויש ממשחקים שאפשר לשחק לבד או עם אח/חבר...</p>
+            <h3 style="">מושלם לאחים ולמשפחות&nbsp;</h3>
+            <p style="">הערכה מעודדת שיתוף פעולה ויצירה ביחד.&nbsp;<br>יש משחקים משפחתיים שאפשר לשחק עם המשפחה, חברים, שכנים, עם מי שרוצים!<br>ויש ממשחקים שאפשר לשחק לבד או עם אח/חבר...</p>
           </div></div>
       </div><div class="passover-kits-product-overview-image-column zappy-grid-item-no-stretch" style="overflow: hidden !important;">
         <div class="passover-kits-product-overview-image-wrapper">
@@ -508,7 +508,7 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
   <div class="footer-container">
     <div class="footer-top">
       <div class="footer-column company-info">
-        <img src="/assets/logo-1773748743616-dwcn4r.webp?v=1773748744009-9k2lo8" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo" data-element-type="image" data-element-id="img-1783403059557-k58mxtrar" data-zappy-footer-image="true" decoding="async" width="35" height="35">
+        <img src="/assets/logo-1773748743616-dwcn4r.webp?v=1773748744009-9k2lo8" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo" data-element-type="image" data-element-id="img-1783403059557-k58mxtrar" data-zappy-footer-image="true" style="" decoding="async" width="35" height="35">
         
       </div>
       
@@ -523,9 +523,9 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
       
       <div class="footer-column contact-info">
         <h3 class="footer-heading">יצירת קשר</h3>
-        <ul class="footer-list contact-list"><li>
+        <ul class="footer-list contact-list" style=""><li>
             <i class="fas fa-envelope" data-element-type="icon" data-element-id="icon-1783403059554-8xzdkpbjm" data-icon-type="fontawesome" style="cursor: pointer;"></i>
-            <a href="mailto:henhakmon@gmail.com">henhakmon@gmail.com</a>
+            <a href="mailto:henhakmon@gmail.com" style="">henhakmon@gmail.com</a>
           </li><li>
             <i class="fas fa-phone" data-element-type="icon" data-element-id="icon-1783403059554-9iwhdpklg" data-icon-type="fontawesome" style="cursor: pointer;"></i>
             <a href="tel:0523524200">0523524200</a>
@@ -546,7 +546,7 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
     <div class="footer-bottom">
       <div class="footer-bottom-content">
         <div class="copyright">
-          <p>© 2026 חן חכמון זקר - רגעים קטנים גדולים.&nbsp;<br>כל הזכויות שמורות.</p>
+          <p style="">© 2026 חן חכמון זקר - רגעים קטנים גדולים.&nbsp;<br>כל הזכויות שמורות.</p>
         </div>
         <div class="footer-legal">
           <a href="/privacy">מדיניות פרטיות</a>
@@ -649,10 +649,10 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
       var st=true?td:tl;
       nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';
       if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';
-      var neSel='a,.navbar-brand,.navbar-brand a,.dropdown-toggle,.mobile-toggle,.phone-header-btn,.mobile-hamburger-btn,.mobile-close-btn,.mobile-submenu-toggle,.nav-link';
+      var neSel='a,.navbar-brand,.navbar-brand a,.dropdown-toggle,.mobile-toggle,.phone-header-btn,.mobile-hamburger-btn,.mobile-close-btn,.mobile-submenu-toggle,.nav-link,.lang-switcher-current';
       var skipCls=['cart-link','login-link','nav-search-toggle','search-toggle'];
-      function sTC(c,clr){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){var sk=false;if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu')){sk=true;}for(var j=0;j<skipCls.length;j++){if(els[i].classList.contains(skipCls[j])){sk=true;break;}}if(!sk)els[i].style.setProperty('color',clr,'important');}}
-      function cTC(c){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu'))continue;els[i].style.removeProperty('color');}}
+      function sTC(c,clr){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){var sk=false;if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu')){sk=true;}for(var j=0;j<skipCls.length;j++){if(els[i].classList.contains(skipCls[j])){sk=true;break;}}if(!sk)els[i].style.setProperty('color',clr,'important');}try{if(typeof window.fixLanguageSwitcherColor==='function')window.fixLanguageSwitcherColor();}catch(e){}}
+      function cTC(c){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu'))continue;els[i].style.removeProperty('color');}try{if(typeof window.fixLanguageSwitcherColor==='function')window.fixLanguageSwitcherColor();}catch(e){}}
       function applyScrolled(){
         nb.classList.add('scrolled');
         if(window.innerWidth>768){
