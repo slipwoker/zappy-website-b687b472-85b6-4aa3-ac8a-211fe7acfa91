@@ -1,19 +1,19 @@
 <!DOCTYPE html><html data-zappy-site-type="ecommerce" lang="he" dir="rtl"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="index, follow">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
     <title>הפכו רגעים יומיומיים לחוויות חינוכיות מיוחדות — חן חכמון זקר - רגעים קטנים גדולים</title>
-    <meta name="description" content="ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל.">
-    <meta name="keywords" content="הדרכת הורים, ערכות פעילות לילדים, חינוך מיוחד, פעילויות חינוכיות לילדים, רגעים קטנים גדולים">
+    <meta name="description" content="ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל." />
+    <meta name="keywords" content="הדרכת הורים, ערכות פעילות לילדים, חינוך מיוחד, פעילויות חינוכיות לילדים, רגעים קטנים גדולים" />
     
     <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
     <!-- Zappy Analytics -->
 <script>
 (function() {
@@ -221,40 +221,411 @@
 })();
 </script>
 <!-- End Zappy Analytics -->
-    <meta property="og:title" content="הפכו רגעים יומיומיים לחוויות חינוכיות מיוחדות — חן חכמון זקר - רגעים קטנים גדולים">
-    <meta property="og:description" content="ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל.">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="הפכו רגעים יומיומיים לחוויות חינוכיות מיוחדות — חן חכמון זקר - רגעים קטנים גדולים">
-    <meta name="twitter:description" content="ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל.">
+<!-- Zappy Marketing Events -->
+<script>
+(function() {
+  'use strict';
+  if (window.zappyFireMarketingEvent) return;
+
+  var ECOM_MODE = "full";
+  var IS_CATALOG = false;
+  var IS_FULL = true;
+
+  var ECOM_ALIAS = {
+    begin_checkout: 'checkout_started',
+    purchase: 'checkout_complete',
+    add_to_cart: 'add_to_cart',
+    view_product: 'view_product'
+  };
+
+  function pagePath() {
+    try {
+      if (window.ZAPPY_CONFIG && window.ZAPPY_CONFIG.currentPagePath) {
+        return window.ZAPPY_CONFIG.currentPagePath;
+      }
+    } catch (e) {}
+    try { return window.location.pathname || '/'; } catch (e2) { return '/'; }
+  }
+
+  function normalizeItems(meta) {
+    meta = meta || {};
+    var raw = meta.items || meta.cartItems || meta.cart_items || meta.lineItems || [];
+    if (!Array.isArray(raw)) raw = [];
+    var out = [];
+    for (var i = 0; i < raw.length; i++) {
+      var item = raw[i];
+      if (!item || typeof item !== 'object') continue;
+      var id = String(item.item_id || item.productId || item.product_id || item.id || '').trim();
+      var name = String(item.item_name || item.productName || item.product_name || item.name || '').trim();
+      var price = parseFloat(item.price != null ? item.price : (item.unitPrice != null ? item.unitPrice : 0)) || 0;
+      var quantity = Math.max(1, parseInt(item.quantity != null ? item.quantity : (item.qty != null ? item.qty : 1), 10) || 1);
+      if (!id && !name) continue;
+      out.push({ item_id: id || name, item_name: name || id, price: price, quantity: quantity });
+    }
+    return out;
+  }
+
+  function buildGa4Params(eventId, meta) {
+    meta = meta || {};
+    var items = normalizeItems(meta);
+    var value = parseFloat(meta.value != null ? meta.value : (meta.total != null ? meta.total : 0)) || 0;
+    var currency = String(meta.currency || 'USD').toUpperCase();
+
+    if (eventId === 'checkout_complete') {
+      return {
+        transaction_id: String(meta.transaction_id || meta.orderId || meta.order_id || meta.orderNumber || '') || undefined,
+        value: value,
+        currency: currency,
+        items: items
+      };
+    }
+    if (eventId === 'checkout_started') {
+      return { value: value, currency: currency, items: items };
+    }
+    if (eventId === 'add_to_cart') {
+      var atcItems = items.length ? items : [{
+        item_id: String(meta.productId || meta.product_id || ''),
+        item_name: String(meta.productName || meta.product_name || ''),
+        price: parseFloat(meta.value != null ? meta.value : (meta.price != null ? meta.price : 0)) || 0,
+        quantity: parseInt(meta.quantity != null ? meta.quantity : 1, 10) || 1
+      }].filter(function(x) { return x.item_id || x.item_name; });
+      return {
+        value: value || (atcItems[0] ? atcItems[0].price * atcItems[0].quantity : 0),
+        currency: currency,
+        items: atcItems
+      };
+    }
+    if (eventId === 'view_product') {
+      var vpItems = items.length ? items : [{
+        item_id: String(meta.productId || meta.product_id || ''),
+        item_name: String(meta.productName || meta.product_name || ''),
+        price: parseFloat(meta.price != null ? meta.price : (meta.value != null ? meta.value : 0)) || 0,
+        quantity: 1
+      }].filter(function(x) { return x.item_id || x.item_name; });
+      return {
+        currency: currency,
+        value: value || (vpItems[0] ? vpItems[0].price : 0),
+        items: vpItems
+      };
+    }
+    if (eventId === 'whatsapp_click' || eventId === 'phone_click') {
+      return { method: eventId === 'whatsapp_click' ? 'whatsapp' : 'phone', page_path: meta.pagePath || pagePath() };
+    }
+    if (eventId === 'contact_form_submitted' || eventId === 'product_inquiry') {
+      return { page_path: meta.pagePath || pagePath() };
+    }
+    return meta;
+  }
+
+  function buildMetaParams(eventId, meta) {
+    meta = meta || {};
+    var items = normalizeItems(meta);
+    var value = parseFloat(meta.value != null ? meta.value : (meta.total != null ? meta.total : 0)) || 0;
+    var currency = String(meta.currency || 'USD').toUpperCase();
+    var contentIds = [];
+    var numItems = 0;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].item_id) contentIds.push(items[i].item_id);
+      numItems += items[i].quantity || 1;
+    }
+
+    if (eventId === 'checkout_complete') {
+      return {
+        value: value,
+        currency: currency,
+        content_ids: contentIds.length ? contentIds : undefined,
+        content_type: 'product',
+        num_items: numItems || undefined,
+        order_id: String(meta.order_id || meta.orderId || meta.transaction_id || meta.orderNumber || '') || undefined
+      };
+    }
+    if (eventId === 'checkout_started') {
+      return {
+        value: value,
+        currency: currency,
+        content_ids: contentIds.length ? contentIds : undefined,
+        content_type: 'product',
+        num_items: numItems || parseInt(meta.itemCount != null ? meta.itemCount : 0, 10) || undefined
+      };
+    }
+    if (eventId === 'add_to_cart') {
+      var id = String(meta.productId || meta.product_id || contentIds[0] || '');
+      return {
+        value: value || (items[0] ? items[0].price * items[0].quantity : 0),
+        currency: currency,
+        content_ids: id ? [id] : (contentIds.length ? contentIds : undefined),
+        content_type: 'product',
+        content_name: meta.productName || meta.product_name || (items[0] && items[0].item_name),
+        num_items: parseInt(meta.quantity != null ? meta.quantity : (numItems || 1), 10) || 1
+      };
+    }
+    if (eventId === 'view_product') {
+      var vid = String(meta.productId || meta.product_id || contentIds[0] || '');
+      return {
+        value: value || parseFloat(meta.price != null ? meta.price : 0) || 0,
+        currency: currency,
+        content_ids: vid ? [vid] : (contentIds.length ? contentIds : undefined),
+        content_type: 'product',
+        content_name: meta.productName || meta.product_name || (items[0] && items[0].item_name)
+      };
+    }
+    if (eventId === 'whatsapp_click' || eventId === 'phone_click') {
+      return {
+        content_name: eventId === 'whatsapp_click' ? 'WhatsApp' : 'Phone',
+        content_category: 'contact'
+      };
+    }
+    if (eventId === 'contact_form_submitted' || eventId === 'product_inquiry') {
+      return {
+        content_name: eventId === 'product_inquiry' ? 'Product inquiry' : 'Contact form',
+        content_category: meta.productName || meta.product_name || undefined
+      };
+    }
+    return meta;
+  }
+
+  var PLATFORM = {
+    whatsapp_click: { ga4: 'contact', meta: 'Contact', gtm: 'whatsapp_click', ecom: false },
+    phone_click: { ga4: 'contact', meta: 'Contact', gtm: 'phone_click', ecom: false },
+    contact_form_submitted: { ga4: 'generate_lead', meta: 'Lead', gtm: 'contact_form_submitted', ecom: false },
+    checkout_started: { ga4: 'begin_checkout', meta: 'InitiateCheckout', gtm: 'begin_checkout', ecom: true },
+    checkout_complete: { ga4: 'purchase', meta: 'Purchase', gtm: 'purchase', ecom: true },
+    product_inquiry: { ga4: 'generate_lead', meta: 'Lead', gtm: 'product_inquiry', ecom: false },
+    add_to_cart: { ga4: 'add_to_cart', meta: 'AddToCart', gtm: 'add_to_cart', ecom: true },
+    view_product: { ga4: 'view_item', meta: 'ViewContent', gtm: 'view_item', ecom: true }
+  };
+
+  function purchaseDedupKey(orderId) {
+    return 'zappy_purchase_fired_' + String(orderId || '');
+  }
+
+  function alreadyFiredPurchase(orderId) {
+    if (!orderId) return false;
+    try {
+      return sessionStorage.getItem(purchaseDedupKey(orderId)) === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function markPurchaseFired(orderId) {
+    if (!orderId) return;
+    try { sessionStorage.setItem(purchaseDedupKey(orderId), '1'); } catch (e) {}
+  }
+
+  /**
+   * Fire a marketing event to first-party analytics + GA4/GTM/Meta when present.
+   * @param {string} eventName marketing ID or ecommerce alias
+   * @param {object} [metadata]
+   * @param {{ skipFirstParty?: boolean }} [opts]
+   */
+  window.zappyFireMarketingEvent = function(eventName, metadata, opts) {
+    try {
+      opts = opts || {};
+      metadata = metadata || {};
+      var eventId = ECOM_ALIAS[eventName] || eventName;
+      var plat = PLATFORM[eventId];
+      if (!plat) return;
+
+      if (!metadata.pagePath && !metadata.page_path) {
+        metadata.pagePath = pagePath();
+      }
+
+      if (eventId === 'checkout_complete') {
+        var oid = String(metadata.orderId || metadata.order_id || metadata.transaction_id || '');
+        if (oid && alreadyFiredPurchase(oid)) return;
+        if (oid) markPurchaseFired(oid);
+      }
+
+      // First-party (skip when already tracked via zappyTrackEcomAnalytics path
+      // that opts out, or when caller already recorded under a different name)
+      if (!opts.skipFirstParty) {
+        try {
+          if (window.zappyAnalytics && typeof window.zappyAnalytics.track === 'function') {
+            window.zappyAnalytics.track(eventId, metadata);
+          }
+        } catch (e1) {}
+      }
+
+      // GTM / dataLayer — platform-standard ecommerce event names
+      try {
+        window.dataLayer = window.dataLayer || [];
+        if (plat.ecom) {
+          var ga4ForGtm = buildGa4Params(eventId, metadata);
+          var ecommerce = {};
+          if (ga4ForGtm.transaction_id) ecommerce.transaction_id = ga4ForGtm.transaction_id;
+          if (ga4ForGtm.value != null) ecommerce.value = ga4ForGtm.value;
+          if (ga4ForGtm.currency) ecommerce.currency = ga4ForGtm.currency;
+          if (ga4ForGtm.items) ecommerce.items = ga4ForGtm.items;
+          window.dataLayer.push({ event: plat.gtm, ecommerce: ecommerce });
+          // Secondary Zappy-specific trigger for merchants who want it
+          if (eventId === 'checkout_complete' || eventId === 'checkout_started') {
+            window.dataLayer.push({ event: eventId, ecommerce: ecommerce });
+          }
+        } else {
+          var dl = { event: plat.gtm };
+          for (var k in metadata) {
+            if (Object.prototype.hasOwnProperty.call(metadata, k)) dl[k] = metadata[k];
+          }
+          window.dataLayer.push(dl);
+        }
+      } catch (e2) {}
+
+      // GA4 gtag
+      try {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', plat.ga4, buildGa4Params(eventId, metadata));
+        }
+      } catch (e3) {}
+
+      // Meta Pixel (only when fbq is loaded — consent-gated lazy loader)
+      try {
+        if (typeof window.fbq === 'function') {
+          window.fbq('track', plat.meta, buildMetaParams(eventId, metadata));
+        }
+      } catch (e4) {}
+    } catch (err) {}
+  };
+
+  // ---- Click listeners (capture) ----
+  var recent = Object.create(null);
+  function dedupe(key) {
+    var now = Date.now();
+    if (recent[key] && now - recent[key] < 800) return true;
+    recent[key] = now;
+    return false;
+  }
+
+  function closest(el, selector) {
+    if (!el) return null;
+    if (el.closest) return el.closest(selector);
+    return null;
+  }
+
+  function findAnchor(el) {
+    var node = el;
+    while (node && node !== document) {
+      if (node.tagName === 'A') return node;
+      node = node.parentElement;
+    }
+    return null;
+  }
+
+  function isWhatsAppHref(href) {
+    if (!href) return false;
+    var h = String(href).toLowerCase();
+    return h.indexOf('wa.me/') !== -1 ||
+      h.indexOf('api.whatsapp.com') !== -1 ||
+      h.indexOf('whatsapp.com/send') !== -1 ||
+      h.indexOf('whatsapp:') === 0;
+  }
+
+  document.addEventListener('click', function(e) {
+    try {
+      var target = e.target;
+      if (!target) return;
+
+      // WhatsApp
+      var waFloat = closest(target, '.whatsapp-float, a.whatsapp-float, [data-zappy-whatsapp]');
+      var anchor = findAnchor(target);
+      var href = (anchor && anchor.href) || '';
+      if (waFloat || (anchor && isWhatsAppHref(href))) {
+        if (!dedupe('wa:' + href)) {
+          var waSource = waFloat ? 'float' : 'link';
+          window.zappyFireMarketingEvent('whatsapp_click', {
+            source: waSource,
+            href: href || null,
+            pagePath: pagePath()
+          });
+        }
+        return;
+      }
+
+      // Phone
+      var phoneBtn = closest(target, '.phone-header-btn, .nav-phone-btn, .call-btn, [data-zappy-phone]');
+      var telHref = '';
+      if (anchor && anchor.href && String(anchor.href).toLowerCase().indexOf('tel:') === 0) {
+        telHref = anchor.href;
+      } else if (phoneBtn && phoneBtn.href && String(phoneBtn.href).toLowerCase().indexOf('tel:') === 0) {
+        telHref = phoneBtn.href;
+      }
+      if (phoneBtn || telHref) {
+        var phone = '';
+        if (telHref) {
+          phone = String(telHref).replace(/^tel:/i, '').trim();
+        }
+        if (!dedupe('tel:' + (phone || (phoneBtn && phoneBtn.id) || 'btn'))) {
+          window.zappyFireMarketingEvent('phone_click', {
+            source: phoneBtn ? 'button' : 'link',
+            phone: phone || null,
+            href: telHref || null,
+            pagePath: pagePath()
+          });
+        }
+        return;
+      }
+
+      // Catalog / product inquiry
+      if (IS_CATALOG || IS_FULL) {
+        var inq = closest(target, '.card-inquiry-btn, #zappy-pdp-inquiry-btn, a.inquiry-btn');
+        if (inq) {
+          if (!dedupe('inq:' + (inq.id || inq.className))) {
+            var product = window.currentProduct || null;
+            var productId = (inq.getAttribute && inq.getAttribute('data-product-id')) ||
+              (product && product.id) || null;
+            var productName = (inq.getAttribute && inq.getAttribute('data-product-name')) ||
+              (product && product.name) || null;
+            var channel = 'contact_page';
+            var inqHref = (inq.tagName === 'A' && inq.href) ? inq.href : '';
+            if (inqHref && String(inqHref).toLowerCase().indexOf('mailto:') === 0) channel = 'mailto';
+            window.zappyFireMarketingEvent('product_inquiry', {
+              source: inq.id === 'zappy-pdp-inquiry-btn' ? 'pdp' : 'card',
+              productId: productId,
+              productName: productName,
+              channel: channel,
+              pagePath: pagePath()
+            });
+          }
+        }
+      }
+    } catch (err) {}
+  }, true);
+})();
+</script>
+    <meta property="og:title" content="הפכו רגעים יומיומיים לחוויות חינוכיות מיוחדות — חן חכמון זקר - רגעים קטנים גדולים" />
+    <meta property="og:description" content="ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="הפכו רגעים יומיומיים לחוויות חינוכיות מיוחדות — חן חכמון זקר - רגעים קטנים גדולים" />
+    <meta name="twitter:description" content="ערכות פעילות חינוכיות לילדים בגילאי 3-10, בשילוב מומחיות בחינוך מיוחד והדרכת הורים. גלו איך להפוך כל רגע לחוויה משמעותית עם פעילויות מותאמות גיל." />
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","@id":"https://henhakmonzakar.co.il#organization","name":"חן חכמון זקר - רגעים קטנים גדולים","url":"https://henhakmonzakar.co.il","description":"Chen Chakmon Zaker creates activity kits for children, combining her expertise as a special education kindergarten teacher, mother of three, and parenting instructor. The brand 'Small Big Moments' (רגעים קטנים גדולים) focuses on age-appropriate educational activities for children aged 3-10, with customizable kits based on age groups and number of children. The current focus is on Passover holiday activity kits, designed with warm pastel colors and a gentle, inviting aesthetic that reflects both educational expertise and parental warmth.","address":{"@type":"PostalAddress","streetAddress":"צור משה"},"contactPoint":[{"@type":"ContactPoint","contactType":"customer service","email":"henhakmon@gmail.com","telephone":"0523524200"}]},{"@type":"WebSite","@id":"https://henhakmonzakar.co.il#website","url":"https://henhakmonzakar.co.il","name":"חן חכמון זקר - רגעים קטנים גדולים","publisher":{"@id":"https://henhakmonzakar.co.il#organization"}}]}</script>
-    <meta property="og:type" content="website">
-  <meta property="og:locale" content="he_IL">
+    <meta property="og:type" content="website" />
+  <meta property="og:locale" content="he_IL" />
   
   
   
   
   
   <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
     <!-- Cookie Consent -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css" />
     
     <!-- Mickidum Accessibility Toolbar -->
     
     <style id="zappy-critical-above-fold-css">
-html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{box-sizing:inherit}body{margin:0;min-width:320px;overflow-x:clip}img,svg,video{max-width:100%;height:auto}main{display:block}.container{width:min(100% - 32px,1200px);margin-inline:auto}.navbar,nav.navbar,header .navbar,header[role="banner"]{position:relative;z-index:1000;width:100%}.nav-container,.navbar .container{display:flex;align-items:center;justify-content:space-between;min-height:64px}.logo,.logo-link img{display:block;width:35px;height:35px;object-fit:contain}.nav-menu,#navMenu{list-style:none}.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-block;min-width:1em;text-align:center}html:not(#zappy-noop)[data-zappy-site-type="ecommerce"] .phone-header-btn,html:not(#zappy-noop) .navbar:has(.nav-ecommerce-icons)>.phone-header-btn{display:none!important;visibility:hidden!important;width:0!important;height:0!important;pointer-events:none!important}.zappy-preview-empty-store-cta{display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}.hero-section,.index-hero-section,section[class*="hero"]{position:relative;overflow:hidden;min-height:560px}.hero-bg-wrapper,.hero-bg-image,section[class*="hero"] [class*="hero-bg"]{position:absolute;inset:0;width:100%;height:100%}.hero-bg-wrapper img,.hero-bg-image img,section[class*="hero"] [data-hero-bg],section[class*="hero"] img[data-hero-background="true"]{width:100%!important;height:100%!important;object-fit:cover!important;display:block}.hero-content,section[class*="hero"] .container{position:relative;z-index:2}@media(max-width:768px){:root{--header-height:72px;--total-header-height:72px;--zappy-mobile-menu-top:72px}html[data-zappy-site-type="ecommerce"] body{padding-top:var(--total-header-height,72px)}html[data-zappy-site-type="ecommerce"] body>nav.navbar,html[data-zappy-site-type="ecommerce"] body>.navbar:not(.zappy-catalog-menu){position:fixed!important;top:0;left:0;right:0;z-index:100000;width:100%;margin-bottom:0}.zappy-catalog-menu{position:fixed;top:var(--header-height,72px);left:0;right:0;z-index:99999}.nav-container,.navbar .container{min-height:60px}.nav-menu,#navMenu{max-width:100vw;overflow-x:hidden}.hero-section,.index-hero-section,section[class*="hero"]{min-height:100svh}.hero-bg-wrapper,.hero-bg-image,.hero-scrim{min-height:100svh}}
+html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{box-sizing:inherit}body{margin:0;min-width:320px;overflow-x:clip}img,svg,video{max-width:100%;height:auto}main{display:block}.container{width:min(100% - 32px,1200px);margin-inline:auto}.navbar,nav.navbar,header .navbar,header[role="banner"]{position:relative;z-index:1000;width:100%}.nav-container,.navbar .container{display:flex;align-items:center;justify-content:space-between;min-height:64px}.logo,.logo-link img{display:block;width:35px;height:35px;object-fit:contain}.nav-menu,#navMenu{list-style:none;margin:0;padding:0}.navbar a,.nav-menu a,#navMenu a,.navbar .nav-links a{color:inherit;text-decoration:none}.navbar .sub-menu,.nav-menu .sub-menu,#navMenu .sub-menu{display:none}.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-block;min-width:1em;text-align:center}html:not(#zappy-noop)[data-zappy-site-type="ecommerce"] .phone-header-btn,html:not(#zappy-noop) .navbar:has(.nav-ecommerce-icons)>.phone-header-btn{display:none!important;visibility:hidden!important;width:0!important;height:0!important;pointer-events:none!important}.zappy-preview-empty-store-cta{display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}.zappy-catalog-menu{background:var(--surface-color,var(--surface,linear-gradient(135deg,#f8f9fa 0%,#fff 100%)));border-bottom:1px solid var(--border-color,#e5e7eb);padding:0;position:sticky;top:0;z-index:90}.zappy-catalog-menu[dir=rtl],.zappy-catalog-menu.rtl{direction:rtl}.zappy-catalog-menu[dir=ltr],.zappy-catalog-menu.ltr{direction:ltr}.catalog-menu-container{max-width:1440px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:10px 24px;overflow:visible}.catalog-menu-categories,.catalog-menu-list{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:0;padding:0;list-style:none}.catalog-menu-item{display:inline-flex;align-items:center;padding:8px 16px;font-size:14px;font-weight:500;color:var(--text-color,var(--text,#374151));text-decoration:none;border-radius:20px;white-space:nowrap}.catalog-menu-all{background:var(--primary-color,var(--primary,#111));color:var(--text-light,#fff)!important}.catalog-menu-parent{position:relative;display:inline-flex;align-items:center}.catalog-menu-trigger{display:inline-flex;align-items:center;gap:6px}.catalog-menu-chevron{flex-shrink:0}.catalog-menu-parent>.sub-menu{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}.hero-section,.index-hero-section,section[class*="hero"]{position:relative;overflow:hidden;min-height:560px}.hero-bg-wrapper,.hero-bg-image,section[class*="hero"] [class*="hero-bg"]{position:absolute;inset:0;width:100%;height:100%}.hero-bg-wrapper img,.hero-bg-image img,section[class*="hero"] [data-hero-bg],section[class*="hero"] img[data-hero-background="true"]{width:100%!important;height:100%!important;object-fit:cover!important;display:block}.hero-content,section[class*="hero"] .container{position:relative;z-index:2}@media(max-width:768px){:root{--header-height:72px;--total-header-height:72px;--zappy-mobile-menu-top:72px}html[data-zappy-site-type="ecommerce"] body{padding-top:var(--total-header-height,72px)}html[data-zappy-site-type="ecommerce"] body>nav.navbar,html[data-zappy-site-type="ecommerce"] body>.navbar:not(.zappy-catalog-menu){position:fixed!important;top:0;left:0;right:0;z-index:100000;width:100%;margin-bottom:0}.zappy-catalog-menu{position:fixed;top:var(--header-height,72px);left:0;right:0;z-index:99999}.nav-container,.navbar .container{min-height:60px}.nav-menu,#navMenu{max-width:100vw;overflow-x:hidden}.hero-section,.index-hero-section,section[class*="hero"]{min-height:100svh}.hero-bg-wrapper,.hero-bg-image,.hero-scrim{min-height:100svh}}
 </style>
-    <link rel="preload" href="/styles.css" as="style">
-    <link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/styles.css"></noscript>
+    <link rel="preload" href="/styles.css" as="style" />
+    <link rel="stylesheet" href="/styles.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="/styles.css" /></noscript>
     
-    <link rel="preload" as="image" href="/assets/business-general-hero-upload-1774216401270.webp" fetchpriority="high">
+    <link rel="preload" as="image" href="/assets/business-general-hero-upload-1774216401270.webp" fetchpriority="high" />
 
     <style id="zappy-dropdown-submenu-styles">
       /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
@@ -346,12 +717,12 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
 
     <div class="mobile-search-panel" id="mobile-search-panel">
       <div class="search-wrapper">
-        <input type="text" id="mobile-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+        <input type="text" id="mobile-search-input" placeholder="חיפוש מוצרים..." autocomplete="off" />
         <button class="search-submit" id="mobile-search-submit" title="חיפוש">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         </button>
         <button class="close-search" id="close-mobile-search">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
       <div class="search-results" id="mobile-search-results"></div>
@@ -361,23 +732,23 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
   <nav class="navbar" dir="rtl">
   <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
     <svg style="display:block !important" class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </svg>
     <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none !important">
-      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </svg>
   </button>
   
   <button class="phone-header-btn" aria-label="Call" data-phone="0523524200">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
     </svg>
   </button>
   
   <div class="nav-container">
     <div class="nav-brand">
       <a href="/" class="logo-link">
-        <img src="/assets/logo-1773748743616-dwcn4r.webp?v=1773748744009-9k2lo8" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo" decoding="async" width="35" height="35">
+        <img src="/assets/logo-1773748743616-dwcn4r.webp?v=1773748744009-9k2lo8" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo" decoding="async" width="35" height="35" />
       </a>
     </div>
     
@@ -387,10 +758,10 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
       <a href="/products">
         מוצרים
         <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 9l6 6 6-6"></path>
+          <path d="M6 9l6 6 6-6"/>
         </svg>
       </a>
-      <ul class="sub-menu" id="zappy-nav-category-links">
+      <ul class="sub-menu" id="zappy-nav-category-links" dir="rtl">
         <li style="font-weight: 600;"><a href="/products" data-i18n="ecom_products">מוצרים</a></li>
         <!-- Categories will be loaded dynamically -->
       </ul>
@@ -398,38 +769,36 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
   <li style="font-weight: 600;"><a href="/" data-i18n="nav-home">בית</a></li>
 
     
-  <li style="font-weight: 600;"><a href="/about">אודות</a></li><li style="font-weight: 600;"><a href="/summer-kits">ערכות קיץ</a></li><li style="font-weight: 600;"><a href="/contact">צור קשר</a></li><li style="font-weight: 600;"><a href="/educational-tips" class="">טיפים בחינוך</a></li><li style="font-weight: 600;"><a href="/childrens-activities">פעילויות לילדים</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><a href="/login" class="login-link nav-login" title="התחברות"><svg class="login-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a><a href="#cart" class="cart-link nav-cart" id="cart-drawer-toggle" title="עגלת קניות"><svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">0</span></a><div class="nav-search-box">
-    <input type="text" class="nav-search-input" id="nav-search-input" placeholder="חיפוש מוצרים..." autocomplete="off">
+  <li style="font-weight: 600;"><a href="/about">אודות</a></li><li style="font-weight: 600;"><a href="/summer-kits">ערכות קיץ</a></li><li style="font-weight: 600;"><a href="/contact">צור קשר</a></li><li style="font-weight: 600;"><a href="/educational-tips" class>טיפים בחינוך</a></li><li style="font-weight: 600;"><a href="/childrens-activities">פעילויות לילדים</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><a href="/login" class="login-link nav-login" title="התחברות"><svg class="login-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a><a href="#cart" class="cart-link nav-cart" id="cart-drawer-toggle" title="עגלת קניות"><svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cart-count">0</span></a><div class="nav-search-box">
+    <input type="text" class="nav-search-input" id="nav-search-input" placeholder="חיפוש מוצרים..." autocomplete="off" />
     <button class="nav-search-btn" id="nav-search-btn" title="חיפוש">
-      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
     </button>
     <div class="nav-search-results" id="nav-search-results"></div>
-  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="חיפוש"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg></button></div>
+  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="חיפוש"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button></div>
     
     
   </div>
 </nav>
 
-    <nav class="zappy-catalog-menu rtl" id="zappy-catalog-menu" dir="rtl">
+    <nav class="zappy-catalog-menu rtl" id="zappy-catalog-menu" dir="rtl" style="display:none">
       <div class="catalog-menu-container">
         <a href="/products" class="catalog-menu-item catalog-menu-all">כל המוצרים</a>
-        <div class="catalog-menu-categories" id="zappy-category-links">
-          <!-- Categories will be loaded dynamically -->
-        </div>
+        <div class="catalog-menu-categories" id="zappy-category-links" dir="rtl" data-zappy-catalog-baked="1"></div>
       </div>
     </nav>
   
   
   <main>
     <section class="index-hero-section" data-layout-spec="בית-hero" data-hero-type="fullscreen-scrim" style="padding-bottom: 0px; margin-top: -102px !important; padding-top: 102px !important; min-height: 790.333px !important;" id="zappy-section-0" data-zappy-content-align="top-center"><div class="index-hero-section__bg-wrapper">
-    <div data-zappy-zoom-wrapper="true" data-element-id="img-1772723145803-l9deoqv75" data-element-type="image" data-zappy-zoom-wrapper-width-mode="full" style="position: absolute !important; top: 0px !important; left: 0px !important; width:100% !important; height:100% !important; max-width:none !important; margin-left: 0px !important; margin-right: 0px !important; display: block !important; z-index: 1 !important; overflow: hidden !important;" data-zappy-zoom-clip="true" data-zappy-wrapper-margins-applied="true" data-zappy-zoom-wrapper-width="1541px" data-zappy-zoom-wrapper-height="790px"><img loading="eager" fetchpriority="high" data-hero-bg="true" data-placeholder="index-hero-bg" data-context="A bright, sunlit tabletop scene with warm natural light streaming in, showing hands of children and an adult engaged in gentle Passover-themed craft activities. Pastel-colored materials scattered across a clean wooden table: soft pink, mint green, cream, and butter yellow craft supplies. Visible elements include decorative Passover symbols (matzah shapes, Seder plate items) being assembled with care. Shallow depth of field with soft shadows, creating a warm, inviting, educational atmosphere. The composition should have calm energy—organized but playful. Soft focus background showing more craft supplies. Photography style: lifestyle editorial, natural window light, gentle color grading with warm pastel tones, shot from a slightly elevated angle to show the activity clearly." width="1920" height="1080" src="/assets/business-general-hero-upload-1774216401270.webp" alt="ילדים והורה יוצרים יחד פעילויות פסח בצבעים פסטליים רכים" class="index-hero-section__bg-image" data-preserve-bg="0" data-element-type="image" data-element-id="img-1772723145803-l9deoqv75" style="object-position: 56% 62%; object-fit: cover; width: 100%; height: 100%; position: absolute !important; margin: 0px !important; left: -37.2132% !important; top: 0% !important; max-width: none !important; max-height: none !important; display: block !important;" data-zappy-zoom="0.8" data-hero-background="true" data-zappy-original-width="1540.833251953125" data-zappy-original-height="790.3255004882812" decoding="async"></div>
+    <div data-zappy-zoom-wrapper="true" data-element-id="img-1772723145803-l9deoqv75" data-element-type="image" data-zappy-zoom-wrapper-width-mode="full" style="position: absolute !important; top: 0px !important; left: 0px !important; width:100% !important; height:100% !important; max-width:none !important; margin-left: 0px !important; margin-right: 0px !important; display: block !important; z-index: 1 !important; overflow: hidden !important;" data-zappy-zoom-clip="true" data-zappy-wrapper-margins-applied="true" data-zappy-zoom-wrapper-width="1541px" data-zappy-zoom-wrapper-height="790px"><img loading="eager" fetchpriority="high" data-hero-bg="true" data-placeholder="index-hero-bg" data-context="A bright, sunlit tabletop scene with warm natural light streaming in, showing hands of children and an adult engaged in gentle Passover-themed craft activities. Pastel-colored materials scattered across a clean wooden table: soft pink, mint green, cream, and butter yellow craft supplies. Visible elements include decorative Passover symbols (matzah shapes, Seder plate items) being assembled with care. Shallow depth of field with soft shadows, creating a warm, inviting, educational atmosphere. The composition should have calm energy—organized but playful. Soft focus background showing more craft supplies. Photography style: lifestyle editorial, natural window light, gentle color grading with warm pastel tones, shot from a slightly elevated angle to show the activity clearly." width="1920" height="1080" src="/assets/business-general-hero-upload-1774216401270.webp" alt="ילדים והורה יוצרים יחד פעילויות פסח בצבעים פסטליים רכים" class="index-hero-section__bg-image" data-preserve-bg="0" data-element-type="image" data-element-id="img-1772723145803-l9deoqv75" style="object-position: 56% 62%; object-fit: cover; width: 100%; height: 100%; position: absolute !important; margin: 0px !important; left: -37.2132% !important; top: 0% !important; max-width: none !important; max-height: none !important; display: block !important;" data-zappy-zoom="0.8" data-hero-background="true" data-zappy-original-width="1540.833251953125" data-zappy-original-height="790.3255004882812" decoding="async" /></div>
   </div>
   <div class="index-hero-section__scrim" aria-hidden="true"></div>
-  <h1 class="index-hero-section__headline" data-zappy-abs-align="true" style="color: rgb(34, 48, 43); font-size: 200px; left: 600px; width: 1200px; outline-offset: 2px !important;" data-element-id="move-1774190242945-0u09slil"><font color="#f5f5dc"><br></font><br><font color="#f5f5dc">&nbsp;</font><font color="#f5f5dc"><br></font><br><font color="#f5f5dc"><br></font><font color="#f5f5dc"><br></font><br><font color="#f5f5dc">רגעים קטנים גדולים</font></h1><div class="index-hero-section__content-wrapper" data-zappy-align-target="true">
+  <h1 class="index-hero-section__headline" data-zappy-abs-align="true" style="color: rgb(34, 48, 43); font-size: 200px; left: 600px; width: 1200px; outline-offset: 2px !important;" data-element-id="move-1774190242945-0u09slil"><font color="#f5f5dc"><br /></font><br /><font color="#f5f5dc">&nbsp;</font><font color="#f5f5dc"><br /></font><br /><font color="#f5f5dc"><br /></font><font color="#f5f5dc"><br /></font><br /><font color="#f5f5dc">רגעים קטנים גדולים</font></h1><div class="index-hero-section__content-wrapper" data-zappy-align-target="true">
     <div class="index-hero-section__overlay-card" style="background: transparent; backdrop-filter: none; box-shadow: none; border: none; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 22%">
       
       
-      <h1 class="index-hero-section__headline" style="text-align: center; font-size: 200px;" data-zappy-abs-align="true" data-element-id="move-1774049817818-1r17xgrz"><font color="#f5f5dc"><br></font><font color="#f5f5dc"><br><font color="#f5f5dc"><br></font><br><font color="#f5f5dc"><br></font><br><font color="#f5f5dc"><br></font>רגעים קטנים גדולים</font></h1><br><br><br><div class="index-hero-section__cta-group">
+      <h1 class="index-hero-section__headline" style="text-align: center; font-size: 200px;" data-zappy-abs-align="true" data-element-id="move-1774049817818-1r17xgrz"><font color="#f5f5dc"><br /></font><font color="#f5f5dc"><br /><font color="#f5f5dc"><br /></font><br /><font color="#f5f5dc"><br /></font><br /><font color="#f5f5dc"><br /></font>רגעים קטנים גדולים</font></h1><br /><br /><br /><div class="index-hero-section__cta-group">
         
         
       </div>
@@ -439,12 +808,12 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
     <svg aria-hidden="true" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="index-hero-wave-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#FFF9F2;stop-opacity:1"></stop>
-          <stop offset="50%" style="stop-color:#FFE4A8;stop-opacity:0.15"></stop>
-          <stop offset="100%" style="stop-color:#FFF9F2;stop-opacity:1"></stop>
+          <stop offset="0%" style="stop-color:#FFF9F2;stop-opacity:1"/>
+          <stop offset="50%" style="stop-color:#FFE4A8;stop-opacity:0.15"/>
+          <stop offset="100%" style="stop-color:#FFF9F2;stop-opacity:1"/>
         </linearGradient>
       </defs>
-      <path d="M0,100 L0,45 Q60,38 120,45 T240,42 Q300,48 360,40 T480,45 Q540,38 600,46 T720,40 Q780,47 840,42 T960,45 Q1020,39 1080,46 T1200,42 L1200,100 Z" fill="var(--bg-light)"></path>
+      <path d="M0,100 L0,45 Q60,38 120,45 T240,42 Q300,48 360,40 T480,45 Q540,38 600,46 T720,40 Q780,47 840,42 T960,45 Q1020,39 1080,46 T1200,42 L1200,100 Z" fill="var(--bg-light)"/>
     </svg>
   </div>
 </section>
@@ -468,14 +837,14 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
     
     <h3>
 
-אני חן, גננת חינוך מיוחד, אמא לשלושה ומדריכת הורים. יצרתי את "רגעים קטנים גדולים" מתוך אמונה שלמידה מתרחשת בצורה הטובה ביותר דרך משחק.&nbsp;<br>בכל ערכה שאני יוצרת אני משלבת את הניסיון המקצועי שלי בחינוך המיוחד&nbsp;<br>עם ההבנה [החשובה!] של צרכי ההורים והילדים בבית.&nbsp;<br>כזו שמפתחת חשיבה, למידה, סקרנות, מחזקת את הקשר בין אחים ויוצרת שיח רגשי אמיתי.</h3>
+אני חן, גננת חינוך מיוחד, אמא לשלושה ומדריכת הורים. יצרתי את "רגעים קטנים גדולים" מתוך אמונה שלמידה מתרחשת בצורה הטובה ביותר דרך משחק.&nbsp;<br />בכל ערכה שאני יוצרת אני משלבת את הניסיון המקצועי שלי בחינוך המיוחד&nbsp;<br />עם ההבנה [החשובה!] של צרכי ההורים והילדים בבית.&nbsp;<br />כזו שמפתחת חשיבה, למידה, סקרנות, מחזקת את הקשר בין אחים ויוצרת שיח רגשי אמיתי.</h3>
     
   </div>
 </div></section><section class="index-age-selector-section" data-layout-spec="בית-age-selector" id="zappy-section-1" style="padding-top: 30px">
   <div class="index-age-selector-container">
     <div class="index-age-selector-header">
       <h2>ערכות&nbsp; לחופש הגדול&nbsp;</h2>
-      <p style="font-weight: 600;"><span>בערכה תמצאו </span>משחקים<span>, </span>יצירות<span>, </span>משימות חשיבה<span>,&nbsp;<br></span><span>&nbsp;ו</span>משחקים המזמנים זמן איכות משפחתי.<span>&nbsp;<br></span><b>&nbsp;</b><b>בכל ערכה חומרים ופעילויות ל-2 ילדים!&nbsp;</b><br>כמובן הערכה ניתנת להתאמה אישית- לפי גיל וכמות הילדים.&nbsp;<br>צריכים עזרה?&nbsp;<br>אשמח לעזור לכם להתאים את הערכה המושלמת!&nbsp;&nbsp;</p>
+      <p style="font-weight: 600;"><span>בערכה תמצאו </span>משחקים<span>, </span>יצירות<span>, </span>משימות חשיבה<span>,&nbsp;<br /></span><span>&nbsp;ו</span>משחקים המזמנים זמן איכות משפחתי.<span>&nbsp;<br /></span><b>&nbsp;</b><b>בכל ערכה חומרים ופעילויות ל-2 ילדים!&nbsp;</b><br />כמובן הערכה ניתנת להתאמה אישית- לפי גיל וכמות הילדים.&nbsp;<br />צריכים עזרה?&nbsp;<br />אשמח לעזור לכם להתאים את הערכה המושלמת!&nbsp;&nbsp;</p>
     </div>
 
     <div class="index-age-selector-card">
@@ -498,7 +867,7 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
       </div>
 
     <div class="index-age-selector-footer">
-      <p style="font-weight: 600;">כל ערכה מכילה חומרים ופעילויות ל-2 ילדים!&nbsp;<br>בעלות 180 ש"ח<br>כל תוספת של ילד בעלות 33 שח</p>
+      <p style="font-weight: 600;">כל ערכה מכילה חומרים ופעילויות ל-2 ילדים!&nbsp;<br />בעלות 180 ש"ח<br />כל תוספת של ילד בעלות 33 שח</p>
       <p style="text-align: center !important; display: flex !important; justify-content: center !important; align-items: flex-start !important; width: 100% !important; font-weight: 600;"><a href="/products" class="index-age-selector-cta" data-native-element="true" data-element-id="btn-1774189735360-dl6mvsqln" data-element-type="button" style="outline: none; border-color: rgb(229, 107, 95) !important; color: rgb(255, 255, 255) !important; background-color: rgb(229, 107, 95) !important; background-image: none !important;">לרכישה</a>
     </p></div>
   </div>
@@ -507,12 +876,12 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
     <svg aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="scallop-fade" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-opacity="0.15"></stop>
-          <stop offset="100%" stop-opacity="0"></stop>
+          <stop offset="0%" stop-opacity="0.15"/>
+          <stop offset="100%" stop-opacity="0"/>
         </linearGradient>
       </defs>
-      <path d="M0,60 L0,30 Q30,25 60,30 T120,30 Q150,25 180,30 T240,30 Q270,25 300,30 T360,30 Q390,25 420,30 T480,30 Q510,25 540,30 T600,30 Q630,25 660,30 T720,30 Q750,25 780,30 T840,30 Q870,25 900,30 T960,30 Q990,25 1020,30 T1080,30 Q1110,25 1140,30 T1200,30 L1200,60 Z" fill="#FBF6EF"></path>
-      <path d="M0,30 Q30,25 60,30 T120,30 Q150,25 180,30 T240,30 Q270,25 300,30 T360,30 Q390,25 420,30 T480,30 Q510,25 540,30 T600,30 Q630,25 660,30 T720,30 Q750,25 780,30 T840,30 Q870,25 900,30 T960,30 Q990,25 1020,30 T1080,30 Q1110,25 1140,30 T1200,30" stroke="var(--border-light)" stroke-width="1" fill="#FBF6EF"></path>
+      <path d="M0,60 L0,30 Q30,25 60,30 T120,30 Q150,25 180,30 T240,30 Q270,25 300,30 T360,30 Q390,25 420,30 T480,30 Q510,25 540,30 T600,30 Q630,25 660,30 T720,30 Q750,25 780,30 T840,30 Q870,25 900,30 T960,30 Q990,25 1020,30 T1080,30 Q1110,25 1140,30 T1200,30 L1200,60 Z" fill="#FBF6EF"/>
+      <path d="M0,30 Q30,25 60,30 T120,30 Q150,25 180,30 T240,30 Q270,25 300,30 T360,30 Q390,25 420,30 T480,30 Q510,25 540,30 T600,30 Q630,25 660,30 T720,30 Q750,25 780,30 T840,30 Q870,25 900,30 T960,30 Q990,25 1020,30 T1080,30 Q1110,25 1140,30 T1200,30" stroke="var(--border-light)" stroke-width="1" fill="#FBF6EF"/>
     </svg>
   </div>
 </section>
@@ -522,7 +891,7 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
 
 
 
-<section class="index-benefits-section" data-layout-spec="בית-benefits" id="zappy-section-3" style="position: relative; overflow: hidden; background-color: #F4A7A2; --zappy-bg-color: #F4A7A2" data-zappy-bg-color="#F4A7A2" data-zappy-bg-image="" data-zappy-bg-overlay-color="#000000" data-zappy-bg-overlay-opacity="0" data-zappy-bg-video-type="" data-zappy-bg-video-url="" data-zappy-bg-type="color"><style data-zappy-section-color="zappy-section-3">#zappy-section-3, #zappy-section-3 h1, #zappy-section-3 h2, #zappy-section-3 h3, #zappy-section-3 h4, #zappy-section-3 h5, #zappy-section-3 h6, #zappy-section-3 p, #zappy-section-3 span, #zappy-section-3 a, #zappy-section-3 li, #zappy-section-3 label, #zappy-section-3 blockquote, #zappy-section-3 figcaption, #zappy-section-3 dt, #zappy-section-3 dd, #zappy-section-3 td, #zappy-section-3 th { color: #1A1A1A; }</style>
+<section class="index-benefits-section" data-layout-spec="בית-benefits" id="zappy-section-3" style="position: relative; overflow: hidden; background-color: #F4A7A2; --zappy-bg-color: #F4A7A2" data-zappy-bg-color="#F4A7A2" data-zappy-bg-image data-zappy-bg-overlay-color="#000000" data-zappy-bg-overlay-opacity="0" data-zappy-bg-video-type data-zappy-bg-video-url data-zappy-bg-type="color"><style data-zappy-section-color="zappy-section-3">#zappy-section-3, #zappy-section-3 h1, #zappy-section-3 h2, #zappy-section-3 h3, #zappy-section-3 h4, #zappy-section-3 h5, #zappy-section-3 h6, #zappy-section-3 p, #zappy-section-3 span, #zappy-section-3 a, #zappy-section-3 li, #zappy-section-3 label, #zappy-section-3 blockquote, #zappy-section-3 figcaption, #zappy-section-3 dt, #zappy-section-3 dd, #zappy-section-3 td, #zappy-section-3 th { color: #1A1A1A; }</style>
   <div class="index-benefits-container zappy-preserve-css-grid" id="zappy-auto-grid-1773915864284-48hjiy" data-zappy-auto-grid="true" data-zappy-grid-align="start" data-original-item-width="570" data-original-gap="60px" style="display: grid; --zappy-grid-cols: repeat(2, minmax(0, 1fr)); grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch !important;" data-zappy-explicit-columns="true">
     <div class="index-benefits-content">
       <h2>למה הורים אוהבים את הערכות שלנו</h2>
@@ -531,8 +900,8 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
       <div class="index-benefits-cards zappy-preserve-css-grid" style="display: grid; grid-template-columns: repeat(3, minmax(0px, 1fr)); --zappy-grid-cols: repeat(3, minmax(0px, 1fr)); align-items: stretch !important;" data-zappy-explicit-columns="true" data-original-item-width="177" data-original-gap="20px" id="zappy-auto-grid-1774130580689-nzosc6" data-zappy-auto-grid="true"><div class="index-benefits-card" data-grid-item-index="0">
           <div class="index-benefits-card-icon">
             <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S6 21.523 6 16 10.477 6 16 6z" fill="currentColor"></path>
-              <path d="M16 10a1 1 0 0 1 1 1v4h4a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1z" fill="currentColor"></path>
+              <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S6 21.523 6 16 10.477 6 16 6z" fill="currentColor"/>
+              <path d="M16 10a1 1 0 0 1 1 1v4h4a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1z" fill="currentColor"/>
             </svg>
           </div>
           <h3>מותאם גיל</h3>
@@ -540,17 +909,17 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
         </div><div class="index-benefits-card" data-grid-item-index="1">
           <div class="index-benefits-card-icon">
             <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H8zm0 2h16v16H8V8z" fill="currentColor"></path>
-              <path d="M12 12h8v2h-8v-2zm0 4h8v2h-8v-2zm0 4h5v2h-5v-2z" fill="currentColor"></path>
+              <path d="M8 6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H8zm0 2h16v16H8V8z" fill="currentColor"/>
+              <path d="M12 12h8v2h-8v-2zm0 4h8v2h-8v-2zm0 4h5v2h-5v-2z" fill="currentColor"/>
             </svg>
           </div>
           <h3>אפס מאמץ</h3>
-          <p style="font-weight: 600;">הכל ארוז ומוכן – חומרים, הוראות ברורות, ורעיונות להעשרה.&nbsp;<br>אתם פשוט פותחים ומתחילים ליהנות.</p>
+          <p style="font-weight: 600;">הכל ארוז ומוכן – חומרים, הוראות ברורות, ורעיונות להעשרה.&nbsp;<br />אתם פשוט פותחים ומתחילים ליהנות.</p>
         </div><div class="index-benefits-card" data-grid-item-index="2">
           <div class="index-benefits-card-icon">
             <svg data-element-type="icon" data-icon-type="svg" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S6 21.523 6 16 10.477 6 16 6z" fill="currentColor"></path>
-              <path d="M14.5 10l-1.5 1.5L16.293 15H10v2h6.293L13 20.293 14.5 22l6-6-6-6z" fill="currentColor"></path>
+              <path d="M16 4C9.373 4 4 9.373 4 16s5.373 12 12 12 12-5.373 12-12S22.627 4 16 4zm0 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S6 21.523 6 16 10.477 6 16 6z" fill="currentColor"/>
+              <path d="M14.5 10l-1.5 1.5L16.293 15H10v2h6.293L13 20.293 14.5 22l6-6-6-6z" fill="currentColor"/>
             </svg>
           </div>
           <h3>למידה דרך משחק עם תוצאות ברורות</h3>
@@ -560,7 +929,7 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
 
     <div class="index-benefits-imagery zappy-grid-item-no-stretch" style="overflow: hidden !important;">
       <div class="index-benefits-main-image-wrapper">
-        <input type="checkbox" id="zappy-lightbox-toggle-img-1773915864215-pg4sw57p9" class="zappy-lightbox-toggle" data-zappy-image-lightbox="true"><label class="zappy-lightbox-trigger" for="zappy-lightbox-toggle-img-1773915864215-pg4sw57p9" data-zappy-image-lightbox="true"><div data-zappy-zoom-wrapper="true" data-element-id="img-1773915864215-pg4sw57p9" data-element-type="image" data-zappy-zoom-wrapper-width="480px" data-zappy-zoom-wrapper-height="643px" data-zappy-zoom-wrapper-width-mode="px" style="cursor: pointer; position: relative !important; overflow: hidden !important; width: 480px !important; max-width: 100% !important; margin-left: auto !important; margin-right: auto !important; height: 643px !important; display: block !important;" data-zappy-zoom-clip="true" data-zappy-wrapper-margins-applied="true" data-zappy-click-action="expand" data-zappy-zoom-wrapper-align="center"><img data-placeholder="index-benefits-image-1" data-context="A warm, bright lifestyle photo showing an organized Passover activity kit laid out on a soft pastel cloth (cream or light pink). The kit includes colorful craft materials, small educational cards with Hebrew text, child-safe scissors, and finished craft examples. Shot from a 45-degree overhead angle with natural window light, creating a calm and inviting educational atmosphere. The arrangement is neat and aesthetically pleasing, reflecting both professional teaching expertise and parental warmth. Soft shadows, pastel color palette (coral pink, mint green, butter yellow), gentle focus." width="600" height="800" src="/assets/site-index-benefits-image-1-1783718285116-m92q8j.webp?v=1783718287263" alt="ערכת פעילות מאורגנת לפסח על רקע בד פסטלי" class="index-benefits-main-image" data-element-type="image" data-element-id="img-1773915864215-pg4sw57p9" style="object-position: 36% 69% !important; display: block !important; object-fit: cover !important; width: 160.036% !important; height: 160% !important; max-width: none !important; margin: 0px !important; max-height: none !important; left: -21.6128% !important; top: -41.4% !important; position: absolute !important;" data-zappy-original-width="480" data-zappy-original-height="642.8515625" data-zappy-zoom="1.6" data-zappy-click-action="expand" data-zappy-object-position="36% 69%" loading="lazy" decoding="async" fetchpriority="low"></div></label>
+        <input type="checkbox" id="zappy-lightbox-toggle-img-1773915864215-pg4sw57p9" class="zappy-lightbox-toggle" data-zappy-image-lightbox="true" /><label class="zappy-lightbox-trigger" for="zappy-lightbox-toggle-img-1773915864215-pg4sw57p9" data-zappy-image-lightbox="true"><div data-zappy-zoom-wrapper="true" data-element-id="img-1773915864215-pg4sw57p9" data-element-type="image" data-zappy-zoom-wrapper-width="480px" data-zappy-zoom-wrapper-height="643px" data-zappy-zoom-wrapper-width-mode="px" style="cursor: pointer; position: relative !important; overflow: hidden !important; width: 480px !important; max-width: 100% !important; margin-left: auto !important; margin-right: auto !important; height: 643px !important; display: block !important;" data-zappy-zoom-clip="true" data-zappy-wrapper-margins-applied="true" data-zappy-click-action="expand" data-zappy-zoom-wrapper-align="center"><img data-placeholder="index-benefits-image-1" data-context="A warm, bright lifestyle photo showing an organized Passover activity kit laid out on a soft pastel cloth (cream or light pink). The kit includes colorful craft materials, small educational cards with Hebrew text, child-safe scissors, and finished craft examples. Shot from a 45-degree overhead angle with natural window light, creating a calm and inviting educational atmosphere. The arrangement is neat and aesthetically pleasing, reflecting both professional teaching expertise and parental warmth. Soft shadows, pastel color palette (coral pink, mint green, butter yellow), gentle focus." width="600" height="800" src="/assets/site-index-benefits-image-1-1783718285116-m92q8j.webp?v=1783718287263" alt="ערכת פעילות מאורגנת לפסח על רקע בד פסטלי" class="index-benefits-main-image" data-element-type="image" data-element-id="img-1773915864215-pg4sw57p9" style="object-position: 36% 69% !important; display: block !important; object-fit: cover !important; width: 160.036% !important; height: 160% !important; max-width: none !important; margin: 0px !important; max-height: none !important; left: -21.6128% !important; top: -41.4% !important; position: absolute !important;" data-zappy-original-width="480" data-zappy-original-height="642.8515625" data-zappy-zoom="1.6" data-zappy-click-action="expand" data-zappy-object-position="36% 69%" loading="lazy" decoding="async" fetchpriority="low" /></div></label>
         <div class="index-benefits-accent-image-wrapper">
           
         </div>
@@ -572,12 +941,12 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
     <svg aria-hidden="true" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="benefits-divider-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#FBF6EF;stop-opacity:1"></stop>
-          <stop offset="100%" style="stop-color:#F3EADF;stop-opacity:1"></stop>
+          <stop offset="0%" style="stop-color:#FBF6EF;stop-opacity:1"/>
+          <stop offset="100%" style="stop-color:#F3EADF;stop-opacity:1"/>
         </linearGradient>
       </defs>
-      <path d="M0,100 L0,0 L1200,100 L1200,100 Z" fill="#4A3B33"></path>
-      <path d="M0,0 L1200,100" stroke="var(--border-light)" stroke-width="1" fill="#4A3B33" opacity="0.6"></path>
+      <path d="M0,100 L0,0 L1200,100 L1200,100 Z" fill="#4A3B33"/>
+      <path d="M0,0 L1200,100" stroke="var(--border-light)" stroke-width="1" fill="#4A3B33" opacity="0.6"/>
     </svg>
   </div>
 </section>
@@ -603,7 +972,7 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
   <div class="footer-container">
     <div class="footer-top">
       <div class="footer-column company-info">
-        <img src="/assets/logo-1773748743616-dwcn4r.webp?v=1773748744009-9k2lo8" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo" data-element-type="image" data-element-id="img-1783403059557-k58mxtrar" data-zappy-footer-image="true" decoding="async" width="35" height="35">
+        <img src="/assets/logo-1773748743616-dwcn4r.webp?v=1773748744009-9k2lo8" alt="חן חכמון זקר - רגעים קטנים גדולים" class="logo" data-element-type="image" data-element-id="img-1783403059557-k58mxtrar" data-zappy-footer-image="true" decoding="async" width="35" height="35" />
         
       </div>
       
@@ -641,7 +1010,7 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
     <div class="footer-bottom">
       <div class="footer-bottom-content">
         <div class="copyright">
-          <p style="font-weight: 600;">© 2026 חן חכמון זקר - רגעים קטנים גדולים.&nbsp;<br>כל הזכויות שמורות.</p>
+          <p style="font-weight: 600;">© 2026 חן חכמון זקר - רגעים קטנים גדולים.&nbsp;<br />כל הזכויות שמורות.</p>
         </div>
         <div class="footer-legal">
           <a href="/privacy">מדיניות פרטיות</a>
@@ -654,7 +1023,10 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
           <a href="/accessibility">נגישות</a>
           <span class="separator">|</span>
           <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
-        </div>
+        <span class="separator">|</span>
+            <a href="/shipping-policy" aria-label="מדיניות משלוחים">
+              מדיניות משלוחים
+            </a></div>
       </div>
     </div>
   </div>
@@ -666,10 +1038,10 @@ html{box-sizing:border-box;-webkit-text-size-adjust:100%}*,*::before,*::after{bo
   
   <div data-integration="accessibility:toolbar"></div>
 
-<div class="zappy-qv-overlay" id="zappy-qv-overlay" hidden=""></div>
-<div class="zappy-qv-modal" id="zappy-qv-modal" role="dialog" aria-modal="true" aria-label="תצוגה מהירה" hidden="">
+<div class="zappy-qv-overlay" id="zappy-qv-overlay" hidden></div>
+<div class="zappy-qv-modal" id="zappy-qv-modal" role="dialog" aria-modal="true" aria-label="תצוגה מהירה" hidden>
   <button type="button" class="zappy-qv-close" id="zappy-qv-close" aria-label="סגור">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
   </button>
   <div class="zappy-qv-content" id="zappy-qv-content"></div>
 </div>
