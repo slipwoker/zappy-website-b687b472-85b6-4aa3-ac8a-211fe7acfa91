@@ -1,30 +1,10 @@
 {
   "@context": "https://schema.org",
-  "generated_at": "2026-07-16T14:15:59.675Z",
+  "generated_at": "2026-07-16T14:18:45.991Z",
   "base_url": "https://henhakmonzakar.co.il",
   "currency": "ILS",
-  "count": 2,
+  "count": 1,
   "products": [
-    {
-      "id": "07edeebf-6275-482d-aed9-af889b4981e4",
-      "slug": "tst-yooi8j",
-      "name": "טסט",
-      "name_translations": {},
-      "description": "",
-      "short_description": "ניסיון",
-      "sku": null,
-      "brand": null,
-      "price": 0.1,
-      "base_price": 0.1,
-      "sale_price": 0.1,
-      "currency": "ILS",
-      "images": [],
-      "in_stock": true,
-      "stock_status": "in_stock",
-      "url": "https://henhakmonzakar.co.il/product/tst-yooi8j",
-      "categories": [],
-      "updated_at": "2026-07-16T14:00:55.571Z"
-    },
     {
       "id": "fc25557d-c0d0-4842-8dc6-12bbd2528a3b",
       "slug": "arkt-mshchk-vlmydh-lkyts-r52uo8",
