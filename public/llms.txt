@@ -78,7 +78,13 @@ Information about WCAG compliance and accessibility features.
 
 ## Products
 
-**Total active products: 1**
+**Total active products: 2**
+
+### טסט
+https://henhakmonzakar.co.il/product/tst-yooi8j
+- Price: 0.10 ILS
+- Availability: In stock
+- Description: ניסיון
 
 ### ערכת משחק ולמידה לקיץ
 https://henhakmonzakar.co.il/product/arkt-mshchk-vlmydh-lkyts-r52uo8
