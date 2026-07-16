@@ -13397,6 +13397,12 @@ async function loadRelatedProducts(currentProduct, t) {
       if (imgA >= contA) return { w: (imgA / contA) * 100, h: 100 };
       return { w: 100, h: (contA / imgA) * 100 };
     }
+    function containPercents(imgA, contA) {
+      if (!isFinite(imgA) || imgA <= 0 || !isFinite(contA) || contA <= 0)
+        return { w: 100, h: 100 };
+      if (imgA >= contA) return { w: 100, h: (contA / imgA) * 100 };
+      return { w: (imgA / contA) * 100, h: 100 };
+    }
 
     var IMAGE_SLOT_CLASS_TOKENS = ['image-wrap', 'image-tile', 'image-slot', 'card-image', 'card-media', 'media-wrap', 'portrait-wrap'];
     function classNameHasImageSlotMarker(className) {
@@ -13898,11 +13904,15 @@ async function loadRelatedProducts(currentProduct, t) {
       var imgA = nW / nH;
       var contA = rect.width / rect.height;
       var cover = coverPercents(imgA, contA);
+      var contain = containPercents(imgA, contA);
 
       var wPct = 100, hPct = 100;
       if (zoom >= 1) {
         wPct = cover.w * zoom;
         hPct = cover.h * zoom;
+      } else if (zoom <= 0.5) {
+        wPct = contain.w;
+        hPct = contain.h;
       } else {
         var t = (zoom - 0.5) / 0.5;
         if (!isFinite(t)) t = 0;
@@ -20728,9 +20738,10 @@ function withConsent(category, callback) {
   } catch (e) {}
 })();
 
-/* ZAPPY_ANNOUNCEMENT_HEADER_SYNC_V3 */
+/* ZAPPY_ANNOUNCEMENT_HEADER_SYNC_V4 */
 (function(){
-  if (window.__zappyAnnouncementHeaderSyncV3) return;
+  if (window.__zappyAnnouncementHeaderSyncV4) return;
+  window.__zappyAnnouncementHeaderSyncV4 = true;
   window.__zappyAnnouncementHeaderSyncV3 = true;
   window.__zappyAnnouncementHeaderSyncV2 = true;
   window.__zappyAnnouncementHeaderSyncV1 = true; // legacy guards
@@ -20803,17 +20814,35 @@ function withConsent(category, callback) {
     document.documentElement.style.setProperty('--zappy-header-stack-height', totalHeight + 'px');
     document.body.style.setProperty('padding-top', totalHeight + 'px', 'important');
 
-    // Transparent nav: pull hero behind the fixed stack immediately (do NOT
-    // wait for lazy storefront-runtime.js — that delay was the ~10s gray bar).
-    // Keep selectors aligned with ZAPPY_ANNOUNCEMENT_HEADER_OFFSET_CSS_V2 —
+    // Transparent nav: pull hero behind the fixed stack immediately.
+    // Measure the navbar itself rather than trusting --nav-bg, which can be
+    // absent on older published pages or during stylesheet failure. Critical
+    // CSS also paints known opaque navbar colors before this runtime executes.
+    // Keep selectors aligned with ZAPPY_ANNOUNCEMENT_HEADER_OFFSET_CSS_V3 —
     // never underlap bare main>section:first-child (catalog /products pages).
-    var navBgValue = '';
-    try { navBgValue = getComputedStyle(document.documentElement).getPropertyValue('--nav-bg').trim(); } catch (e) {}
-    if (!navBgValue || navBgValue === 'transparent') {
-      var heroEl = document.querySelector('section[data-hero-type^="fullscreen"], .index-hero-section, main > section[class*="hero"]:first-of-type');
-      if (heroEl && totalHeight > 0) {
+    var heroEl = document.querySelector('section[data-hero-type^="fullscreen"], .index-hero-section, main > section[class*="hero"]:first-of-type');
+    if (heroEl && totalHeight > 0) {
+      var headerIsTransparent = false;
+      try {
+        var headerStyle = getComputedStyle(header);
+        var backgroundColor = headerStyle.backgroundColor || '';
+        var backgroundImage = headerStyle.backgroundImage || 'none';
+        var alphaMatch = backgroundColor.match(/rgba?\([^)]*[,\s]([0-9.]+)\s*\)$/i);
+        headerIsTransparent =
+          backgroundImage === 'none' &&
+          (backgroundColor === 'transparent' || (alphaMatch && parseFloat(alphaMatch[1]) < 0.3));
+      } catch (e) {}
+      if (headerIsTransparent) {
         heroEl.style.setProperty('margin-top', '-' + totalHeight + 'px', 'important');
         heroEl.style.setProperty('padding-top', totalHeight + 'px', 'important');
+        heroEl.setAttribute('data-zappy-nav-underlap', 'true');
+      } else if (
+        heroEl.getAttribute('data-zappy-nav-underlap') === 'true' ||
+        (heroEl.style.marginTop === '-' + totalHeight + 'px' && heroEl.style.paddingTop === totalHeight + 'px')
+      ) {
+        heroEl.style.removeProperty('margin-top');
+        heroEl.style.removeProperty('padding-top');
+        heroEl.removeAttribute('data-zappy-nav-underlap');
       }
     }
   }

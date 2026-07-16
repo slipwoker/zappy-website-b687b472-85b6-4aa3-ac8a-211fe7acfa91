@@ -10809,7 +10809,7 @@ main,
 }
 
 
-/* ZAPPY_ANNOUNCEMENT_HEADER_OFFSET_CSS_V2 */
+/* ZAPPY_ANNOUNCEMENT_HEADER_OFFSET_CSS_V3 */
 :root {
   --zappy-header-stack-height: calc(var(--zappy-announcement-height, 40px) + var(--header-height, 72px));
 }
@@ -10827,6 +10827,7 @@ body:has(.zappy-announcement-bar) main > section[class*="hero"]:first-of-type {
   margin-top: calc(-1 * var(--zappy-header-stack-height)) !important;
   padding-top: calc(var(--zappy-header-stack-height)) !important;
 }
+
 
 
 /* ZAPPY_MOBILE_CATEGORIES_SUBMENU_CSS_V1 */
