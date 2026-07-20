@@ -1,13 +1,13 @@
 {
   "@context": "https://schema.org",
-  "generated_at": "2026-07-20T08:16:52.224Z",
+  "generated_at": "2026-07-20T08:17:39.945Z",
   "base_url": "https://henhakmonzakar.co.il",
   "currency": "ILS",
   "count": 1,
   "products": [
     {
       "id": "1a4e940e-94bd-44e7-9484-a2486c925ea6",
-      "slug": "arkt-mshchk-vlmydh-lkyts-cm3sod",
+      "slug": "arkt-mshchk-vlmydh-lkyts-yfmr6o",
       "name": "ערכת משחק ולמידה לקיץ ",
       "name_translations": {},
       "description": "<p>ערכת משחק ולמידה מושלמת לחופשת הקיץ! 🌞 הערכה כוללת פעילויות חינוכיות מהנות, משחקי יצירה, דפי עבודה צבעוניים והפתעות נוספות – הכל מותאם לגיל הילד/ה. 👧👦 </p><p>איך מזמינים? 1. הוסיפו את הערכה לעגלה 2. בדף התשלום, בשדה \"הערות להזמנה\" – כתבו את גילאי הילדים 3. הגילאים הזמינים: 3-6 , 7-10  📦 . הערכה נשלחת עד הבית ומגיעה באריזה מעוצבת !</p>",
@@ -23,9 +23,9 @@
       ],
       "in_stock": true,
       "stock_status": "in_stock",
-      "url": "https://henhakmonzakar.co.il/product/arkt-mshchk-vlmydh-lkyts-cm3sod",
+      "url": "https://henhakmonzakar.co.il/product/arkt-mshchk-vlmydh-lkyts-yfmr6o",
       "categories": [],
-      "updated_at": "2026-07-20T08:16:19.286Z"
+      "updated_at": "2026-07-20T08:17:08.426Z"
     }
   ]
 }
