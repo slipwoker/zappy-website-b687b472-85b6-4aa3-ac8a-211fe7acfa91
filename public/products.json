@@ -1,16 +1,16 @@
 {
   "@context": "https://schema.org",
-  "generated_at": "2026-07-20T18:41:34.047Z",
+  "generated_at": "2026-07-20T18:44:38.220Z",
   "base_url": "https://henhakmonzakar.co.il",
   "currency": "ILS",
   "count": 1,
   "products": [
     {
       "id": "1a4e940e-94bd-44e7-9484-a2486c925ea6",
-      "slug": "arkt-mshchk-vlmydh-lkyts-r8q1rz",
+      "slug": "arkt-mshchk-vlmydh-lkyts-pmqp87",
       "name": "ערכת משחק ולמידה לקיץ ",
       "name_translations": {},
-      "description": "<p>ערכת משחק ולמידה מושלמת לחופשת הקיץ! 🌞 הערכה כוללת פעילויות חינוכיות מהנות, משחקי יצירה, דפי עבודה צבעוניים והפתעות נוספות – הכל מותאם לגיל הילד/ה. 👧👦</p><p>איך מזמינים? 1. לחצו על מספר הילדים שאתם צריכים [כמות] 2. כתבו את הגילאים שאתם צריכים. 3. הוסיפו את הערכה לעגלה 4. המשך לתשלום 5. רשמו כתובת מלאה .6 איזה כייף! בקרוב הערכה שלכם תגיע אליכם!</p>",
+      "description": "<p>ערכת משחק ולמידה מושלמת לחופשת הקיץ! 🌞 הערכה כוללת פעילויות חינוכיות מהנות, משחקי יצירה, דפי עבודה צבעוניים והפתעות נוספות – הכל מותאם לגיל הילד/ה. 👧👦</p><p>איך מזמינים? 1. לחצו על מספר הילדים שאתם צריכים [כמות] 2. כתבו את הגילאים שאתם צריכים. 3. הוסיפו את הערכה לעגלה 4. המשך לתשלום 5. רשמו כתובת מלאה 6. איזה כייף! בקרוב הערכה שלכם תגיע אליכם!</p>",
       "short_description": null,
       "sku": null,
       "brand": null,
@@ -23,9 +23,9 @@
       ],
       "in_stock": true,
       "stock_status": "in_stock",
-      "url": "https://henhakmonzakar.co.il/product/arkt-mshchk-vlmydh-lkyts-r8q1rz",
+      "url": "https://henhakmonzakar.co.il/product/arkt-mshchk-vlmydh-lkyts-pmqp87",
       "categories": [],
-      "updated_at": "2026-07-20T18:41:02.377Z"
+      "updated_at": "2026-07-20T18:44:18.589Z"
     }
   ]
 }
