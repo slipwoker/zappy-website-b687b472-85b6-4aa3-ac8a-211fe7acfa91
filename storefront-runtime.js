@@ -392,6 +392,75 @@ window.onload = function() {
 ;
 
 ;
+
+
+/* ZAPPY_BLOCK_RUNTIME_V3 */
+(function(){
+  if (window.__zappyBlockRuntimeInstalled) return;
+  window.__zappyBlockRuntimeInstalled = true;
+  function b64ToUtf8(b64){
+    try {
+      var bin = atob(String(b64 || ''));
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    } catch (e) { return ''; }
+  }
+  function hydrate(section){
+    try {
+      if (!section || section.getAttribute('data-zappy-hydrated') === '1') return;
+      var frame = section.querySelector('iframe[data-zappy-block-frame]');
+      if (!frame) return;
+      var doc = b64ToUtf8(section.getAttribute('data-zappy-block-doc'));
+      if (!doc) return;
+      frame.setAttribute('srcdoc', doc);
+      section.setAttribute('data-zappy-hydrated', '1');
+    } catch (e) {}
+  }
+  function hydrateAll(root){
+    var scope = (root && root.querySelectorAll) ? root : document;
+    var nodes = scope.querySelectorAll('section[data-zappy-block][data-zappy-block-doc]');
+    for (var i = 0; i < nodes.length; i++) hydrate(nodes[i]);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){ hydrateAll(document); });
+  } else {
+    hydrateAll(document);
+  }
+  // Catch blocks inserted later (editor live-insert / SPA navigation).
+  try {
+    var mo = new MutationObserver(function(muts){
+      for (var i = 0; i < muts.length; i++){
+        var added = muts[i].addedNodes || [];
+        for (var j = 0; j < added.length; j++){
+          var n = added[j];
+          if (!n || n.nodeType !== 1) continue;
+          if (n.matches && n.matches('section[data-zappy-block][data-zappy-block-doc]')) hydrate(n);
+          if (n.querySelectorAll) hydrateAll(n);
+        }
+      }
+    });
+    mo.observe(document.documentElement || document.body, { childList: true, subtree: true });
+  } catch (e) {}
+  // Auto-size block iframes from their inner CONTENT height. The inner bridge
+  // measures a content wrapper (not the iframe viewport), so this is a stable
+  // fixed point — setting the iframe height does NOT change the reported content
+  // height, hence no feedback loop and no need for an arbitrary upper clamp. We
+  // only write when the value actually changed to avoid redundant style churn.
+  window.addEventListener('message', function(e){
+    var d = e && e.data;
+    if (!d || d.__zappyBlock !== true || d.type !== 'resize') return;
+    if (typeof d.id !== 'string') return;
+    var frame = document.querySelector('iframe[data-zappy-block-frame="' + d.id.replace(/"/g, '') + '"]');
+    var h = parseInt(d.height, 10);
+    if (!frame || !(h > 0)) return;
+    var cur = parseInt(frame.style.height, 10) || 0;
+    if (Math.abs(cur - h) >= 1) frame.style.height = h + 'px';
+  });
+})();
+/* ZAPPY_BLOCK_RUNTIME_END */
+
+;
 /* ==ZAPPY E-COMMERCE JS START== */
 // E-commerce functionality
 (function() {
@@ -896,6 +965,78 @@ function stripHtmlToText(html) {
   
   // Cart state
   let cart = JSON.parse(localStorage.getItem('zappy_cart_' + websiteId) || '[]');
+
+  // WhatsApp checkout links carry an opaque server cart session. Hydrate that
+  // cart into this browser before rendering /checkout, then use the same
+  // session ID when checkout/init runs. This keeps the URL free of product
+  // prices and customer PII while allowing Phone Payment and every other
+  // storefront payment method to work through the normal checkout page.
+  // Returning WhatsApp customers get their known details stored on the cart
+  // (metadata.checkoutPrefill) — fill contact + shipping fields so they only
+  // review and complete what's missing. Never overwrite user-entered values.
+  function applyWhatsappCheckoutPrefill(prefill) {
+    if (!prefill) return;
+    const run = function() {
+      const setVal = function(id, value) {
+        const el = document.getElementById(id);
+        if (el && value && !el.value && el.dataset.checkoutEdited !== '1') el.value = value;
+      };
+      setVal('customer-name', prefill.name);
+      setVal('customer-email', prefill.email);
+      setVal('customer-phone', prefill.phone);
+      const addr = prefill.address || {};
+      const countryInput = document.getElementById('shipping-country');
+      if (addr.country && countryInput && !countryInput.value) {
+        countryInput.value = addr.country;
+        if (typeof onCountryChange === 'function') onCountryChange(addr.country);
+      }
+      if (addr.state) {
+        const stateInput = document.getElementById('shipping-state');
+        if (stateInput) setTimeout(function() { if (!stateInput.value) stateInput.value = addr.state; }, 50);
+      }
+      setVal('shipping-street', addr.street);
+      setVal('shipping-apartment', addr.apartment);
+      setVal('shipping-city', addr.city);
+      setVal('shipping-zip', addr.zip);
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run);
+    } else {
+      run();
+    }
+  }
+
+  const checkoutCartHydrationPromise = (async function hydrateCheckoutCartFromUrl() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const cartSession = params.get('cartSession');
+      if (!cartSession || !/^wa_[a-f0-9]{48}$/i.test(cartSession)) return;
+
+      const appliedKey = 'zappy_checkout_cart_session_' + websiteId;
+      const alreadyApplied = localStorage.getItem(appliedKey) === cartSession;
+      if (alreadyApplied) localStorage.setItem('zappy_session_id', cartSession);
+
+      const response = await fetch(buildApiUrl(
+        '/api/ecommerce/cart?websiteId=' + encodeURIComponent(websiteId)
+        + '&sessionId=' + encodeURIComponent(cartSession)
+      ));
+      const payload = await response.json();
+      const data = payload && payload.success ? payload.data : null;
+      if (!response.ok || !data) return;
+
+      const items = Array.isArray(data.items) ? data.items : [];
+      if (!alreadyApplied && items.length) {
+        cart = items;
+        localStorage.setItem('zappy_cart_' + websiteId, JSON.stringify(cart));
+        localStorage.setItem('zappy_session_id', cartSession);
+        localStorage.setItem(appliedKey, cartSession);
+      }
+
+      applyWhatsappCheckoutPrefill(data.metadata && data.metadata.checkoutPrefill);
+    } catch (error) {
+      console.warn('[E-COMMERCE] Failed to hydrate shared checkout cart:', error);
+    }
+  })();
   
   // VAT rate - fetched from store settings, with fallback to default
   let vatRate = 0.18; // Default fallback (Israel VAT rate as of January 2025)
@@ -922,20 +1063,27 @@ function stripHtmlToText(html) {
       if (!force && window.__zappyStoreSettingsData && window.__zappyStoreSettingsCacheKey === settingsUrl) {
         return window.__zappyStoreSettingsData;
       }
+      var settingsFetchPromise;
       if (!force && window.__zappyStoreSettingsPromise && window.__zappyStoreSettingsCacheKey === settingsUrl) {
-        return await window.__zappyStoreSettingsPromise;
+        settingsFetchPromise = window.__zappyStoreSettingsPromise;
+      } else {
+        // Await a LOCAL reference — .finally() nulls the global and racing
+        // callers must not await null / lose the in-flight fetch.
+        window.__zappyStoreSettingsCacheKey = settingsUrl;
+        settingsFetchPromise = fetch(settingsUrl)
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            window.__zappyStoreSettingsData = data;
+            return data;
+          })
+          .finally(function() {
+            if (window.__zappyStoreSettingsPromise === settingsFetchPromise) {
+              window.__zappyStoreSettingsPromise = null;
+            }
+          });
+        window.__zappyStoreSettingsPromise = settingsFetchPromise;
       }
-      window.__zappyStoreSettingsCacheKey = settingsUrl;
-      window.__zappyStoreSettingsPromise = fetch(settingsUrl)
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          window.__zappyStoreSettingsData = data;
-          return data;
-        })
-        .finally(function() {
-          window.__zappyStoreSettingsPromise = null;
-        });
-      const data = await window.__zappyStoreSettingsPromise;
+      const data = await settingsFetchPromise;
       if (data.success && data.data) {
         if (data.data.taxRate && data.data.taxRate > 0) {
           vatRate = data.data.taxRate;
@@ -1311,6 +1459,26 @@ function stripHtmlToText(html) {
   // card CTA opens Quick View and Add to Cart is gated until a slot is chosen.
   window.zappyIsServiceProduct = function(p) {
     return !!(p && (p.product_kind === 'service' || p.productKind === 'service'));
+  };
+
+  // Optional customer form on a physical product (same field shape as the
+  // service booking form; stored on custom_fields.purchaseFormSchema). Empty
+  // / missing schema → no storefront form.
+  window.zappyGetPurchaseFormSchema = function(p) {
+    if (!p) return [];
+    var cf = p.custom_fields != null ? p.custom_fields : p.customFields;
+    if (typeof cf === 'string') {
+      try { cf = JSON.parse(cf); } catch (e) { cf = null; }
+    }
+    if (!cf || typeof cf !== 'object') return [];
+    var schema = cf.purchaseFormSchema;
+    return Array.isArray(schema) ? schema.filter(function(f) { return f && f.key; }) : [];
+  };
+  window.zappyHasPurchaseForm = function(p) {
+    return !window.zappyIsServiceProduct(p) && window.zappyGetPurchaseFormSchema(p).length > 0;
+  };
+  window.zappyNeedsPurchaseForm = function(p) {
+    return window.zappyIsServiceProduct(p) || window.zappyHasPurchaseForm(p);
   };
 
   // Human-readable booking date/time (timezone-aware) for a cart/order line, or
@@ -2732,9 +2900,9 @@ function stripHtmlToText(html) {
     var pid = card.getAttribute('data-product-id'); var p = window.zappyGetCardProduct(pid); if (!p) return;
     var cv = p.card_variants;
     var sel = window.zappyGetCardSelection(pid) || {};
-    // Service / event products are booked (date + time + optional form), never
-    // blind-added — always route to Quick View which hosts the booking widget.
-    if (window.zappyIsServiceProduct(p)) {
+    // Service / event products (and physical products with a purchase form)
+    // are never blind-added — route to Quick View which hosts the form widget.
+    if (window.zappyNeedsPurchaseForm && window.zappyNeedsPurchaseForm(p)) {
       if (typeof window.zappyOpenQuickView === 'function') window.zappyOpenQuickView(p.slug || p.id, sel);
       return;
     }
@@ -2962,16 +3130,19 @@ function stripHtmlToText(html) {
       var available = !cv || (variant && variant.available);
       var exceeds = inv && inv.qtyExceeds(maxQty, qty);
       var isService = qvBookingIsService();
+      var needsForm = qvBookingNeedsForm();
       var bookingOk = qvBookingReady();
-      var chooseBookingLabel = (qvState.availability && qvState.availability.dateOnly)
-        ? getEcomText('bookingChooseDate', t.bookingChooseDate || 'Choose a date')
-        : getEcomText('bookingChooseTime', t.bookingChooseTime || 'Choose a time');
+      var chooseBookingLabel = (qvState.availability && qvState.availability.formOnly)
+        ? getEcomText('bookingCompleteFormFirst', t.bookingCompleteFormFirst || 'Please fill in the required fields')
+        : ((qvState.availability && qvState.availability.dateOnly)
+          ? getEcomText('bookingChooseDate', t.bookingChooseDate || 'Choose a date')
+          : getEcomText('bookingChooseTime', t.bookingChooseTime || 'Choose a time'));
       var ready = allSelected && available && bookingOk && !exceeds;
       cartBtn.disabled = !ready;
       cartBtn.classList.toggle('is-disabled', !ready);
       if (cv && keys.length && !allSelected) cartBtn.textContent = getEcomText('selectVariant', t.selectVariant || 'Select options');
       else if (!available) cartBtn.textContent = getEcomText('outOfStock', t.outOfStock || 'Out of stock');
-      else if (isService && !bookingOk) cartBtn.textContent = chooseBookingLabel;
+      else if (needsForm && !bookingOk) cartBtn.textContent = chooseBookingLabel;
       else if (isService) cartBtn.textContent = getEcomText('bookNow', t.bookNow || 'Book now');
       else cartBtn.textContent = getEcomText('addToCart', t.addToCart || 'Add to cart');
     }
@@ -3007,7 +3178,7 @@ function stripHtmlToText(html) {
     qvSyncInventoryQtyUI();
     var inqBtn = content.querySelector('.zappy-qv-inquiry-btn');
     if (inqBtn) {
-      var inqReady = !qvBookingIsService() || qvBookingReady({ inquiryMode: true });
+      var inqReady = !qvBookingNeedsForm() || qvBookingReady({ inquiryMode: true });
       inqBtn.style.opacity = inqReady ? '' : '0.5';
       inqBtn.setAttribute('aria-disabled', inqReady ? 'false' : 'true');
     }
@@ -3058,19 +3229,25 @@ function stripHtmlToText(html) {
     if (variant) {
       item.selectedVariant = { id: variant.id, attributes: variant.attributes, price: variant.price, sku: variant.sku, image: variant.image };
     }
-    if (qvBookingIsService()) {
+    if (qvBookingIsService() || qvBookingIsPurchaseForm()) {
       if (!qvBookingReady()) return; // button is disabled anyway
       var av = qvState.availability || {}; var b = qvState.booking || {};
-      item.booking = {
-        slotId: b.slotId || null,
-        startsAt: b.startsAt || null,
-        endsAt: b.endsAt || null,
-        timezone: av.timezone || null,
-        durationMinutes: av.durationMinutes || null,
-        dateOnly: !!av.dateOnly,
-        requiresShipping: !!av.requiresShipping,
-        formAnswers: Object.assign({}, b.formAnswers || {})
-      };
+      if (qvBookingIsService()) {
+        item.booking = {
+          slotId: b.slotId || null,
+          startsAt: b.startsAt || null,
+          endsAt: b.endsAt || null,
+          timezone: av.timezone || null,
+          durationMinutes: av.durationMinutes || null,
+          dateOnly: !!av.dateOnly,
+          requiresShipping: !!av.requiresShipping,
+          formAnswers: Object.assign({}, b.formAnswers || {})
+        };
+      } else {
+        item.booking = {
+          formAnswers: Object.assign({}, b.formAnswers || {})
+        };
+      }
     }
     qvSyncCardSelection();
     // Close QV first (restores body scroll), then add — addToCart opens the
@@ -3104,7 +3281,11 @@ function stripHtmlToText(html) {
       var style = document.createElement('style');
       style.id = 'zappy-booking-widget-css';
       style.textContent =
-        '/* ZAPPY_SERVICE_BOOKING_WIDGET_CSS_V2 */' +
+        // V3: ID-scoped calendar grid selectors beat the site-wide mobile
+        // [class*="-grid"] { grid-template-columns:1fr !important } collapse.
+        // V2 class-scoped QV selector lost to that catch-all, so Quick View days
+        // stacked in one column on mobile while PDP stayed fine via #zappy-pdp-booking.
+        '/* ZAPPY_SERVICE_BOOKING_WIDGET_CSS_V3 */' +
         '.zappy-qv-booking{display:flex!important;flex-direction:column!important;gap:10px!important;width:min(100%,320px)!important;max-width:320px!important;margin:8px 0 18px!important;align-self:flex-start!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;box-sizing:border-box!important}' +
       '.zappy-qv-book-row{display:flex!important;flex-direction:column!important;gap:5px!important}' +
       '.zappy-qv-book-row.is-check{flex-direction:row!important;align-items:center!important;gap:8px!important}' +
@@ -3117,7 +3298,7 @@ function stripHtmlToText(html) {
       '.zappy-qv-book-cal-title{text-align:center!important;font-size:13px!important;font-weight:700!important;color:var(--text-color,#111827)!important}' +
       '.zappy-qv-book-cal-nav{width:32px!important;height:32px!important;border:1px solid var(--border-color,#d1d5db)!important;border-radius:999px!important;background:#fff!important;color:var(--text-color,#111827)!important;cursor:pointer!important;font:inherit!important;line-height:1!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;padding:0!important}' +
       '.zappy-qv-book-cal-nav:disabled{opacity:.35!important;cursor:not-allowed!important}' +
-      '#zappy-pdp-booking .zappy-qv-book-cal-weekdays,#zappy-pdp-booking .zappy-qv-book-cal-grid,.zappy-qv-booking .zappy-qv-book-cal-weekdays,.zappy-qv-booking .zappy-qv-book-cal-grid{display:grid!important;grid-template-columns:repeat(7,1fr)!important;grid-auto-columns:minmax(0,1fr)!important;gap:4px!important}' +
+      '#zappy-qv-modal .zappy-qv-book-cal-weekdays,#zappy-qv-modal .zappy-qv-book-cal-grid,#zappy-pdp-booking .zappy-qv-book-cal-weekdays,#zappy-pdp-booking .zappy-qv-book-cal-grid,.zappy-qv-booking .zappy-qv-book-cal-weekdays,.zappy-qv-booking .zappy-qv-book-cal-grid{display:grid!important;grid-template-columns:repeat(7,1fr)!important;grid-auto-columns:minmax(0,1fr)!important;gap:4px!important}' +
       '.zappy-qv-book-cal-weekdays{margin-bottom:4px!important}' +
       '.zappy-qv-book-cal-weekday{text-align:center!important;font-size:11px!important;font-weight:700!important;color:var(--text-muted,#6b7280)!important}' +
       '.zappy-qv-book-calendar .zappy-qv-book-cal-day{display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;width:auto!important;max-width:none!important;height:34px!important;border:1px solid transparent!important;border-radius:9px!important;background:transparent!important;color:var(--text-muted,#9ca3af)!important;font:inherit!important;font-size:13px!important;cursor:default!important;padding:0!important;box-sizing:border-box!important}' +
@@ -3136,10 +3317,24 @@ function stripHtmlToText(html) {
     if (pdpBooking && actionRow) actionRow.classList.add('zappy-service-booking-actions');
   };
   function qvBookingIsService() { return window.zappyIsServiceProduct(qvState.product); }
+  function qvBookingIsPurchaseForm() { return window.zappyHasPurchaseForm && window.zappyHasPurchaseForm(qvState.product); }
+  function qvBookingNeedsForm() { return qvBookingIsService() || qvBookingIsPurchaseForm(); }
   function qvBookingSlotKey(s) { return s && (s.slotId ? 's' + s.slotId : 't' + s.startsAt); }
 
   function qvBookingFetch() {
     var product = qvState.product; if (!product) return;
+    // Physical purchase form — schema is already on the product payload; no
+    // availability API round-trip (and that endpoint 404s for non-services).
+    if (qvBookingIsPurchaseForm() && !qvBookingIsService()) {
+      qvState.availLoading = false;
+      qvState.availability = {
+        slots: [],
+        formSchema: window.zappyGetPurchaseFormSchema(product),
+        formOnly: true
+      };
+      var mForm = qvEl('zappy-qv-modal'); if (mForm && !mForm.hidden) qvRender();
+      return;
+    }
     qvState.availability = null; qvState.availLoading = true;
     var wid = window.ZAPPY_WEBSITE_ID;
     fetch(buildApiUrlWithLang('/api/ecommerce/storefront/service-availability?websiteId=' + wid + '&productId=' + encodeURIComponent(product.id)))
@@ -3276,16 +3471,20 @@ function stripHtmlToText(html) {
 
   function qvBookingRenderBlock() {
     if (typeof window.zappyEnsureBookingWidgetStyles === 'function') window.zappyEnsureBookingWidgetStyles();
-    if (!qvBookingIsService()) return '';
+    if (!qvBookingNeedsForm()) return '';
     var av = qvState.availability;
     if (qvState.availLoading || !av) {
       return '<div class="zappy-qv-booking"><div class="zappy-qv-book-loading">' + getEcomText('bookingLoading', 'Loading availability…') + '</div></div>';
     }
     var b = qvState.booking || (qvState.booking = { formAnswers: {} });
+    var formHtml = qvBookingRenderForm(av.formSchema, b.formAnswers);
+    // Physical purchase form (and any formOnly schema) — fields only, no calendar.
+    if (av.formOnly || (!qvBookingIsService() && qvBookingIsPurchaseForm())) {
+      return formHtml ? ('<div class="zappy-qv-booking">' + formHtml + '</div>') : '';
+    }
     var grp = qvBookingGroupByDate();
     var tz = av.timezone;
     var dateOnly = !!av.dateOnly;
-    var formHtml = qvBookingRenderForm(av.formSchema, b.formAnswers);
     if (!grp.order.length) {
       return '<div class="zappy-qv-booking"><div class="zappy-qv-book-empty">' + (dateOnly ? getEcomText('bookingNoDates', 'No available dates right now') : getEcomText('bookingNoSlots', 'No available times right now')) + '</div>' + formHtml + '</div>';
     }
@@ -3350,13 +3549,15 @@ function stripHtmlToText(html) {
   function qvBookingReady(opts) {
     opts = opts || {};
     var inquiryMode = !!opts.inquiryMode;
-    if (!qvBookingIsService()) return true;
+    if (!qvBookingNeedsForm()) return true;
     var av = qvState.availability; var b = qvState.booking;
     if (!av || !b) return false;
     var slots = Array.isArray(av.slots) ? av.slots : [];
-    // Cart checkout always needs a slot. Catalog / contact-for-price inquiries
-    // allow form-only when the merchant has not configured availability yet.
-    if (!inquiryMode || slots.length > 0) {
+    var formOnly = !!av.formOnly || qvBookingIsPurchaseForm();
+    // Cart checkout always needs a slot for services. Catalog / contact-for-price
+    // inquiries allow form-only when the merchant has not configured availability yet.
+    // Physical purchase forms never require a slot.
+    if (!formOnly && (!inquiryMode || slots.length > 0)) {
       if (!b.startsAt) return false;
     }
     var schema = Array.isArray(av.formSchema) ? av.formSchema : [];
@@ -3371,12 +3572,12 @@ function stripHtmlToText(html) {
 
   function qvHandleInquiryClick(e) {
     try {
-      if (!qvBookingIsService()) return true;
+      if (!qvBookingNeedsForm()) return true;
       if (!qvBookingReady({ inquiryMode: true })) {
         if (e && e.preventDefault) e.preventDefault();
         var slots = (qvState.availability && Array.isArray(qvState.availability.slots)) ? qvState.availability.slots : [];
         var msg;
-        if (slots.length > 0 && !(qvState.booking && qvState.booking.startsAt)) {
+        if (!qvBookingIsPurchaseForm() && slots.length > 0 && !(qvState.booking && qvState.booking.startsAt)) {
           msg = (qvState.availability && qvState.availability.dateOnly)
             ? getEcomText('bookingSelectDateFirst', t.bookingSelectDateFirst || 'Please choose a date first')
             : getEcomText('bookingSelectTimeFirst', t.bookingSelectTimeFirst || 'Please choose a date and time first');
@@ -3450,7 +3651,7 @@ function stripHtmlToText(html) {
       var inqHref = window.zappyBuildInquiryHref ? window.zappyBuildInquiryHref(product) : buildStorefrontPath('/contact');
       // Service booking form answers must travel with the inquiry — intercept
       // the click so we can validate required fields and append the body.
-      var inqClick = qvBookingIsService()
+      var inqClick = qvBookingNeedsForm()
         ? ' onclick="return (typeof window.__zappyQvHandleInquiryClick===\'function\') ? window.__zappyQvHandleInquiryClick(event) : true;"'
         : '';
       cartArea = '<a href="' + zappyCardEscAttr(inqHref) + '" class="zappy-qv-addcart zappy-qv-viewbtn zappy-qv-inquiry-btn"' + inqClick + '>' + inqLbl + '</a>';
@@ -3564,11 +3765,18 @@ function stripHtmlToText(html) {
         // modal might have been closed while fetching
         if (!qvEl('zappy-qv-modal') || qvEl('zappy-qv-modal').hidden) return;
         qvRender();
-        // Service products load their availability, then re-render the widget.
-        if (window.zappyIsServiceProduct(qvState.product)) { qvState.availLoading = true; qvBookingFetch(); }
+        // Service / physical-purchase-form products load their form widget.
+        if (window.zappyNeedsPurchaseForm && window.zappyNeedsPurchaseForm(qvState.product)) {
+          qvState.availLoading = true; qvBookingFetch();
+        }
       })
       .catch(function() {
-        if (qvState.product && qvState.product.name) { qvRender(); if (window.zappyIsServiceProduct(qvState.product)) { qvState.availLoading = true; qvBookingFetch(); } }
+        if (qvState.product && qvState.product.name) {
+          qvRender();
+          if (window.zappyNeedsPurchaseForm && window.zappyNeedsPurchaseForm(qvState.product)) {
+            qvState.availLoading = true; qvBookingFetch();
+          }
+        }
         else { content.innerHTML = '<div class="zappy-qv-loading">' + getEcomText('errorLoading', t.errorLoading || 'Could not load product') + '</div>'; }
       });
   };
@@ -3984,15 +4192,20 @@ function stripHtmlToText(html) {
       } else if (item.variantName) {
         variantInfo = '<div class="cart-item-variant">' + item.variantName + '</div>';
       }
-      // Service booking time + form answers (FEATURE_ECOMMERCE_SERVICES).
+      // Service booking time + form answers (FEATURE_ECOMMERCE_SERVICES),
+      // including physical-product purchase-form answers (no startsAt).
       var bookingSummary = window.zappyBookingSummary(item);
-      if (bookingSummary) {
-        var bookingLine = '<div class="cart-item-booking">🗓 ' + escapeCartHtml(bookingSummary);
-        var fa = item.booking && item.booking.formAnswers;
-        if (fa && typeof fa === 'object') {
-          var faParts = [];
-          Object.keys(fa).forEach(function(k) { if (fa[k] !== '' && fa[k] != null && fa[k] !== false) faParts.push(escapeCartHtml(String(fa[k]))); });
-          if (faParts.length) bookingLine += ' <span class="cart-item-attr-sep">•</span> ' + faParts.join(', ');
+      var fa = item.booking && item.booking.formAnswers;
+      var faParts = [];
+      if (fa && typeof fa === 'object') {
+        Object.keys(fa).forEach(function(k) { if (fa[k] !== '' && fa[k] != null && fa[k] !== false) faParts.push(escapeCartHtml(String(fa[k]))); });
+      }
+      if (bookingSummary || faParts.length) {
+        var bookingLine = '<div class="cart-item-booking">';
+        if (bookingSummary) bookingLine += '🗓 ' + escapeCartHtml(bookingSummary);
+        if (faParts.length) {
+          if (bookingSummary) bookingLine += ' <span class="cart-item-attr-sep">•</span> ';
+          bookingLine += faParts.join(', ');
         }
         bookingLine += '</div>';
         variantInfo += bookingLine;
@@ -8380,11 +8593,15 @@ function stripHtmlToText(html) {
   }
   
   // Handle both cases: DOM already loaded or not yet loaded
+  function initAllAfterCheckoutCartHydration() {
+    Promise.resolve(checkoutCartHydrationPromise).finally(initAll);
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
+    document.addEventListener('DOMContentLoaded', initAllAfterCheckoutCartHydration);
   } else {
-    // DOM already loaded, run immediately
-    initAll();
+    // DOM already loaded, run after an optional WhatsApp cart has hydrated.
+    initAllAfterCheckoutCartHydration();
   }
   
   // Register language change callback to refresh products when language changes
@@ -8858,19 +9075,29 @@ async function fetchAdditionalJsSettings(force) {
     if (!force && window.__zappyStoreSettingsData && window.__zappyStoreSettingsCacheKey === settingsUrl) {
       data = window.__zappyStoreSettingsData;
     } else {
+      // Await a LOCAL promise reference — never await window.__zappyStoreSettingsPromise
+      // after .finally() nulls the global (race → await null / lost in-flight fetch).
+      // That race left featured grids stuck on "טוען..." when settings + loadFeatured
+      // overlapped with a language-change force refresh.
+      var settingsFetchPromise;
       if (!window.__zappyStoreSettingsPromise || window.__zappyStoreSettingsCacheKey !== settingsUrl) {
         window.__zappyStoreSettingsCacheKey = settingsUrl;
-        window.__zappyStoreSettingsPromise = fetch(settingsUrl)
+        settingsFetchPromise = fetch(settingsUrl)
           .then(function(res) { return res.json(); })
           .then(function(payload) {
             window.__zappyStoreSettingsData = payload;
             return payload;
           })
           .finally(function() {
-            window.__zappyStoreSettingsPromise = null;
+            if (window.__zappyStoreSettingsPromise === settingsFetchPromise) {
+              window.__zappyStoreSettingsPromise = null;
+            }
           });
+        window.__zappyStoreSettingsPromise = settingsFetchPromise;
+      } else {
+        settingsFetchPromise = window.__zappyStoreSettingsPromise;
       }
-      data = await window.__zappyStoreSettingsPromise;
+      data = await settingsFetchPromise;
     }
     if (data.success && data.data) {
       if (data.data.productLayout) {
@@ -9373,8 +9600,14 @@ async function loadFeaturedProducts() {
     zappyClearBakedPreviewEmptyStoreCta();
   }
 
-  // Ensure store settings are loaded first (for productLayout + OOS-last flag)
-  await fetchAdditionalJsSettings();
+  // Ensure store settings are loaded first (for productLayout + OOS-last flag).
+  // Cap wait so a hung/racy settings fetch cannot leave the grid on "טוען..." forever.
+  try {
+    await Promise.race([
+      fetchAdditionalJsSettings(),
+      new Promise(function(resolve) { setTimeout(resolve, 3000); })
+    ]);
+  } catch (e) {}
   
   const t = {"products":"מוצרים","ourProducts":"המוצרים שלנו","featuredProducts":"מוצרים מומלצים","noFeaturedProducts":"עוד לא נבחרו מוצרים מומלצים. צפו בכל המוצרים שלנו!","featuredCategories":"קנו לפי קטגוריה","all":"הכל","featured":"מומלצים","new":"חדשים","sale":"מבצעים","loadingProducts":"טוען מוצרים...","cart":"עגלת קניות","yourCart":"עגלת הקניות שלך","emptyCart":"העגלה ריקה","total":"סה\"כ","proceedToCheckout":"המשך לתשלום","checkout":"תשלום","customerInfo":"פרטי לקוח","fullName":"שם מלא","email":"אימייל","phone":"טלפון","shippingAddress":"כתובת למשלוח","street":"רחוב ומספר","streetAndNumber":"רחוב ומספר","apartment":"דירה, קומה, כניסה","apartmentExt":"דירה, קומה, קוד בניין, הערות וכו'","city":"עיר","zip":"מיקוד","zipPostal":"מיקוד","countryRegion":"מדינה / אזור","stateProvince":"מדינה / מחוז","stateRequired":"נא לבחור מדינה / מחוז","saveAddressForNextTime":"שמור את הכתובת לפעם הבאה","shippingMethod":"שיטת משלוח","loadingShipping":"טוען שיטות משלוח...","payment":"תשלום","loadingPayment":"טוען אפשרויות תשלום...","orderSummary":"סיכום הזמנה","subtotal":"סכום ביניים","vat":"מע\"מ","vatIncluded":"כולל מע\"מ","shipping":"משלוח","discount":"הנחה","bundleDiscount":"הנחת חבילה","seasonalDiscount":"הנחה עונתית","customerDiscount":"הנחת לקוח","totalToPay":"סה\"כ לתשלום","placeOrder":"בצע הזמנה","login":"התחברות","customerLogin":"התחברות לקוחות","enterEmail":"הזן את כתובת האימייל שלך ונשלח לך קוד התחברות","emailAddress":"כתובת אימייל","sendCode":"שלח קוד","enterCode":"הזן את הקוד שנשלח לאימייל שלך","verificationCode":"קוד אימות","verify":"אמת","returnPolicy":"מדיניות החזרות","addToCart":"הוסף לעגלה","startingAt":"החל מ","addedToCart":"המוצר נוסף לעגלה!","remove":"הסר","noProducts":"אין מוצרים להצגה כרגע","errorLoading":"שגיאה בטעינה","days":"ימים","currency":"₪","free":"חינם","freeAbove":"משלוח חינם מעל","noShippingMethods":"אין אפשרויות משלוח זמינות","viewAllResults":"הצג את כל התוצאות","searchProducts":"חיפוש מוצרים","searchResults":"תוצאות חיפוש","productDetails":"פרטי המוצר","viewDetails":"לפרטים נוספים","inStock":"במלאי","outOfStock":"אזל מהמלאי","pleaseSelect":"נא לבחור","sku":"מק\"ט","category":"קטגוריה","relatedProducts":"מוצרים דומים","frequentlyBoughtTogether":"לרכוש יחד","frequentlyBoughtTogetherSubtitle":"הוספת מוצרים נלווים לעגלה","bundleTotal":"סה\"כ לעגלה","addBundleToCart":"הוספת {count} מוצרים לעגלה","upsellFree":"חינם","productNotFound":"המוצר לא נמצא","backToProducts":"חזרה למוצרים","home":"בית","quantity":"כמות","unitLabels":{"piece":"יח'","kg":"ק\"ג","gram":"גרם","liter":"ליטר","ml":"מ\"ל"},"perUnit":"/","couponCode":"קוד קופון","enterCouponCode":"הזן קוד קופון","applyCoupon":"החל","removeCoupon":"הסר","couponApplied":"הקופון הוחל בהצלחה!","invalidCoupon":"קוד קופון לא תקין","couponExpired":"הקופון פג תוקף","couponMinOrder":"סכום הזמנה מינימלי","alreadyHaveAccount":"כבר יש לך חשבון?","loginHere":"התחבר כאן","signInHere":"התחבר כאן","mobileNumber":"מספר טלפון","loggedInAs":"מחובר כ:","logout":"התנתק","haveCouponCode":"יש לי קוד קופון","agreeToTerms":"אני מסכים/ה ל","termsAndConditions":"תנאי השימוש","pleaseAcceptTerms":"נא לאשר את תנאי השימוש","nameRequired":"נא להזין שם מלא","emailRequired":"נא להזין כתובת אימייל","emailInvalid":"כתובת אימייל לא תקינה","phoneRequired":"נא להזין מספר טלפון","shippingRequired":"נא לבחור שיטת משלוח","streetRequired":"נא להזין רחוב ומספר","cityRequired":"נא להזין עיר","paymentNotConfigured":"תשלום מקוון לא מוגדר","orderSuccess":"ההזמנה התקבלה!","thankYouOrder":"תודה על ההזמנה","orderNumber":"מספר הזמנה","orderConfirmation":"אישור הזמנה נשלח לאימייל שלך","orderProcessing":"ההזמנה שלך בטיפול. נעדכן אותך כשהמשלוח יצא לדרך.","continueShopping":"להמשך קניות","next":"הבא","contactInformation":"פרטי התקשרות","items":"פריטים","continueToHomePage":"המשך לדף הבית","transactionDate":"תאריך עסקה","paymentMethod":"אמצעי תשלום","orderDetails":"פרטי ההזמנה","loadingOrder":"טוען פרטי הזמנה...","orderNotFound":"לא נמצאה הזמנה","paymentNotCompleted":"התשלום לא הושלם","paymentNotCompletedDesc":"התשלום לא הושלם ולכן לא נוצרה הזמנה. לא בוצע חיוב בכרטיס שלך. ניתן לנסות שוב.","backToCheckout":"חזרה לתשלום","orderItems":"פריטים בהזמנה","paidAmount":"סכום ששולם","myAccount":"החשבון שלי","accountWelcome":"ברוך הבא","yourOrders":"ההזמנות שלך","noOrders":"אין עדיין הזמנות","orderDate":"תאריך","orderStatus":"סטטוס","orderTotal":"סה\"כ","viewOrder":"צפה בהזמנה","statusPending":"ממתין לתשלום","statusPaid":"שולם","statusProcessing":"בטיפול","statusShipped":"נשלח","statusDelivered":"נמסר","statusCancelled":"בוטל","notLoggedIn":"לא מחובר","pleaseLogin":"יש להתחבר כדי לצפות בחשבון","personalDetails":"פרטים אישיים","editProfile":"עריכת פרופיל","name":"שם","saveChanges":"שמור שינויים","cancel":"ביטול","addresses":"כתובות","addAddress":"הוסף כתובת","editAddress":"ערוך כתובת","deleteAddress":"מחק כתובת","setAsDefault":"הגדר כברירת מחדל","defaultAddress":"כתובת ברירת מחדל","addressLabel":"שם הכתובת","work":"עבודה","other":"אחר","noAddresses":"אין כתובות שמורות","confirmDelete":"האם אתה בטוח שברצונך למחוק?","profileUpdated":"הפרופיל עודכן בהצלחה","addressSaved":"הכתובת נשמרה בהצלחה","addressDeleted":"הכתובת נמחקה","saving":"שומר...","saveToFavorites":"שמור למועדפים","removeFromFavorites":"הסר ממועדפים","shareProduct":"שתף מוצר","linkCopied":"הקישור הועתק!","myFavorites":"המועדפים שלי","noFavorites":"אין עדיין מוצרים מועדפים","addedToFavorites":"נוסף למועדפים","removedFromFavorites":"הוסר מהמועדפים","loginToFavorite":"יש להתחבר כדי לשמור מועדפים","browseFavorites":"גלו את כל המוצרים שלנו","selectVariant":"בחר אפשרות","variantUnavailable":"לא זמין","color":"צבע","size":"מידה","material":"חומר","style":"סגנון","weight":"משקל","capacity":"קיבולת","length":"אורך","inquiryAbout":"פנייה בנושא","sendInquiry":"שלח פנייה","callNow":"התקשר עכשיו","specifications":"מפרט טכני","storeNote":"מידע נוסף","businessPhone":"0523524200","businessEmail":"henhakmon@gmail.com"};
   
@@ -9560,6 +9793,7 @@ function stripHtmlToText(html) {
   text = text.replace(/\s+/g, ' ').trim();
   return text;
 }
+
 
 function zappyApplyCustomerPercentToPrice(basePrice, productId) {
   function applyFromWindowConfig() {
@@ -11489,7 +11723,7 @@ function renderProductDetail(container, product, t) {
             '</div>' +
           '</div>';
         })()}
-        ${(window.zappyIsServiceProduct && window.zappyIsServiceProduct(product))
+        ${(window.zappyNeedsPurchaseForm && window.zappyNeedsPurchaseForm(product))
           ? '<div id="zappy-pdp-booking" class="zappy-qv-booking"></div>'
           : ''}
         ${(() => {
@@ -11932,9 +12166,9 @@ function syncPdpInventoryQtyUI() {
 
   var exceeds = inv.qtyExceeds(max, qty);
   var ok = inStock && !exceeds;
-  // Service booking may independently disable the button — don't re-enable
-  // when a booking slot is still required.
-  if (window.zappyIsServiceProduct && window.zappyIsServiceProduct(product) && window.zappyPdpBookingReady && !window.zappyPdpBookingReady()) {
+  // Service / purchase-form may independently disable the button — don't
+  // re-enable when a booking slot or required field is still missing.
+  if (window.zappyNeedsPurchaseForm && window.zappyNeedsPurchaseForm(product) && window.zappyPdpBookingReady && !window.zappyPdpBookingReady()) {
     ok = false;
   }
   btn.disabled = !ok;
@@ -12633,10 +12867,14 @@ function zappyPdpBookRenderBlock(st) {
   }
   var av = st.availability;
   var b = st.booking || (st.booking = { formAnswers: {} });
+  var formHtml = zappyPdpBookRenderForm(av.formSchema, b.formAnswers);
+  // Physical purchase form — fields only, no calendar / empty-slots message.
+  if (av.formOnly) {
+    return formHtml || '';
+  }
   var grp = zappyPdpBookGroupByDate(st);
   var tz = av.timezone;
   var dateOnly = !!av.dateOnly;
-  var formHtml = zappyPdpBookRenderForm(av.formSchema, b.formAnswers);
   if (!grp.order.length) {
     return '<div class="zappy-qv-book-empty">' + (dateOnly ? getEcomText('bookingNoDates', 'No available dates right now') : getEcomText('bookingNoSlots', 'No available times right now')) + '</div>' + formHtml;
   }
@@ -12702,10 +12940,11 @@ window.zappyPdpBookingReady = function(opts) {
   var av = st.availability; var b = st.booking;
   if (!av || !b) return false;
   var slots = Array.isArray(av.slots) ? av.slots : [];
-  // Cart checkout always needs a chosen slot. Catalog / contact-for-price
-  // inquiries still require a slot when the merchant configured availability,
-  // but form-only inquiries are allowed when no slots exist yet.
-  if (!inquiryMode || slots.length > 0) {
+  var formOnly = !!av.formOnly;
+  // Cart checkout always needs a chosen slot for services. Catalog /
+  // contact-for-price inquiries still require a slot when availability exists,
+  // but form-only inquiries (and physical purchase forms) skip the slot gate.
+  if (!formOnly && (!inquiryMode || slots.length > 0)) {
     if (!b.startsAt) return false;
   }
   var schema = Array.isArray(av.formSchema) ? av.formSchema : [];
@@ -12722,11 +12961,17 @@ window.zappyPdpBookingData = function(opts) {
   var st = window.__zappyPdpBooking;
   if (!st || !st.booking) return null;
   var av = st.availability || {}; var b = st.booking;
-  var allowFormOnly = !!opts.allowFormOnly;
+  var formOnly = !!av.formOnly;
+  var allowFormOnly = !!opts.allowFormOnly || formOnly;
   if (!b.startsAt && !allowFormOnly) return null;
   if (!b.startsAt && allowFormOnly) {
     var hasAnswers = b.formAnswers && Object.keys(b.formAnswers).length;
-    if (!hasAnswers) return null;
+    if (!hasAnswers && !formOnly) return null;
+    // Physical purchase form: return formAnswers even when empty object so
+    // checkout validation can still run server-side for required fields.
+    if (formOnly) {
+      return { formAnswers: Object.assign({}, b.formAnswers || {}) };
+    }
   }
   return {
     slotId: b.slotId || null,
@@ -12743,7 +12988,7 @@ window.zappyPdpBookingData = function(opts) {
 window.zappyPdpHandleInquiryClick = function(e) {
   try {
     var product = window.currentProduct;
-    if (product && window.zappyIsServiceProduct && window.zappyIsServiceProduct(product)) {
+    if (product && window.zappyNeedsPurchaseForm && window.zappyNeedsPurchaseForm(product)) {
       if (!window.zappyPdpBookingReady({ inquiryMode: true })) {
         if (e && e.preventDefault) e.preventDefault();
         var tt = window.productTranslations || {};
@@ -12751,7 +12996,7 @@ window.zappyPdpHandleInquiryClick = function(e) {
         var bookingAvailability = bookingState.availability || {};
         var slots = Array.isArray(bookingAvailability.slots) ? bookingAvailability.slots : [];
         var msg;
-        if (slots.length > 0 && !(bookingState.booking && bookingState.booking.startsAt)) {
+        if (!bookingAvailability.formOnly && slots.length > 0 && !(bookingState.booking && bookingState.booking.startsAt)) {
           msg = bookingAvailability.dateOnly
             ? getEcomText('bookingSelectDateFirst', tt.bookingSelectDateFirst || 'Please choose a date first')
             : getEcomText('bookingSelectTimeFirst', tt.bookingSelectTimeFirst || 'Please choose a date and time first');
@@ -12776,19 +13021,31 @@ window.zappyPdpHandleInquiryClick = function(e) {
 };
 window.zappyPdpBookingInit = function(product) {
   var wrap = document.getElementById('zappy-pdp-booking');
-  if (!wrap || !window.zappyIsServiceProduct || !window.zappyIsServiceProduct(product)) return;
+  if (!wrap || !window.zappyNeedsPurchaseForm || !window.zappyNeedsPurchaseForm(product)) return;
   var st = window.__zappyPdpBooking = { product: product, availability: null, availLoading: true, booking: { formAnswers: {} } };
   zappyPdpBookPaint();
   zappyPdpBookSyncButton();
-  var wid = window.ZAPPY_WEBSITE_ID;
-  fetch(buildApiUrlWithLang('/api/ecommerce/storefront/service-availability?websiteId=' + wid + '&productId=' + encodeURIComponent(product.id)))
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      st.availLoading = false;
-      st.availability = (data && data.success && data.data) ? data.data : { slots: [], formSchema: [] };
-    })
-    .catch(function() { st.availLoading = false; st.availability = { slots: [], formSchema: [] }; })
-    .then(function() { zappyPdpBookPaint(); zappyPdpBookSyncButton(); });
+  // Physical purchase form — schema already on the product; skip availability API.
+  if (window.zappyHasPurchaseForm && window.zappyHasPurchaseForm(product)) {
+    st.availLoading = false;
+    st.availability = {
+      slots: [],
+      formSchema: window.zappyGetPurchaseFormSchema(product),
+      formOnly: true
+    };
+    zappyPdpBookPaint();
+    zappyPdpBookSyncButton();
+  } else {
+    var wid = window.ZAPPY_WEBSITE_ID;
+    fetch(buildApiUrlWithLang('/api/ecommerce/storefront/service-availability?websiteId=' + wid + '&productId=' + encodeURIComponent(product.id)))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        st.availLoading = false;
+        st.availability = (data && data.success && data.data) ? data.data : { slots: [], formSchema: [] };
+      })
+      .catch(function() { st.availLoading = false; st.availability = { slots: [], formSchema: [] }; })
+      .then(function() { zappyPdpBookPaint(); zappyPdpBookSyncButton(); });
+  }
   if (!window.__zappyPdpBookingBound) {
     window.__zappyPdpBookingBound = true;
     document.addEventListener('click', zappyPdpBookHandleEvent, true);
@@ -12836,17 +13093,19 @@ function addProductToCart() {
   // Contact-for-price products (showPrice === false) are inquiry-only.
   if (window.zappyProductPriceHidden && window.zappyProductPriceHidden(product)) return;
 
-  // Service/event products (FEATURE_ECOMMERCE_SERVICES) require a chosen slot +
-  // any required custom-form answers before they can be added to the cart.
-  if (window.zappyIsServiceProduct && window.zappyIsServiceProduct(product)) {
+  // Service/event products require a chosen slot + required form answers;
+  // physical products with a purchase form require only the form answers.
+  if (window.zappyNeedsPurchaseForm && window.zappyNeedsPurchaseForm(product)) {
     if (!window.zappyPdpBookingReady || !window.zappyPdpBookingReady()) {
       const tt = window.productTranslations || {};
       const bookingState = window.__zappyPdpBooking || {};
       const bookingAvailability = bookingState.availability || {};
       alert(
-        bookingAvailability.dateOnly
-          ? getEcomText('bookingSelectDateFirst', tt.bookingSelectDateFirst || 'Please choose a date first')
-          : getEcomText('bookingSelectTimeFirst', tt.bookingSelectTimeFirst || 'Please choose a date and time first')
+        bookingAvailability.formOnly
+          ? getEcomText('bookingCompleteFormFirst', tt.bookingCompleteFormFirst || 'Please fill in the required fields')
+          : (bookingAvailability.dateOnly
+            ? getEcomText('bookingSelectDateFirst', tt.bookingSelectDateFirst || 'Please choose a date first')
+            : getEcomText('bookingSelectTimeFirst', tt.bookingSelectTimeFirst || 'Please choose a date and time first'))
       );
       zappyPdpBookSyncButton();
       return;
@@ -12930,10 +13189,11 @@ function addProductToCart() {
     }
   }
   
-  // Attach the chosen booking (slot + form answers) for service/event products
-  // so it flows through the cart, checkout reservation, and order line item.
-  if (window.zappyIsServiceProduct && window.zappyIsServiceProduct(product) && window.zappyPdpBookingData) {
-    const bookingData = window.zappyPdpBookingData();
+  // Attach booking / purchase-form answers so they flow through cart → checkout → order.
+  if (window.zappyNeedsPurchaseForm && window.zappyNeedsPurchaseForm(product) && window.zappyPdpBookingData) {
+    const bookingData = window.zappyPdpBookingData(
+      (window.zappyHasPurchaseForm && window.zappyHasPurchaseForm(product)) ? { allowFormOnly: true } : {}
+    );
     if (bookingData) cartItem.booking = bookingData;
   }
 
@@ -13162,72 +13422,6 @@ async function loadRelatedProducts(currentProduct, t) {
   return _zappyRelatedProductsInflight;
 }
 /* ==ZAPPY E-COMMERCE JS END== */
-
-/* ZAPPY_BLOCK_RUNTIME_V3 */
-(function(){
-  if (window.__zappyBlockRuntimeInstalled) return;
-  window.__zappyBlockRuntimeInstalled = true;
-  function b64ToUtf8(b64){
-    try {
-      var bin = atob(String(b64 || ''));
-      var bytes = new Uint8Array(bin.length);
-      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-      return new TextDecoder('utf-8').decode(bytes);
-    } catch (e) { return ''; }
-  }
-  function hydrate(section){
-    try {
-      if (!section || section.getAttribute('data-zappy-hydrated') === '1') return;
-      var frame = section.querySelector('iframe[data-zappy-block-frame]');
-      if (!frame) return;
-      var doc = b64ToUtf8(section.getAttribute('data-zappy-block-doc'));
-      if (!doc) return;
-      frame.setAttribute('srcdoc', doc);
-      section.setAttribute('data-zappy-hydrated', '1');
-    } catch (e) {}
-  }
-  function hydrateAll(root){
-    var scope = (root && root.querySelectorAll) ? root : document;
-    var nodes = scope.querySelectorAll('section[data-zappy-block][data-zappy-block-doc]');
-    for (var i = 0; i < nodes.length; i++) hydrate(nodes[i]);
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ hydrateAll(document); });
-  } else {
-    hydrateAll(document);
-  }
-  // Catch blocks inserted later (editor live-insert / SPA navigation).
-  try {
-    var mo = new MutationObserver(function(muts){
-      for (var i = 0; i < muts.length; i++){
-        var added = muts[i].addedNodes || [];
-        for (var j = 0; j < added.length; j++){
-          var n = added[j];
-          if (!n || n.nodeType !== 1) continue;
-          if (n.matches && n.matches('section[data-zappy-block][data-zappy-block-doc]')) hydrate(n);
-          if (n.querySelectorAll) hydrateAll(n);
-        }
-      }
-    });
-    mo.observe(document.documentElement || document.body, { childList: true, subtree: true });
-  } catch (e) {}
-  // Auto-size block iframes from their inner CONTENT height. The inner bridge
-  // measures a content wrapper (not the iframe viewport), so this is a stable
-  // fixed point — setting the iframe height does NOT change the reported content
-  // height, hence no feedback loop and no need for an arbitrary upper clamp. We
-  // only write when the value actually changed to avoid redundant style churn.
-  window.addEventListener('message', function(e){
-    var d = e && e.data;
-    if (!d || d.__zappyBlock !== true || d.type !== 'resize') return;
-    if (typeof d.id !== 'string') return;
-    var frame = document.querySelector('iframe[data-zappy-block-frame="' + d.id.replace(/"/g, '') + '"]');
-    var h = parseInt(d.height, 10);
-    if (!frame || !(h > 0)) return;
-    var cur = parseInt(frame.style.height, 10) || 0;
-    if (Math.abs(cur - h) >= 1) frame.style.height = h + 'px';
-  });
-})();
-/* ZAPPY_BLOCK_RUNTIME_END */
 
 
 /* ZAPPY_PUBLISHED_LIGHTBOX_RUNTIME */
@@ -13740,9 +13934,17 @@ async function loadRelatedProducts(currentProduct, t) {
         var shStr = wrapper.getAttribute('data-zappy-zoom-wrapper-height');
         var swNum = parseFloat(swStr) || 0;
         var shNum = parseFloat(shStr) || 0;
+        // If the slot's height is only as tall as the wrapper, that height is
+        // content-driven by THIS wrapper (common for .home-feature-image-wrap
+        // with no CSS height). Switching to height:100% then collapses on the
+        // next layout pass because the absolute <img> no longer contributes
+        // intrinsic height — the Artistic Epoxy / nwooda middle-card bug.
+        var slotSizedByWrapper = Math.abs(slotRect.height - wrapRect.height) <= 2;
+        var canFillSlotHeight = slotRect.height > 0 && !slotSizedByWrapper &&
+          (forceCardSlotFill || (slotHeightGap > 4 && slotCS.overflow !== 'visible'));
         wrapper.style.setProperty('width', '100%', 'important');
         wrapper.style.setProperty('max-width', '100%', 'important');
-        if (slotRect.height > 0 && (forceCardSlotFill || (slotHeightGap > 4 && slotCS.overflow !== 'visible'))) {
+        if (canFillSlotHeight) {
           wrapper.style.setProperty('height', '100%', 'important');
           wrapper.style.setProperty('aspect-ratio', 'auto', 'important');
           wrapper.style.setProperty('padding-bottom', '0', 'important');
@@ -13784,8 +13986,12 @@ async function loadRelatedProducts(currentProduct, t) {
             }
           }
         } else if (swNum > 0 && shNum > 0) {
+          // Heightless / content-sized slots (and already-collapsed wrappers):
+          // keep width:100% and size via the saved aspect ratio so absolute
+          // images remain visible after refresh.
           wrapper.style.setProperty('aspect-ratio', swNum + '/' + shNum, 'important');
           wrapper.style.setProperty('height', 'auto', 'important');
+          wrapper.style.setProperty('padding-bottom', '0', 'important');
         }
         wrapper.setAttribute('data-zappy-card-slot-fill', '1');
         // Also stretch any intermediate .zappy-inserted-element ancestors up
